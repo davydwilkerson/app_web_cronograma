@@ -50,6 +50,7 @@ cd /var/www/cronograma-saas
 npm ci
 npm run db:generate
 npm run db:migrate
+npm run content:import
 npm run build
 mkdir -p logs
 ```
@@ -95,6 +96,7 @@ cd /var/www/cronograma-saas
 git pull origin main
 npm ci
 npm run db:migrate
+npm run content:import
 npm run build
 pm2 reload cronograma-saas --update-env
 ```

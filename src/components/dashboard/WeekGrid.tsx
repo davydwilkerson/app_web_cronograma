@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import styles from "./WeekGrid.module.css";
 
 interface WeekData {
@@ -15,14 +16,14 @@ interface WeekGridProps {
 }
 
 export default function WeekGrid({ weeks }: WeekGridProps) {
+    const router = useRouter();
+
     function handleWeekClick(week: WeekData) {
         if (week.locked) {
-            alert(
-                "Esta semana está bloqueada no modo trial. Assine para ter acesso completo!"
-            );
+            alert("Esta semana esta bloqueada no modo trial. Assine para liberar.");
             return;
         }
-        window.location.assign(`/dashboard/semana/${week.week_num}`);
+        router.push(`/dashboard/semana/${week.week_num}`);
     }
 
     function getStatusClass(pct: number): string {
@@ -42,17 +43,14 @@ export default function WeekGrid({ weeks }: WeekGridProps) {
                     id={`week-${week.week_num}`}
                     disabled={week.locked}
                 >
-                    {/* Lock icon for trial users */}
                     {week.locked && (
                         <div className={styles.lockOverlay}>
                             <i className="fas fa-lock"></i>
                         </div>
                     )}
 
-                    {/* Week number */}
                     <div className={styles.weekNumber}>S{week.week_num}</div>
 
-                    {/* Progress ring */}
                     <div className={styles.progressRing}>
                         <svg viewBox="0 0 36 36" className={styles.ringSvg}>
                             <path
@@ -72,7 +70,6 @@ export default function WeekGrid({ weeks }: WeekGridProps) {
                         <span className={styles.ringText}>{week.percentage}%</span>
                     </div>
 
-                    {/* Week label */}
                     <div className={styles.weekLabel}>Semana {week.week_num}</div>
                     <div className={styles.cardCount}>
                         {week.completed_cards}/{week.total_cards} cards

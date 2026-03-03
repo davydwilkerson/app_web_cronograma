@@ -10,7 +10,8 @@
     "postinstall": "prisma generate",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate deploy",
-    "db:push": "prisma db push"
+    "db:push": "prisma db push",
+    "content:import": "node scripts/import-week-content.mjs"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",

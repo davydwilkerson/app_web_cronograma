@@ -1,0 +1,60 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.hero {
+  background: var(--card-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 22px 22px 20px;
+}
+
+.kicker {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.hero h1 {
+  margin: 6px 0 0;
+  color: var(--accent);
+  font-family: "Playfair Display", serif;
+  font-size: clamp(1.7rem, 4vw, 2.3rem);
+  line-height: 1.2;
+}
+
+.subtitle {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.emptyState {
+  background: var(--card-bg);
+  border: 1px dashed rgba(9, 31, 47, 0.25);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.emptyState h2 {
+  margin: 0;
+  color: var(--accent);
+  font-family: "Playfair Display", serif;
+}
+
+.emptyState p {
+  margin: 10px 0 0;
+  color: var(--muted);
+}
+
+.emptyState code {
+  font-size: 0.85rem;
+  color: var(--accent);
+  font-weight: 600;
+}

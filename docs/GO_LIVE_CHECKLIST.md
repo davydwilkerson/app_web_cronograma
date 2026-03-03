@@ -45,6 +45,7 @@ git pull origin main
 npm ci
 npm run db:generate
 npm run db:migrate
+npm run content:import
 npm run lint
 npm run build
 mkdir -p logs
@@ -82,6 +83,7 @@ Critero para avancar:
 - [ ] Login com Google funciona
 - [ ] Login com email/senha funciona (usuario com hash cadastrado)
 - [ ] Dashboard carrega e lista semanas
+- [ ] Pagina de semana abre e salva progresso (`/dashboard/semana/1`)
 - [ ] Logout encerra sessao e volta ao login
 - [ ] Webhook HeroSpark responde (200 para payload valido)
   - Teste rapido:

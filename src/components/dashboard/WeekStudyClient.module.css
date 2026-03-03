@@ -1,0 +1,347 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.progressSection {
+  background: var(--card-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.progressHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.progressHeader h2 {
+  margin: 0;
+  color: var(--accent);
+  font-family: "Playfair Display", serif;
+  font-size: 1.6rem;
+}
+
+.progressHeader span {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.progressTrack {
+  height: 12px;
+  margin-top: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--bg-alt);
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(120deg, var(--gold), var(--gold-2));
+  transition: width 220ms ease;
+}
+
+.progressFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.progressFooter strong {
+  color: var(--accent);
+  font-size: 1rem;
+}
+
+.errorBanner {
+  margin: 0;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  background: rgba(239, 68, 68, 0.1);
+  color: #991b1b;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 0.88rem;
+}
+
+.daysNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dayBtn {
+  border: 1px solid var(--border-subtle);
+  background: var(--card-bg);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.dayBtn:hover {
+  color: var(--accent);
+  border-color: var(--gold);
+}
+
+.dayBtnActive {
+  color: #063351;
+  border-color: var(--gold);
+  background: linear-gradient(120deg, var(--gold), var(--gold-2));
+}
+
+.cardsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.dayHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.dayHeader h3 {
+  margin: 0;
+  font-family: "Playfair Display", serif;
+  color: var(--accent);
+  font-size: 1.35rem;
+}
+
+.dayHeader span {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.cardsList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.studyCard {
+  background: var(--card-bg);
+  border: 1px solid var(--border-subtle);
+  border-left-width: 5px;
+  border-left-color: var(--gold);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+}
+
+.portugues {
+  border-left-color: var(--portugues);
+}
+
+.especifica1 {
+  border-left-color: var(--especifica1);
+}
+
+.especifica2 {
+  border-left-color: var(--especifica2);
+}
+
+.rlm {
+  border-left-color: var(--rlm);
+}
+
+.sus1 {
+  border-left-color: var(--sus1);
+}
+
+.sus2 {
+  border-left-color: var(--sus2);
+}
+
+.revisao {
+  border-left-color: var(--revisao);
+}
+
+.simulado {
+  border-left-color: var(--simulado);
+}
+
+.cardHeader {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.cardCheckbox {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 2px solid rgba(9, 31, 47, 0.22);
+  background: var(--card-bg);
+  color: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.cardCheckbox i {
+  font-size: 0.78rem;
+}
+
+.cardChecked {
+  border-color: var(--sus1);
+  background: var(--sus1);
+  color: #fff;
+}
+
+.cardInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.disciplineBadge {
+  display: inline-flex;
+  align-items: center;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(9, 31, 47, 0.06);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
+.cardTitle {
+  margin: 8px 0 0;
+  color: var(--accent);
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.cardLinks {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cardLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  color: var(--muted);
+  font-size: 0.82rem;
+  background: var(--card-bg);
+}
+
+.cardLinkPrimary {
+  color: #063351;
+  border-color: var(--gold);
+  background: linear-gradient(120deg, var(--gold), var(--gold-2));
+  font-weight: 600;
+}
+
+.progressList {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.progressItem {
+  display: grid;
+  grid-template-columns: minmax(120px, 190px) 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.progressItemLabel {
+  color: var(--accent);
+  font-size: 0.85rem;
+}
+
+.progressButton {
+  height: 10px;
+  border: none;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--bg-alt);
+  cursor: pointer;
+  padding: 0;
+}
+
+.progressItemFill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(120deg, var(--gold), var(--gold-2));
+}
+
+.progressItem strong {
+  min-width: 44px;
+  color: var(--accent);
+  text-align: right;
+  font-size: 0.84rem;
+}
+
+.weekNav {
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.weekNavLinks {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.weekNavButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  background: var(--card-bg);
+  color: var(--muted);
+  font-size: 0.85rem;
+  transition: all var(--transition);
+}
+
+.weekNavButton:hover {
+  border-color: var(--gold);
+  color: var(--accent);
+}
+
+.weekNavPrimary {
+  color: #063351;
+  border-color: var(--gold);
+  background: linear-gradient(120deg, var(--gold), var(--gold-2));
+  font-weight: 600;
+}
+
+@media (max-width: 720px) {
+  .progressItem {
+    grid-template-columns: 1fr;
+  }
+
+  .progressItem strong {
+    text-align: left;
+  }
+}

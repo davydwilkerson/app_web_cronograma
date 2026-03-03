@@ -1,0 +1,233 @@
+.formContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* ── Google Button ── */
+.googleBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 999px;
+    background: var(--card-bg);
+    color: var(--accent);
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 260ms ease;
+}
+
+.googleBtn:hover:not(:disabled) {
+    border-color: #4285f4;
+    background: rgba(66, 133, 244, 0.04);
+    box-shadow: 0 4px 16px rgba(66, 133, 244, 0.15);
+    transform: translateY(-1px);
+}
+
+.googleBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ── Divider ── */
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    gap: 12px;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border-subtle);
+}
+
+.divider span {
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ── Form ── */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    background: var(--bg);
+    color: var(--accent);
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    outline: none;
+}
+
+.input::placeholder {
+    color: var(--muted);
+    opacity: 0.6;
+}
+
+.input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(191, 160, 111, 0.15);
+}
+
+.input:disabled {
+    opacity: 0.5;
+}
+
+/* ── Password wrapper ── */
+.passwordWrap {
+    position: relative;
+}
+
+.passwordWrap .input {
+    padding-right: 44px;
+}
+
+.eyeBtn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 4px;
+    font-size: 0.9rem;
+}
+
+.eyeBtn:hover {
+    color: var(--accent);
+}
+
+/* ── Feedback ── */
+.feedback {
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    animation: fadeIn 0.2s ease;
+}
+
+.feedbackError {
+    background: rgba(239, 68, 68, 0.08);
+    color: #b91c1c;
+    border: 1px solid rgba(239, 68, 68, 0.12);
+}
+
+.feedbackWarn {
+    background: rgba(245, 158, 11, 0.08);
+    color: #92400e;
+    border: 1px solid rgba(245, 158, 11, 0.12);
+}
+
+.feedbackInfo {
+    background: rgba(16, 185, 129, 0.08);
+    color: #047857;
+    border: 1px solid rgba(16, 185, 129, 0.12);
+}
+
+/* ── Submit Button ── */
+.submitBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 14px 16px;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(120deg, var(--gold), var(--gold-2));
+    color: var(--accent);
+    font-size: 0.95rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 260ms ease;
+    box-shadow: 0 6px 20px rgba(191, 160, 111, 0.3);
+}
+
+.submitBtn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(191, 160, 111, 0.4);
+}
+
+.submitBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ── Mode Links ── */
+.modeLinks {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.modeLink {
+    background: none;
+    border: none;
+    color: var(--gold);
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    padding: 4px;
+    transition: color 0.2s ease;
+}
+
+.modeLink:hover {
+    color: var(--gold-2);
+}
+
+/* ── Browser Info ── */
+.browserInfo {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 16px;
+    padding: 10px 14px;
+    background: rgba(59, 130, 246, 0.06);
+    border-radius: 10px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.4;
+}
+
+.browserInfo i {
+    color: #3b82f6;
+    margin-top: 2px;
+    flex-shrink: 0;
+}

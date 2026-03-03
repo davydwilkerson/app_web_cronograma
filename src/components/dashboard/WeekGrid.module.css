@@ -1,0 +1,155 @@
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+}
+
+.weekCard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 20px 12px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: all 260ms ease;
+    font-family: inherit;
+    overflow: hidden;
+}
+
+.weekCard:hover:not(:disabled) {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--gold);
+}
+
+.weekCard:active:not(:disabled) {
+    transform: translateY(-2px);
+}
+
+/* ── Status colors ── */
+.notStarted {
+    border-left: 3px solid #e5e7eb;
+}
+
+.inProgress1 {
+    border-left: 3px solid #f59e0b;
+}
+
+.inProgress2 {
+    border-left: 3px solid #3b82f6;
+}
+
+.completed {
+    border-left: 3px solid #10b981;
+}
+
+/* ── Week Number Badge ── */
+.weekNumber {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(191, 160, 111, 0.1);
+    color: var(--gold);
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 999px;
+}
+
+/* ── Progress Ring ── */
+.progressRing {
+    position: relative;
+    width: 60px;
+    height: 60px;
+}
+
+.ringSvg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.ringBg {
+    stroke: var(--bg-alt);
+}
+
+.ringFill {
+    stroke: var(--gold);
+    stroke-linecap: round;
+    transition: stroke-dasharray 0.5s ease;
+}
+
+.completed .ringFill {
+    stroke: #10b981;
+}
+
+.ringText {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+/* ── Labels ── */
+.weekLabel {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.cardCount {
+    font-size: 0.72rem;
+    color: var(--muted);
+}
+
+/* ── Locked State ── */
+.locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: grayscale(0.5);
+}
+
+.lockOverlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.6);
+    z-index: 2;
+    border-radius: var(--radius);
+}
+
+[data-theme="dark"] .lockOverlay {
+    background: rgba(15, 26, 36, 0.6);
+}
+
+.lockOverlay i {
+    font-size: 1.5rem;
+    color: var(--muted);
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+    .grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 12px;
+    }
+
+    .weekCard {
+        padding: 16px 10px;
+    }
+
+    .progressRing {
+        width: 50px;
+        height: 50px;
+    }
+}

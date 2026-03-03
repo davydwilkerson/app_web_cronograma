@@ -1,0 +1,64 @@
+.banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 20px;
+    background: linear-gradient(120deg, rgba(245, 158, 11, 0.08), rgba(239, 68, 68, 0.06));
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    animation: fadeIn 0.3s ease;
+}
+
+.content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: var(--accent);
+}
+
+.content i {
+    color: #f59e0b;
+    font-size: 1.2rem;
+}
+
+.upgradeBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(120deg, #f59e0b, #f97316);
+    color: white;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 260ms ease;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.upgradeBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4);
+}
+
+@media (max-width: 480px) {
+    .banner {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .content {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .upgradeBtn {
+        width: 100%;
+        justify-content: center;
+    }
+}

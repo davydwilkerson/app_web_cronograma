@@ -1,0 +1,117 @@
+.loginPage {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+}
+
+.loginContainer {
+    width: 100%;
+    max-width: 440px;
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+    padding: 40px 32px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-subtle);
+    animation: fadeIn 0.4s ease;
+}
+
+.logoSection {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.9rem;
+    font-weight: 800;
+    color: var(--accent);
+    margin: 0 0 6px;
+    line-height: 1.2;
+}
+
+.title span {
+    color: var(--gold);
+}
+
+.subtitle {
+    font-size: 0.95rem;
+    color: var(--muted);
+    margin: 0;
+}
+
+/* ── Feedback messages ── */
+.feedbackError,
+.feedbackSuccess {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 0.88rem;
+    margin-bottom: 20px;
+    line-height: 1.5;
+    animation: fadeIn 0.3s ease;
+}
+
+.feedbackError {
+    background: rgba(239, 68, 68, 0.08);
+    color: #b91c1c;
+    border: 1px solid rgba(239, 68, 68, 0.15);
+}
+
+.feedbackSuccess {
+    background: rgba(16, 185, 129, 0.08);
+    color: #047857;
+    border: 1px solid rgba(16, 185, 129, 0.15);
+}
+
+.feedbackError i,
+.feedbackSuccess i {
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+/* ── Footer Links ── */
+.footerLinks {
+    text-align: center;
+    margin-top: 24px;
+}
+
+.trialLink {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin: 0 0 12px;
+}
+
+.link {
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.link:hover {
+    color: var(--gold-2);
+}
+
+.disclaimer {
+    font-size: 0.78rem;
+    color: var(--muted);
+    opacity: 0.6;
+    margin: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+    .loginContainer {
+        padding: 28px 20px;
+        border-radius: 20px;
+    }
+
+    .title {
+        font-size: 1.5rem;
+    }
+}

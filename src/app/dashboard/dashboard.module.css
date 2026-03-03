@@ -1,0 +1,12 @@
+.dashboardShell {
+    min-height: 100vh;
+}
+
+.main {
+    flex: 1;
+    padding: 0 0 40px;
+}
+
+.footer {
+    padding: 0 0 20px;
+}

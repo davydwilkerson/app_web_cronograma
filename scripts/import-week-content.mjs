@@ -4,6 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { PrismaClient } from "@prisma/client";
+import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -92,7 +93,9 @@ async function main() {
         throw new Error("DATABASE_URL nao encontrado. Ajuste o .env antes de importar.");
     }
 
-    const prisma = new PrismaClient();
+    const prisma = new PrismaClient({
+        adapter: createMariaDbAdapter(),
+    });
     try {
         const weekNums = Array.from(new Set(rows.map((row) => row.weekNum))).sort(
             (a, b) => a - b
@@ -113,6 +116,28 @@ async function main() {
     } finally {
         await prisma.$disconnect();
     }
+}
+
+function createMariaDbAdapter() {
+    const databaseUrl = process.env.DATABASE_URL;
+    if (!databaseUrl) {
+        throw new Error("DATABASE_URL nao encontrado.");
+    }
+
+    const parsedUrl = new URL(databaseUrl);
+    const database = parsedUrl.pathname.replace(/^\//, "");
+    if (!database) {
+        throw new Error("DATABASE_URL precisa incluir o nome do banco.");
+    }
+
+    return new PrismaMariaDb({
+        host: parsedUrl.hostname,
+        port: parsedUrl.port ? Number(parsedUrl.port) : 3306,
+        user: decodeURIComponent(parsedUrl.username || ""),
+        password: decodeURIComponent(parsedUrl.password || ""),
+        database,
+        connectionLimit: Number(process.env.DATABASE_CONNECTION_LIMIT || "10"),
+    });
 }
 
 function parseArgs(rawArgs) {

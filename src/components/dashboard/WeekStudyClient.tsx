@@ -629,10 +629,6 @@ export default function WeekStudyClient({
 
                                     {activeVideo?.cardId === card.cardId && (
                                         <div className={styles.videoEmbedWrap}>
-                                            <div className={styles.videoEmbedHead}>
-                                                <strong>Aula protegida: {activeVideo.label}</strong>
-                                            </div>
-
                                             <div className={styles.videoControlPanel}>
                                                 <div className={styles.videoControlGroup}>
                                                     <button
@@ -650,18 +646,22 @@ export default function WeekStudyClient({
                                                         type="button"
                                                         className={styles.videoControlBtn}
                                                         onClick={() => handleSeek(-10)}
+                                                        title="Voltar 10 segundos"
+                                                        aria-label="Voltar 10 segundos"
                                                     >
                                                         <i className="fas fa-rotate-left"></i>
-                                                        Voltar 10s
+                                                        10s
                                                     </button>
 
                                                     <button
                                                         type="button"
                                                         className={styles.videoControlBtn}
                                                         onClick={() => handleSeek(10)}
+                                                        title="Avancar 10 segundos"
+                                                        aria-label="Avancar 10 segundos"
                                                     >
                                                         <i className="fas fa-forward"></i>
-                                                        Ir 10s
+                                                        10s
                                                     </button>
                                                 </div>
 

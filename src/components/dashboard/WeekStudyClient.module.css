@@ -320,6 +320,8 @@
   margin-top: var(--space-md);
   width: min(100%, 700px);
   margin-inline: auto;
+  display: flex;
+  flex-direction: column;
   border: 1px solid rgba(255, 255, 255, 0.72);
   border-radius: 16px;
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(245, 251, 255, 0.92));
@@ -328,11 +330,7 @@
 }
 
 .videoEmbedHead {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: var(--space-sm);
-  margin-bottom: var(--space-xs);
+  display: none;
 }
 
 .videoEmbedHead strong {
@@ -343,12 +341,13 @@
 }
 
 .videoControlPanel {
+  order: 2;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-sm);
   flex-wrap: wrap;
-  margin-bottom: var(--space-sm);
+  margin-top: var(--space-sm);
 }
 
 .videoControlGroup {
@@ -424,6 +423,7 @@
 }
 
 .videoFrame {
+  order: 1;
   position: relative;
   border-radius: 18px;
   padding: 4px;

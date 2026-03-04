@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type {
     WeekCardData,
     WeekDayData,
@@ -14,6 +14,20 @@ interface WeekStudyClientProps {
     weekNum: number;
     days: WeekDayData[];
     initialProgress: Record<string, WeekProgressState>;
+}
+
+interface ActiveVideoState {
+    cardId: string;
+    playerId: string;
+    embedUrl: string;
+    label: string;
+    title: string;
+}
+
+interface PlayerTelemetry {
+    currentTime: number;
+    playbackRate: number;
+    playerState: number;
 }
 
 const DISCIPLINE_CLASS_MAP: Record<string, string> = {
@@ -104,7 +118,35 @@ function parseYouTubeVideoId(rawUrl: string): string | null {
 function buildYoutubeEmbedUrl(rawUrl: string): string | null {
     const videoId = parseYouTubeVideoId(rawUrl);
     if (!videoId) return null;
-    return `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&fs=0&disablekb=1`;
+    const origin =
+        typeof window !== "undefined"
+            ? `&origin=${encodeURIComponent(window.location.origin)}`
+            : "";
+    return `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&controls=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&fs=0&disablekb=1&enablejsapi=1${origin}`;
+}
+
+function sanitizeId(value: string): string {
+    return value.replace(/[^a-zA-Z0-9_-]/g, "");
+}
+
+function buildPlayerId(cardId: string): string {
+    return `ytplayer-${sanitizeId(cardId)}`;
+}
+
+function postPlayerMessage(playerId: string, payload: unknown) {
+    if (typeof document === "undefined") return;
+    const iframe = document.getElementById(playerId) as HTMLIFrameElement | null;
+    if (!iframe?.contentWindow) return;
+    iframe.contentWindow.postMessage(JSON.stringify(payload), "*");
+}
+
+function sendPlayerCommand(playerId: string, func: string, args: unknown[] = []) {
+    postPlayerMessage(playerId, {
+        event: "command",
+        func,
+        args,
+        id: playerId,
+    });
 }
 
 function defaultProgress(card: WeekCardData): WeekProgressState {
@@ -155,9 +197,9 @@ export default function WeekStudyClient({
     const [activeDay, setActiveDay] = useState<number>(days[0]?.dayNum ?? 1);
     const [savingCardId, setSavingCardId] = useState<string>("");
     const [errorMessage, setErrorMessage] = useState<string>("");
-    const [activeVideoByCard, setActiveVideoByCard] = useState<
-        Record<string, string>
-    >({});
+    const [activeVideo, setActiveVideo] = useState<ActiveVideoState | null>(null);
+    const [playerStatsById, setPlayerStatsById] = useState<Record<string, PlayerTelemetry>>({});
+    const activeVideoRef = useRef<ActiveVideoState | null>(null);
     const [progressByCard, setProgressByCard] = useState<Record<string, WeekProgressState>>(() => {
         const seeded: Record<string, WeekProgressState> = {};
         for (const card of allCards) {
@@ -165,6 +207,81 @@ export default function WeekStudyClient({
         }
         return seeded;
     });
+
+    useEffect(() => {
+        activeVideoRef.current = activeVideo;
+    }, [activeVideo]);
+
+    useEffect(() => {
+        function handlePlayerMessage(event: MessageEvent) {
+            if (typeof event.data !== "string") return;
+            if (!event.origin.includes("youtube")) return;
+
+            let payload: unknown;
+            try {
+                payload = JSON.parse(event.data);
+            } catch {
+                return;
+            }
+
+            if (!payload || typeof payload !== "object") return;
+
+            const data = payload as {
+                event?: string;
+                id?: string;
+                info?: {
+                    currentTime?: number;
+                    playbackRate?: number;
+                    playerState?: number;
+                };
+            };
+
+            if (data.event !== "infoDelivery" || !data.id || !data.info) return;
+
+            const playerId = data.id;
+            const info = data.info;
+
+            setPlayerStatsById((prev) => {
+                const existing = prev[playerId] || {
+                    currentTime: 0,
+                    playbackRate: 1,
+                    playerState: -1,
+                };
+
+                let changed = false;
+                const next = { ...existing };
+
+                if (
+                    typeof info.currentTime === "number" &&
+                    Math.abs(info.currentTime - existing.currentTime) >= 0.4
+                ) {
+                    next.currentTime = info.currentTime;
+                    changed = true;
+                }
+
+                if (
+                    typeof info.playbackRate === "number" &&
+                    Math.abs(info.playbackRate - existing.playbackRate) > 0.01
+                ) {
+                    next.playbackRate = info.playbackRate;
+                    changed = true;
+                }
+
+                if (
+                    typeof info.playerState === "number" &&
+                    info.playerState !== existing.playerState
+                ) {
+                    next.playerState = info.playerState;
+                    changed = true;
+                }
+
+                return changed ? { ...prev, [playerId]: next } : prev;
+            });
+        }
+
+        window.addEventListener("message", handlePlayerMessage);
+        return () => window.removeEventListener("message", handlePlayerMessage);
+    }, []);
 
     const completedCards = allCards.reduce((count, card) => {
         const state = normalizeProgress(card, progressByCard[card.cardId]);
@@ -273,15 +390,104 @@ export default function WeekStudyClient({
         void persistCard(card.cardId, nextState);
     }
 
-    function handleVideoToggle(cardId: string, embedUrl: string) {
-        setActiveVideoByCard((prev) => {
-            const isSame = prev[cardId] === embedUrl;
-            return {
-                ...prev,
-                [cardId]: isSame ? "" : embedUrl,
-            };
+    function handleVideoToggle(
+        cardId: string,
+        cardTitle: string,
+        linkLabel: string,
+        embedUrl: string
+    ) {
+        const playerId = buildPlayerId(cardId);
+
+        if (
+            activeVideoRef.current &&
+            activeVideoRef.current.cardId === cardId &&
+            activeVideoRef.current.embedUrl === embedUrl
+        ) {
+            setActiveVideo(null);
+            return;
+        }
+
+        setActiveVideo({
+            cardId,
+            playerId,
+            embedUrl,
+            label: linkLabel,
+            title: cardTitle,
         });
+
+        setPlayerStatsById((prev) => ({
+            ...prev,
+            [playerId]: prev[playerId] || {
+                currentTime: 0,
+                playbackRate: 1,
+                playerState: -1,
+            },
+        }));
     }
+
+    function initVideoPlayer(playerId: string) {
+        postPlayerMessage(playerId, { event: "listening", id: playerId });
+        sendPlayerCommand(playerId, "playVideo");
+        sendPlayerCommand(playerId, "getCurrentTime");
+        sendPlayerCommand(playerId, "getPlaybackRate");
+        sendPlayerCommand(playerId, "getPlayerState");
+    }
+
+    function handlePlayPause() {
+        if (!activeVideo) return;
+        const stats = playerStatsById[activeVideo.playerId];
+        const isPlaying = stats?.playerState === 1;
+
+        if (isPlaying) {
+            sendPlayerCommand(activeVideo.playerId, "pauseVideo");
+        } else {
+            sendPlayerCommand(activeVideo.playerId, "playVideo");
+        }
+    }
+
+    function handleSeek(deltaSeconds: number) {
+        if (!activeVideo) return;
+        const stats = playerStatsById[activeVideo.playerId];
+        const currentTime = stats?.currentTime || 0;
+        const targetTime = Math.max(0, currentTime + deltaSeconds);
+
+        sendPlayerCommand(activeVideo.playerId, "seekTo", [targetTime, true]);
+
+        setPlayerStatsById((prev) => ({
+            ...prev,
+            [activeVideo.playerId]: {
+                ...(prev[activeVideo.playerId] || {
+                    currentTime: 0,
+                    playbackRate: 1,
+                    playerState: -1,
+                }),
+                currentTime: targetTime,
+            },
+        }));
+    }
+
+    function handleSpeed(rate: number) {
+        if (!activeVideo) return;
+        sendPlayerCommand(activeVideo.playerId, "setPlaybackRate", [rate]);
+
+        setPlayerStatsById((prev) => ({
+            ...prev,
+            [activeVideo.playerId]: {
+                ...(prev[activeVideo.playerId] || {
+                    currentTime: 0,
+                    playbackRate: 1,
+                    playerState: -1,
+                }),
+                playbackRate: rate,
+            },
+        }));
+    }
+
+    const activePlayerStats = activeVideo
+        ? playerStatsById[activeVideo.playerId]
+        : undefined;
+    const isActivePlaying = activePlayerStats?.playerState === 1;
+    const activePlaybackRate = activePlayerStats?.playbackRate || 1;
 
     return (
         <div className={styles.wrapper}>
@@ -366,8 +572,9 @@ export default function WeekStudyClient({
                                                     ? buildYoutubeEmbedUrl(link.url)
                                                     : null;
                                                 const isSelected =
-                                                    embedUrl &&
-                                                    activeVideoByCard[card.cardId] === embedUrl;
+                                                    !!embedUrl &&
+                                                    activeVideo?.cardId === card.cardId &&
+                                                    activeVideo.embedUrl === embedUrl;
 
                                                 if (isVideo && embedUrl) {
                                                     return (
@@ -378,6 +585,8 @@ export default function WeekStudyClient({
                                                             onClick={() =>
                                                                 handleVideoToggle(
                                                                     card.cardId,
+                                                                    card.title,
+                                                                    link.label,
                                                                     embedUrl
                                                                 )
                                                             }
@@ -418,22 +627,64 @@ export default function WeekStudyClient({
                                         </div>
                                     )}
 
-                                    {activeVideoByCard[card.cardId] && (
+                                    {activeVideo?.cardId === card.cardId && (
                                         <div className={styles.videoEmbedWrap}>
                                             <div className={styles.videoEmbedHead}>
-                                                <strong>Aula em video</strong>
-                                                <button
-                                                    type="button"
-                                                    className={styles.videoCloseBtn}
-                                                    onClick={() =>
-                                                        setActiveVideoByCard((prev) => ({
-                                                            ...prev,
-                                                            [card.cardId]: "",
-                                                        }))
-                                                    }
-                                                >
-                                                    Fechar
-                                                </button>
+                                                <strong>Aula protegida: {activeVideo.label}</strong>
+                                            </div>
+
+                                            <div className={styles.videoControlPanel}>
+                                                <div className={styles.videoControlGroup}>
+                                                    <button
+                                                        type="button"
+                                                        className={styles.videoControlBtn}
+                                                        onClick={handlePlayPause}
+                                                    >
+                                                        <i
+                                                            className={`fas ${isActivePlaying ? "fa-pause" : "fa-play"}`}
+                                                        ></i>
+                                                        {isActivePlaying ? "Pausar" : "Reproduzir"}
+                                                    </button>
+
+                                                    <button
+                                                        type="button"
+                                                        className={styles.videoControlBtn}
+                                                        onClick={() => handleSeek(-10)}
+                                                    >
+                                                        <i className="fas fa-rotate-left"></i>
+                                                        Voltar 10s
+                                                    </button>
+
+                                                    <button
+                                                        type="button"
+                                                        className={styles.videoControlBtn}
+                                                        onClick={() => handleSeek(10)}
+                                                    >
+                                                        <i className="fas fa-forward"></i>
+                                                        Ir 10s
+                                                    </button>
+                                                </div>
+
+                                                <div className={styles.videoSpeedGroup}>
+                                                    {[1.2, 1.5, 2].map((rate) => (
+                                                        <button
+                                                            key={rate}
+                                                            type="button"
+                                                            className={`${styles.videoSpeedBtn} ${Math.abs(activePlaybackRate - rate) < 0.01 ? styles.videoSpeedActive : ""}`}
+                                                            onClick={() => handleSpeed(rate)}
+                                                        >
+                                                            {rate}x
+                                                        </button>
+                                                    ))}
+
+                                                    <button
+                                                        type="button"
+                                                        className={`${styles.videoControlBtn} ${styles.videoCloseBtn}`}
+                                                        onClick={() => setActiveVideo(null)}
+                                                    >
+                                                        Fechar
+                                                    </button>
+                                                </div>
                                             </div>
 
                                             <div
@@ -442,18 +693,32 @@ export default function WeekStudyClient({
                                                     event.preventDefault()
                                                 }
                                             >
-                                                <iframe
-                                                    src={activeVideoByCard[card.cardId]}
-                                                    title={`${card.title} - video`}
-                                                    loading="lazy"
-                                                    allow="autoplay; encrypted-media; picture-in-picture"
-                                                    allowFullScreen={false}
-                                                    referrerPolicy="strict-origin-when-cross-origin"
-                                                    sandbox="allow-scripts allow-same-origin allow-presentation"
-                                                />
-                                                <span className={styles.videoWatermark}>
-                                                    Plataforma EA
-                                                </span>
+                                                <div className={styles.videoViewport}>
+                                                    <iframe
+                                                        id={activeVideo.playerId}
+                                                        src={activeVideo.embedUrl}
+                                                        title={`${activeVideo.title} - video`}
+                                                        loading="lazy"
+                                                        allow="autoplay; encrypted-media; picture-in-picture"
+                                                        allowFullScreen={false}
+                                                        referrerPolicy="strict-origin-when-cross-origin"
+                                                        sandbox="allow-scripts allow-same-origin allow-presentation"
+                                                        onLoad={() =>
+                                                            initVideoPlayer(
+                                                                activeVideo.playerId
+                                                            )
+                                                        }
+                                                    />
+                                                    <span
+                                                        className={styles.videoClickShieldTop}
+                                                    ></span>
+                                                    <span
+                                                        className={styles.videoClickShieldBottom}
+                                                    ></span>
+                                                    <span className={styles.videoWatermark}>
+                                                        EA Premium Player
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
                                     )}

@@ -38,12 +38,12 @@ export default function GamificationPanel({
     <section className={`${styles.panel} ${compact ? styles.compact : ""}`}>
       <div className={styles.hero}>
         <div>
-          <p className={styles.kicker}>Gameficacao ativa</p>
-          <h2>Ritmo, recompensa e evolucao</h2>
+          <p className={styles.kicker}>Gamificação Ativa</p>
+          <h2>Ritmo, Recompensa e Evolução</h2>
         </div>
         <div className={styles.levelChip}>
           <span>
-            {snapshot.balanceLabel} | Nivel {snapshot.level.level}
+            {snapshot.balanceLabel} | Nível {snapshot.level.level}
           </span>
           <strong>{snapshot.level.title}</strong>
         </div>
@@ -56,7 +56,7 @@ export default function GamificationPanel({
         <small>
           {snapshot.level.nextLevelXp
             ? `${snapshot.level.currentXp} XP / ${snapshot.level.nextLevelXp} XP`
-            : `${snapshot.level.currentXp} XP (nivel maximo)`}
+            : `${snapshot.level.currentXp} XP (Nível Máximo)`}
         </small>
       </div>
 
@@ -88,7 +88,7 @@ export default function GamificationPanel({
           <header>
             <h3>
               <i className="fas fa-flag-checkered"></i>
-              Missoes do dia
+              Missões do Dia
             </h3>
             <span>
               {dailyCompleted}/{snapshot.dailyMissions.length}
@@ -119,7 +119,7 @@ export default function GamificationPanel({
           <header>
             <h3>
               <i className="fas fa-dragon"></i>
-              Boss semanal
+              Boss Semanal
             </h3>
             <span>S{snapshot.weeklyBoss.weekNum}</span>
           </header>
@@ -141,13 +141,13 @@ export default function GamificationPanel({
           </div>
           <div className={styles.chestRow}>
             <div>
-              <p>Bau semanal</p>
+              <p>Baú Semanal</p>
               <small>
                 Streak {snapshot.surpriseChest.currentStreak}/{snapshot.surpriseChest.requiredStreak}
               </small>
             </div>
             <span className={`${styles.chestStatus} ${snapshot.surpriseChest.ready ? styles.ready : ""}`}>
-              {snapshot.surpriseChest.ready ? "Pronto para abrir" : "Em progresso"}
+              {snapshot.surpriseChest.ready ? "Pronto para Abrir" : "Em Progresso"}
             </span>
           </div>
           <div className={styles.progressTrack}>
@@ -187,9 +187,9 @@ export default function GamificationPanel({
             <header>
               <h3>
                 <i className="fas fa-ranking-star"></i>
-                Ranking semanal
+                Ranking Semanal
               </h3>
-              <span>Top jogadores</span>
+              <span>Top Jogadores</span>
             </header>
             <ol className={styles.rankList}>
               {snapshot.leaderboard.map((entry) => (
@@ -207,9 +207,9 @@ export default function GamificationPanel({
           <header>
             <h3>
               <i className="fas fa-route"></i>
-              Mapa da jornada
+              Mapa da Jornada
             </h3>
-            <span>24 semanas</span>
+            <span>24 Semanas</span>
           </header>
           <div className={styles.journeyGrid}>
             {journey.map((week) => (

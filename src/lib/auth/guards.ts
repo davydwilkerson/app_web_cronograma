@@ -1,12 +1,8 @@
+import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { redirect } from "next/navigation";
 import { AuthUser, AccessEvaluation } from "@/types/auth";
 
-/**
- * Obtém o usuário autenticado no servidor.
- * Se não estiver autenticado, redireciona para /login.
- */
 export async function requireAuth(): Promise<AuthUser> {
     const session = await auth();
 
@@ -23,9 +19,6 @@ export async function requireAuth(): Promise<AuthUser> {
     };
 }
 
-/**
- * Obtém o usuário autenticado sem redirecionar.
- */
 export async function getAuthUser(): Promise<AuthUser | null> {
     const session = await auth();
 
@@ -42,23 +35,14 @@ export async function getAuthUser(): Promise<AuthUser | null> {
     };
 }
 
-/**
- * Avalia o acesso completo do usuário no MySQL.
- */
-export async function evaluateAccess(
-    userId: string,
-    email: string
-): Promise<AccessEvaluation> {
-    // Buscar acesso na tabela AuthorizedAccess
+export async function evaluateAccess(userId: string, email: string): Promise<AccessEvaluation> {
     const accessRow = await prisma.authorizedAccess.findUnique({
         where: { email },
     });
 
-    const role = "user"; // Default
+    const role = "user";
 
-    // Sem registro na tabela
     if (!accessRow) {
-        // Verificar trial
         const trialRow = await prisma.trialUsage.findUnique({
             where: { userId },
         });
@@ -76,15 +60,13 @@ export async function evaluateAccess(
 
         return {
             allowed: false,
-            message:
-                "Não encontramos acesso ativo para este e-mail. Use o mesmo e-mail da compra.",
+            message: "Não encontramos acesso ativo para este e-mail. Use o mesmo e-mail da compra.",
             tone: "warn",
             role: "user",
             isTrial: false,
         };
     }
 
-    // Verificar status
     if (["active", "approved", "paid"].includes(accessRow.status)) {
         return {
             allowed: true,
@@ -105,7 +87,6 @@ export async function evaluateAccess(
         };
     }
 
-    // Default fallback
     return {
         allowed: true,
         message: "",
@@ -114,3 +95,4 @@ export async function evaluateAccess(
         isTrial: false,
     };
 }
+

@@ -18,7 +18,6 @@ interface LoginPageProps {
 }
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
-    // Se já estiver logado, redirecionar para dashboard
     const user = await getAuthUser();
     if (user) {
         redirect("/dashboard");
@@ -26,7 +25,6 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
     const params = await searchParams;
 
-    // Resolver mensagem de erro se houver
     let errorMessage = "";
     if (params.error === "no_access") {
         errorMessage =
@@ -37,8 +35,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
                 ? "Seu acesso está bloqueado por falta de pagamento."
                 : "Seu acesso está temporariamente bloqueado.";
     } else if (params.error === "no_email") {
-        errorMessage =
-            "Não foi possível obter seu e-mail. Tente novamente com outra conta.";
+        errorMessage = "Não foi possível obter seu e-mail. Tente novamente com outra conta.";
     } else if (params.error === "session_expired") {
         errorMessage = "Sua sessão expirou. Faça login novamente.";
     } else if (params.error === "device_conflict") {
@@ -52,17 +49,13 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
     return (
         <div className={styles.loginPage}>
             <div className={styles.loginContainer}>
-                {/* Logo e Título */}
                 <div className={styles.logoSection}>
                     <h1 className={styles.title}>
                         Cronograma <span>Enfermeiro Aprovado</span>
                     </h1>
-                    <p className={styles.subtitle}>
-                        Seu plano de estudos estratégico por semana
-                    </p>
+                    <p className={styles.subtitle}>Seu Plano de Estudos Estratégico por Semana</p>
                 </div>
 
-                {/* Mensagens de feedback */}
                 {errorMessage && (
                     <div className={styles.feedbackError}>
                         <i className="fas fa-exclamation-triangle"></i>
@@ -77,15 +70,13 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
                     </div>
                 )}
 
-                {/* Formulário de Login */}
                 <LoginForm redirectTo={redirectTo} />
 
-                {/* Footer */}
                 <div className={styles.footerLinks}>
                     <p className={styles.trialLink}>
                         Ainda não comprou?{" "}
                         <a href="/trial" className={styles.link}>
-                            Teste grátis por 7 dias →
+                            Teste Grátis por 7 dias →
                         </a>
                     </p>
                     <p className={styles.disclaimer}>
@@ -95,7 +86,6 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
                 </div>
             </div>
 
-            {/* WhatsApp Float */}
             <div className="whatsapp-float-wrap">
                 <a
                     href="https://wa.me/5561992599325"
@@ -112,3 +102,4 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         </div>
     );
 }
+

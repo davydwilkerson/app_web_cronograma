@@ -16,7 +16,7 @@ function formatDateTime(value: Date | null): string {
 
 export const metadata = {
     title: "Admin - Cronograma",
-    description: "Painel operacional de acessos e usuarios.",
+    description: "Painel operacional de acessos e usuários.",
 };
 
 export default async function AdminPage() {
@@ -64,17 +64,17 @@ export default async function AdminPage() {
             <section className={styles.hero}>
                 <div>
                     <p className={styles.kicker}>Painel Admin</p>
-                    <h1>Operacao de acessos</h1>
-                    <p>Resumo de usuarios, acessos pagos e status de trial.</p>
+                    <h1>Operação de Acessos</h1>
+                    <p>Resumo de usuários, acessos pagos e status de trial.</p>
                 </div>
                 <Link href="/dashboard" className="btn btn-secondary">
-                    Voltar ao dashboard
+                    Voltar ao Dashboard
                 </Link>
             </section>
 
             <section className={styles.statsGrid}>
                 <article className={styles.statCard}>
-                    <span>Usuarios</span>
+                    <span>Usuários</span>
                     <strong>{totalUsers}</strong>
                 </article>
                 <article className={styles.statCard}>
@@ -93,7 +93,7 @@ export default async function AdminPage() {
 
             <section className={styles.listSection}>
                 <div className={styles.sectionHead}>
-                    <h2>Ultimos acessos sincronizados</h2>
+                    <h2>Últimos Acessos Sincronizados</h2>
                     <span>{recentAccess.length} registros</span>
                 </div>
 

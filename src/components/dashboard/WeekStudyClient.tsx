@@ -382,7 +382,7 @@ export default function WeekStudyClient({
             }
         } catch (error) {
             console.error(error);
-            setErrorMessage("Nao foi possivel salvar o progresso. Tente novamente.");
+            setErrorMessage("Não foi possível salvar o progresso. Tente novamente.");
         } finally {
             setSavingCardId("");
         }
@@ -587,7 +587,7 @@ export default function WeekStudyClient({
                 <div className={styles.progressHeader}>
                     <h2>Semana {weekNum}</h2>
                     <span>
-                        {completedCards}/{totalCards} cards concluidos
+                        {completedCards}/{totalCards} Cards Concluídos
                     </span>
                 </div>
                 <div className={styles.progressTrack}>
@@ -597,7 +597,7 @@ export default function WeekStudyClient({
                     />
                 </div>
                 <div className={styles.progressFooter}>
-                    <span>Progresso da semana</span>
+                    <span>Progresso da Semana</span>
                     <strong>{weekPercentage}%</strong>
                 </div>
             </section>
@@ -627,7 +627,7 @@ export default function WeekStudyClient({
                 <section className={styles.cardsSection}>
                     <div className={styles.dayHeader}>
                         <h3>Dia {currentDay.dayNum}</h3>
-                        <span>{currentDay.cards.length} atividades</span>
+                        <span>{currentDay.cards.length} Atividades</span>
                     </div>
 
                     <div className={styles.cardsList}>
@@ -746,7 +746,7 @@ export default function WeekStudyClient({
                                                             )
                                                         }
                                                         className={styles.videoTimeline}
-                                                        aria-label="Barra de progresso do video"
+                                                        aria-label="Barra de Progresso do Vídeo"
                                                     />
                                                     <span className={styles.videoTimeLabel}>
                                                         {formatSeconds(activeDuration)}
@@ -780,8 +780,8 @@ export default function WeekStudyClient({
                                                         type="button"
                                                         className={styles.videoControlBtn}
                                                         onClick={() => handleSeek(10)}
-                                                        title="Avancar 10 segundos"
-                                                        aria-label="Avancar 10 segundos"
+                                                        title="Avançar 10 segundos"
+                                                        aria-label="Avançar 10 segundos"
                                                     >
                                                         <i className="fas fa-forward"></i>
                                                         10s
@@ -843,7 +843,7 @@ export default function WeekStudyClient({
                                                             type="button"
                                                             className={styles.videoPauseOverlay}
                                                             onClick={handlePlayPause}
-                                                            aria-label="Reproduzir video"
+                                                            aria-label="Reproduzir Vídeo"
                                                         >
                                                             <span
                                                                 className={styles.videoPauseOverlayIcon}
@@ -902,7 +902,7 @@ export default function WeekStudyClient({
 
             <div className={styles.weekNav}>
                 <Link href="/dashboard" className={styles.weekNavButton}>
-                    <i className="fas fa-arrow-left"></i> Voltar ao dashboard
+                    <i className="fas fa-arrow-left"></i> Voltar ao Dashboard
                 </Link>
                 <div className={styles.weekNavLinks}>
                     {weekNum > 1 && (
@@ -910,7 +910,7 @@ export default function WeekStudyClient({
                             href={`/dashboard/semana/${weekNum - 1}`}
                             className={styles.weekNavButton}
                         >
-                            Semana anterior
+                            Semana Anterior
                         </Link>
                     )}
                     {weekNum < TOTAL_WEEKS && (
@@ -918,7 +918,7 @@ export default function WeekStudyClient({
                             href={`/dashboard/semana/${weekNum + 1}`}
                             className={`${styles.weekNavButton} ${styles.weekNavPrimary}`}
                         >
-                            Proxima semana
+                            Próxima Semana
                         </Link>
                     )}
                 </div>

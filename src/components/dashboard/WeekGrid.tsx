@@ -20,7 +20,7 @@ export default function WeekGrid({ weeks }: WeekGridProps) {
 
     function handleWeekClick(week: WeekData) {
         if (week.locked) {
-            alert("Esta semana esta bloqueada no modo trial. Assine para liberar.");
+            alert("Esta semana está bloqueada no modo trial. Assine para liberar.");
             return;
         }
         router.push(`/dashboard/semana/${week.week_num}`);
@@ -72,7 +72,7 @@ export default function WeekGrid({ weeks }: WeekGridProps) {
 
                     <div className={styles.weekLabel}>Semana {week.week_num}</div>
                     <div className={styles.cardCount}>
-                        {week.completed_cards}/{week.total_cards} cards
+                        {week.completed_cards}/{week.total_cards} Cards
                     </div>
                 </button>
             ))}

@@ -82,7 +82,7 @@ const BALANCE_PROFILES: Record<GamificationBalanceProfile, GamificationBalanceCo
   },
   padrao: {
     id: "padrao",
-    label: "Padrao",
+    label: "Padrão",
     xpPerMilestone100: 5,
     xpCardCompletion: 20,
     xpPerfectCardBonus: 8,

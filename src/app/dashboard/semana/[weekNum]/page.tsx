@@ -97,11 +97,11 @@ export async function generateMetadata({ params }: WeekPageProps) {
     const resolved = await params;
     const weekNum = parseWeekNum(resolved.weekNum);
     if (!weekNum) {
-        return { title: "Semana invalida - Cronograma" };
+        return { title: "Semana Inválida - Cronograma" };
     }
     return {
         title: `Semana ${weekNum} - Cronograma`,
-        description: `Conteudo de estudo da semana ${weekNum}.`,
+        description: `Conteúdo de estudo da Semana ${weekNum}.`,
     };
 }
 
@@ -185,10 +185,10 @@ export default async function WeekDetailPage({ params }: WeekPageProps) {
     return (
         <div className={`container ${styles.page}`}>
             <section className={styles.hero}>
-                <p className={styles.kicker}>Cronograma semanal</p>
+                <p className={styles.kicker}>Cronograma Semanal</p>
                 <h1>Semana {weekNum}</h1>
                 <p className={styles.subtitle}>
-                    Estudo organizado por dia com progresso sincronizado.
+                    Estudo Organizado por Dia com Progresso Sincronizado.
                 </p>
             </section>
 
@@ -201,9 +201,9 @@ export default async function WeekDetailPage({ params }: WeekPageProps) {
                 />
             ) : (
                 <section className={styles.emptyState}>
-                    <h2>Semana sem conteudo</h2>
+                    <h2>Semana Sem Conteúdo</h2>
                     <p>
-                        Ainda nao existem cards desta semana na tabela{" "}
+                        Ainda não existem cards desta semana na tabela{" "}
                         <code>week_content</code>.
                     </p>
                     <p>

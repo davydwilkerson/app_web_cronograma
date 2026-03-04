@@ -12,8 +12,8 @@ function addDays(baseDate: Date, days: number): Date {
 }
 
 export const metadata = {
-    title: "Teste Gratis - Cronograma",
-    description: "Inicie seu periodo de teste e acesse o cronograma.",
+    title: "Teste Grátis - Cronograma",
+    description: "Inicie seu período de teste e acesse o cronograma.",
 };
 
 export default async function TrialPage() {
@@ -25,15 +25,15 @@ export default async function TrialPage() {
         return (
             <div className={styles.page}>
                 <section className={styles.card}>
-                    <p className={styles.kicker}>Periodo de teste</p>
+                    <p className={styles.kicker}>Período de Teste</p>
                     <h1>Ative seu acesso de 7 dias</h1>
                     <p>
-                        Faça login primeiro para ativar o teste no seu usuario e liberar o
+                        Faça login primeiro para ativar o teste no seu usuário e liberar o
                         cronograma.
                     </p>
                     <div className={styles.actions}>
                         <Link href="/login?redirect=%2Ftrial" className="btn btn-primary">
-                            Entrar para ativar trial
+                            Entrar para Ativar Trial
                         </Link>
                     </div>
                 </section>
@@ -78,10 +78,10 @@ export default async function TrialPage() {
     return (
         <div className={styles.page}>
             <section className={styles.card}>
-                <p className={styles.kicker}>Periodo de teste</p>
-                <h1>Seu trial ja foi encerrado</h1>
+                <p className={styles.kicker}>Período de Teste</p>
+                <h1>Seu Trial Já Foi Encerrado</h1>
                 <p>
-                    O periodo gratuito deste usuario terminou. Para continuar com acesso
+                    O período gratuito deste usuário terminou. Para continuar com acesso
                     completo, fale com o suporte.
                 </p>
                 <div className={styles.actions}>
@@ -94,10 +94,11 @@ export default async function TrialPage() {
                         Falar no WhatsApp
                     </a>
                     <Link href="/dashboard" className="btn btn-secondary">
-                        Voltar ao dashboard
+                        Voltar ao Dashboard
                     </Link>
                 </div>
             </section>
         </div>
     );
 }
+

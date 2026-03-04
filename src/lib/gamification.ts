@@ -213,7 +213,7 @@ function buildDailyMissions(
   const missions: GamificationMission[] = [
     {
       id: "daily-cards",
-      title: "Sprint de cards",
+      title: "Sprint de Cards",
       description: `Concluir ${balance.dailyCardTarget} card(s) hoje`,
       target: balance.dailyCardTarget,
       progress: input.todayCardsCompleted,
@@ -223,7 +223,7 @@ function buildDailyMissions(
     },
     {
       id: "daily-touch",
-      title: "Ritmo de estudo",
+      title: "Ritmo de Estudo",
       description: `Registrar progresso em ${balance.dailyTouchTarget} card(s) no dia`,
       target: balance.dailyTouchTarget,
       progress: input.todayCardsTouched,
@@ -279,14 +279,14 @@ function buildAchievements(
     },
     {
       id: "streak-3",
-      title: "Constancia 3 dias",
+      title: "Constância 3 Dias",
       description: "Manteve 3 dias seguidos de estudo.",
       icon: "fa-fire",
       unlocked: input.streak >= 3 || input.longestStreak >= 3,
     },
     {
       id: "streak-7",
-      title: "Streak de 7 dias",
+      title: "Streak de 7 Dias",
       description: "Manteve 7 dias seguidos de estudo.",
       icon: "fa-fire-flame-curved",
       unlocked: input.streak >= 7 || input.longestStreak >= 7,
@@ -307,7 +307,7 @@ function buildAchievements(
     },
     {
       id: "centurion",
-      title: "Centuriao",
+      title: "Centurião",
       description: `Concluiu ${balance.achievementTargets.centurionCards} cards.`,
       icon: "fa-medal",
       unlocked: input.completedCards >= balance.achievementTargets.centurionCards,
@@ -356,7 +356,7 @@ function resolveDisplayName(input: {
   isCurrentUser: boolean;
 }): string {
   if (input.isCurrentUser) {
-    return "Voce";
+    return "Você";
   }
 
   if (input.name && input.name.trim().length > 0) {
@@ -571,4 +571,3 @@ export async function getGamificationSnapshot(
     },
   };
 }
-

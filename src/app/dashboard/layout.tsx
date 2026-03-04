@@ -1,47 +1,33 @@
-import { requireAuth } from "@/lib/auth/guards";
 import AntiCopy from "@/components/security/AntiCopy";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
+import { requireAuth } from "@/lib/auth/guards";
 import styles from "./dashboard.module.css";
 
-/**
- * Dashboard Layout (Protegido)
- *
- * Este layout envolve todas as páginas protegidas do app.
- * Garante que o usuário está autenticado antes de renderizar.
- * Inclui o header, anti-cópia, e footer.
- */
 export default async function DashboardLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    // 🔒 Esta chamada redireciona para /login se não autenticado
     const user = await requireAuth();
 
     return (
         <div className={`page-shell protected-content ${styles.dashboardShell}`}>
-            {/* Anti-Copy Protection */}
             <AntiCopy userEmail={user.email} enabled={true} />
-
-            {/* Header */}
             <DashboardHeader user={user} />
 
-            {/* Main Content */}
             <main className={styles.main}>{children}</main>
 
-            {/* Footer */}
             <footer className={styles.footer}>
                 <div className="container">
                     <div className="footer-surface">
                         <p className="footer-text">
-                            © {new Date().getFullYear()} Enfermeiro Aprovado — Todos os
-                            direitos reservados
+                            © {new Date().getFullYear()} Enfermeiro Aprovado — Todos os direitos
+                            reservados
                         </p>
                     </div>
                 </div>
             </footer>
 
-            {/* WhatsApp Float */}
             <div className="whatsapp-float-wrap">
                 <a
                     href="https://wa.me/5561992599325"

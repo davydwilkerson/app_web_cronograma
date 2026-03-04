@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import { signIn } from "next-auth/react";
-import styles from "./LoginForm.module.css";
 import { useRouter } from "next/navigation";
+import styles from "./LoginForm.module.css";
 
 interface LoginFormProps {
     redirectTo: string;
@@ -23,13 +23,11 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
     const [showPassword, setShowPassword] = useState(false);
     const router = useRouter();
 
-    // ── Google OAuth ──
     async function handleGoogleLogin() {
         setLoading(true);
         await signIn("google", { callbackUrl: redirectTo });
     }
 
-    // ── Email/Password Login ──
     async function handleEmailLogin(e: FormEvent) {
         e.preventDefault();
         setLoading(true);
@@ -52,29 +50,24 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
         }
     }
 
-    // ── Password Recovery ──
     async function handleRecovery(e: FormEvent) {
         e.preventDefault();
         setFeedback({
             message: "Funcionalidade de recuperação será configurada em breve.",
             tone: "info",
         });
-        // Aqui implementaremos o envio de email via Nodemailer depois
     }
 
-    // ── First Access ──
     async function handleFirstAccess(e: FormEvent) {
         e.preventDefault();
         setFeedback({
             message: "Para criar conta, entre em contato com o suporte ou use o Google Login.",
             tone: "warn",
         });
-        // O cadastro principal deve ser via compra, não self-registration aberto
     }
 
     return (
         <div className={styles.formContainer}>
-            {/* Google Login Button */}
             <button
                 type="button"
                 className={styles.googleBtn}
@@ -102,19 +95,17 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
                 <span>Entrar com Google</span>
             </button>
 
-            {/* Divider */}
             <div className={styles.divider}>
                 <span>ou</span>
             </div>
 
-            {/* Email/Password Form */}
             <form
                 onSubmit={
                     mode === "login"
                         ? handleEmailLogin
                         : mode === "recovery"
-                            ? handleRecovery
-                            : handleFirstAccess
+                          ? handleRecovery
+                          : handleFirstAccess
                 }
                 className={styles.form}
             >
@@ -156,29 +147,26 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
                                 onClick={() => setShowPassword(!showPassword)}
                                 tabIndex={-1}
                             >
-                                <i
-                                    className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`}
-                                ></i>
+                                <i className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
                             </button>
                         </div>
                     </div>
                 )}
 
-                {/* Feedback */}
                 {feedback && (
                     <div
-                        className={`${styles.feedback} ${feedback.tone === "error"
+                        className={`${styles.feedback} ${
+                            feedback.tone === "error"
                                 ? styles.feedbackError
                                 : feedback.tone === "warn"
-                                    ? styles.feedbackWarn
-                                    : styles.feedbackInfo
-                            }`}
+                                  ? styles.feedbackWarn
+                                  : styles.feedbackInfo
+                        }`}
                     >
                         {feedback.message}
                     </div>
                 )}
 
-                {/* Submit Button */}
                 <button type="submit" className={styles.submitBtn} disabled={loading}>
                     {loading ? (
                         <span className="spinner" />
@@ -198,21 +186,18 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
                 </button>
             </form>
 
-            {/* Mode Switches */}
             <div className={styles.modeLinks}>
                 {mode === "login" && (
-                    <>
-                        <button
-                            type="button"
-                            className={styles.modeLink}
-                            onClick={() => {
-                                setMode("recovery");
-                                setFeedback(null);
-                            }}
-                        >
-                            Esqueci minha senha
-                        </button>
-                    </>
+                    <button
+                        type="button"
+                        className={styles.modeLink}
+                        onClick={() => {
+                            setMode("recovery");
+                            setFeedback(null);
+                        }}
+                    >
+                        Esqueci minha senha
+                    </button>
                 )}
 
                 {(mode === "recovery" || mode === "first-access") && (
@@ -224,11 +209,11 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
                             setFeedback(null);
                         }}
                     >
-                        ← Voltar ao login
+                        ← Voltar ao Login
                     </button>
                 )}
             </div>
-
         </div>
     );
 }
+

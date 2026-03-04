@@ -12,8 +12,8 @@ export default function TrialBanner({ expiresAtLabel }: TrialBannerProps) {
             <div className={styles.content}>
                 <i className="fas fa-clock"></i>
                 <div>
-                    <strong>Periodo de teste</strong> - Voce tem acesso a Semana 1 ate{" "}
-                    <strong>{expiresAtLabel || "o fim do periodo de teste"}</strong>.
+                    <strong>Período de Teste</strong> - Você tem acesso à Semana 1 até{" "}
+                    <strong>{expiresAtLabel || "o fim do período de teste"}</strong>.
                 </div>
             </div>
             <a

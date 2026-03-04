@@ -26,7 +26,6 @@ export default async function DashboardPage() {
         redirect(`/login?${params.toString()}`);
     }
 
-    // Buscar progresso de todas as semanas
     const [progressRows, weekCards] = await Promise.all([
         prisma.userProgress.findMany({
             where: { userId: user.id },
@@ -46,11 +45,9 @@ export default async function DashboardPage() {
         }),
     ]);
 
-    // Calcular progresso por semana
     const weekProgress: Record<number, { total: number; completed: number }> = {};
-
-    // Contar cards por semana
     const uniqueCards = new Set<string>();
+
     weekCards.forEach((card) => {
         const key = `${card.weekNum}-${card.cardId}`;
         if (!uniqueCards.has(key)) {
@@ -62,7 +59,6 @@ export default async function DashboardPage() {
         }
     });
 
-    // Contar completados
     progressRows.forEach((row) => {
         if (row.isCompleted) {
             if (!weekProgress[row.weekNum]) {
@@ -72,7 +68,6 @@ export default async function DashboardPage() {
         }
     });
 
-    // Construir dados das semanas
     const weeks = Array.from({ length: TOTAL_WEEKS }, (_, i) => {
         const num = i + 1;
         const progress = weekProgress[num] || { total: 0, completed: 0 };
@@ -86,13 +81,12 @@ export default async function DashboardPage() {
             total_cards: progress.total,
             completed_cards: progress.completed,
             percentage,
-            locked: access.isTrial && num > (parseInt(process.env.TRIAL_MAX_WEEK || "1", 10)),
+            locked: access.isTrial && num > parseInt(process.env.TRIAL_MAX_WEEK || "1", 10),
         };
     });
 
-    // Calcular progresso geral
-    const totalCards = weeks.reduce((sum, w) => sum + w.total_cards, 0);
-    const completedCards = weeks.reduce((sum, w) => sum + w.completed_cards, 0);
+    const totalCards = weeks.reduce((sum, week) => sum + week.total_cards, 0);
+    const completedCards = weeks.reduce((sum, week) => sum + week.completed_cards, 0);
     const overallPercentage =
         totalCards > 0 ? Math.round((completedCards / totalCards) * 100) : 0;
 
@@ -114,16 +108,12 @@ export default async function DashboardPage() {
 
     return (
         <div className="container">
-            {/* Trial Banner */}
-            {access.isTrial && (
-                <TrialBanner expiresAtLabel={trialExpiresAtLabel} />
-            )}
+            {access.isTrial && <TrialBanner expiresAtLabel={trialExpiresAtLabel} />}
 
             <section className={styles.gamificationSection}>
                 <GamificationPanel snapshot={gamification} variant="full" />
             </section>
 
-            {/* Welcome Section */}
             <section className={styles.welcomeSection}>
                 <div className={styles.welcomeContent}>
                     <h1 className={styles.welcomeTitle}>
@@ -134,7 +124,6 @@ export default async function DashboardPage() {
                     </p>
                 </div>
 
-                {/* Overall Progress */}
                 <div className={styles.overallProgress}>
                     <div className={styles.progressLabel}>
                         <span>Progresso Geral</span>
@@ -152,7 +141,6 @@ export default async function DashboardPage() {
                 </div>
             </section>
 
-            {/* Week Grid */}
             <section className={styles.weekSection}>
                 <h2 className={styles.sectionTitle}>
                     <i className="fas fa-calendar-alt"></i>
@@ -163,3 +151,4 @@ export default async function DashboardPage() {
         </div>
     );
 }
+

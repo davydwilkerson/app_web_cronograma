@@ -20,12 +20,12 @@ interface ActiveVideoState {
     cardId: string;
     playerId: string;
     embedUrl: string;
-    label: string;
     title: string;
 }
 
 interface PlayerTelemetry {
     currentTime: number;
+    duration: number;
     playbackRate: number;
     playerState: number;
 }
@@ -149,6 +149,14 @@ function sendPlayerCommand(playerId: string, func: string, args: unknown[] = [])
     });
 }
 
+function formatSeconds(seconds: number): string {
+    if (!Number.isFinite(seconds) || seconds <= 0) return "00:00";
+    const total = Math.max(0, Math.floor(seconds));
+    const min = Math.floor(total / 60);
+    const sec = total % 60;
+    return `${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+}
+
 function defaultProgress(card: WeekCardData): WeekProgressState {
     const progressData: Record<string, number> = {};
     for (const item of card.progressItems) {
@@ -231,6 +239,7 @@ export default function WeekStudyClient({
                 id?: string;
                 info?: {
                     currentTime?: number;
+                    duration?: number;
                     playbackRate?: number;
                     playerState?: number;
                 };
@@ -244,6 +253,7 @@ export default function WeekStudyClient({
             setPlayerStatsById((prev) => {
                 const existing = prev[playerId] || {
                     currentTime: 0,
+                    duration: 0,
                     playbackRate: 1,
                     playerState: -1,
                 };
@@ -256,6 +266,14 @@ export default function WeekStudyClient({
                     Math.abs(info.currentTime - existing.currentTime) >= 0.4
                 ) {
                     next.currentTime = info.currentTime;
+                    changed = true;
+                }
+
+                if (
+                    typeof info.duration === "number" &&
+                    Math.abs(info.duration - existing.duration) > 0.1
+                ) {
+                    next.duration = info.duration;
                     changed = true;
                 }
 
@@ -393,7 +411,6 @@ export default function WeekStudyClient({
     function handleVideoToggle(
         cardId: string,
         cardTitle: string,
-        linkLabel: string,
         embedUrl: string
     ) {
         const playerId = buildPlayerId(cardId);
@@ -411,7 +428,6 @@ export default function WeekStudyClient({
             cardId,
             playerId,
             embedUrl,
-            label: linkLabel,
             title: cardTitle,
         });
 
@@ -419,6 +435,7 @@ export default function WeekStudyClient({
             ...prev,
             [playerId]: prev[playerId] || {
                 currentTime: 0,
+                duration: 0,
                 playbackRate: 1,
                 playerState: -1,
             },
@@ -429,6 +446,7 @@ export default function WeekStudyClient({
         postPlayerMessage(playerId, { event: "listening", id: playerId });
         sendPlayerCommand(playerId, "playVideo");
         sendPlayerCommand(playerId, "getCurrentTime");
+        sendPlayerCommand(playerId, "getDuration");
         sendPlayerCommand(playerId, "getPlaybackRate");
         sendPlayerCommand(playerId, "getPlayerState");
     }
@@ -458,6 +476,7 @@ export default function WeekStudyClient({
             [activeVideo.playerId]: {
                 ...(prev[activeVideo.playerId] || {
                     currentTime: 0,
+                    duration: 0,
                     playbackRate: 1,
                     playerState: -1,
                 }),
@@ -475,10 +494,36 @@ export default function WeekStudyClient({
             [activeVideo.playerId]: {
                 ...(prev[activeVideo.playerId] || {
                     currentTime: 0,
+                    duration: 0,
                     playbackRate: 1,
                     playerState: -1,
                 }),
                 playbackRate: rate,
+            },
+        }));
+    }
+
+    function handleTimelineChange(percentValue: number) {
+        if (!activeVideo) return;
+        const stats = playerStatsById[activeVideo.playerId];
+        const duration = stats?.duration || 0;
+        if (duration <= 0) return;
+
+        const normalizedPercent = Math.max(0, Math.min(100, percentValue));
+        const targetTime = (duration * normalizedPercent) / 100;
+
+        sendPlayerCommand(activeVideo.playerId, "seekTo", [targetTime, true]);
+
+        setPlayerStatsById((prev) => ({
+            ...prev,
+            [activeVideo.playerId]: {
+                ...(prev[activeVideo.playerId] || {
+                    currentTime: 0,
+                    duration,
+                    playbackRate: 1,
+                    playerState: -1,
+                }),
+                currentTime: targetTime,
             },
         }));
     }
@@ -488,6 +533,24 @@ export default function WeekStudyClient({
         : undefined;
     const isActivePlaying = activePlayerStats?.playerState === 1;
     const activePlaybackRate = activePlayerStats?.playbackRate || 1;
+    const activeDuration = activePlayerStats?.duration || 0;
+    const activeCurrentTime = activePlayerStats?.currentTime || 0;
+    const activeProgressPercent =
+        activeDuration > 0 ? (activeCurrentTime / activeDuration) * 100 : 0;
+    const showPauseOverlay =
+        activePlayerStats?.playerState === 2 || activePlayerStats?.playerState === 0;
+
+    useEffect(() => {
+        if (!activeVideo) return;
+
+        const interval = window.setInterval(() => {
+            sendPlayerCommand(activeVideo.playerId, "getCurrentTime");
+            sendPlayerCommand(activeVideo.playerId, "getDuration");
+            sendPlayerCommand(activeVideo.playerId, "getPlayerState");
+        }, 800);
+
+        return () => window.clearInterval(interval);
+    }, [activeVideo]);
 
     return (
         <div className={styles.wrapper}>
@@ -586,7 +649,6 @@ export default function WeekStudyClient({
                                                                 handleVideoToggle(
                                                                     card.cardId,
                                                                     card.title,
-                                                                    link.label,
                                                                     embedUrl
                                                                 )
                                                             }
@@ -630,6 +692,32 @@ export default function WeekStudyClient({
                                     {activeVideo?.cardId === card.cardId && (
                                         <div className={styles.videoEmbedWrap}>
                                             <div className={styles.videoControlPanel}>
+                                                <div className={styles.videoTimelineRow}>
+                                                    <span className={styles.videoTimeLabel}>
+                                                        {formatSeconds(activeCurrentTime)}
+                                                    </span>
+                                                    <input
+                                                        type="range"
+                                                        min={0}
+                                                        max={100}
+                                                        step={0.1}
+                                                        value={Math.max(
+                                                            0,
+                                                            Math.min(100, activeProgressPercent)
+                                                        )}
+                                                        onChange={(event) =>
+                                                            handleTimelineChange(
+                                                                Number(event.target.value)
+                                                            )
+                                                        }
+                                                        className={styles.videoTimeline}
+                                                        aria-label="Barra de progresso do video"
+                                                    />
+                                                    <span className={styles.videoTimeLabel}>
+                                                        {formatSeconds(activeDuration)}
+                                                    </span>
+                                                </div>
+
                                                 <div className={styles.videoControlGroup}>
                                                     <button
                                                         type="button"
@@ -715,9 +803,20 @@ export default function WeekStudyClient({
                                                     <span
                                                         className={styles.videoClickShieldBottom}
                                                     ></span>
-                                                    <span
-                                                        className={styles.videoYoutubeMask}
-                                                    ></span>
+                                                    {showPauseOverlay && (
+                                                        <button
+                                                            type="button"
+                                                            className={styles.videoPauseOverlay}
+                                                            onClick={handlePlayPause}
+                                                            aria-label="Reproduzir video"
+                                                        >
+                                                            <span
+                                                                className={styles.videoPauseOverlayIcon}
+                                                            >
+                                                                <i className="fas fa-play"></i>
+                                                            </span>
+                                                        </button>
+                                                    )}
                                                     <span className={styles.videoWatermark}>
                                                         EA Premium Player
                                                     </span>

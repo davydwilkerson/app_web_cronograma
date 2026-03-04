@@ -4,19 +4,19 @@
 
 .main {
   flex: 1;
-  padding: 18px 0 54px;
+  padding: var(--space-lg) 0 var(--space-3xl);
 }
 
 .footer {
-  padding: 0 0 22px;
+  padding: 0 0 var(--space-lg);
 }
 
 @media (max-width: 720px) {
   .main {
-    padding: 12px 0 42px;
+    padding: var(--space-md) 0 var(--space-2xl);
   }
 
   .footer {
-    padding-bottom: 16px;
+    padding-bottom: var(--space-md);
   }
 }

@@ -1,7 +1,7 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: var(--space-md);
 }
 
 .progressSection {
@@ -9,7 +9,7 @@
   border-radius: 20px;
   background: var(--card-bg);
   box-shadow: var(--shadow-sm);
-  padding: 16px;
+  padding: var(--section-padding);
   animation: fadeUp 280ms ease both;
 }
 
@@ -17,7 +17,7 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  gap: 12px;
+  gap: var(--space-sm);
   flex-wrap: wrap;
 }
 
@@ -36,7 +36,7 @@
 }
 
 .progressTrack {
-  margin-top: 11px;
+  margin-top: var(--space-sm);
   width: 100%;
   height: 12px;
   border-radius: 999px;
@@ -53,11 +53,11 @@
 }
 
 .progressFooter {
-  margin-top: 9px;
+  margin-top: var(--space-xs);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-sm);
   color: var(--muted);
   font-size: 0.82rem;
 }
@@ -74,15 +74,15 @@
   background: rgba(184, 71, 71, 0.1);
   color: #9f3030;
   font-size: 0.82rem;
-  padding: 10px 12px;
+  padding: var(--space-xs) var(--space-sm);
 }
 
 .daysNav {
   display: flex;
-  gap: 8px;
+  gap: var(--space-xs);
   flex-wrap: nowrap;
   overflow-x: auto;
-  padding-bottom: 2px;
+  padding-bottom: var(--space-2xs);
   scrollbar-width: thin;
 }
 
@@ -116,18 +116,18 @@
 .cardsSection {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-sm);
 }
 
 .dayHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-sm);
   border: 1px solid rgba(9, 42, 61, 0.1);
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.62);
-  padding: 10px 12px;
+  padding: var(--space-xs) var(--space-sm);
 }
 
 .dayHeader h3 {
@@ -147,7 +147,7 @@
 .cardsList {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-sm);
 }
 
 .studyCard {
@@ -156,7 +156,7 @@
   border-radius: 16px;
   background: var(--card-bg);
   box-shadow: var(--shadow-sm);
-  padding: 14px;
+  padding: var(--card-padding);
   animation: fadeUp 260ms ease both;
 }
 
@@ -202,7 +202,7 @@
 
 .cardHeader {
   display: flex;
-  gap: 10px;
+  gap: var(--space-sm);
   align-items: flex-start;
 }
 
@@ -252,17 +252,17 @@
 }
 
 .cardTitle {
-  margin: 8px 0 0;
+  margin: var(--space-xs) 0 0;
   color: var(--accent);
   font-size: 0.96rem;
   line-height: 1.42;
 }
 
 .cardLinks {
-  margin-top: 12px;
+  margin-top: var(--space-sm);
   display: flex;
   flex-wrap: wrap;
-  gap: 7px;
+  gap: var(--space-xs);
 }
 
 .cardLink {
@@ -287,18 +287,18 @@
 }
 
 .progressList {
-  margin-top: 12px;
+  margin-top: var(--space-sm);
   border-top: 1px solid rgba(9, 42, 61, 0.08);
-  padding-top: 12px;
+  padding-top: var(--space-sm);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-xs);
 }
 
 .progressItem {
   display: grid;
   grid-template-columns: minmax(120px, 180px) 1fr auto;
-  gap: 10px;
+  gap: var(--space-sm);
   align-items: center;
 }
 
@@ -335,17 +335,17 @@
 }
 
 .weekNav {
-  margin-top: 2px;
+  margin-top: var(--space-2xs);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-sm);
   flex-wrap: wrap;
 }
 
 .weekNavLinks {
   display: flex;
-  gap: 8px;
+  gap: var(--space-xs);
   flex-wrap: wrap;
 }
 
@@ -378,7 +378,7 @@
 @media (max-width: 760px) {
   .progressItem {
     grid-template-columns: 1fr;
-    gap: 6px;
+    gap: var(--space-xs);
   }
 
   .progressItem strong {

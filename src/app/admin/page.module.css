@@ -1,7 +1,7 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: var(--space-md);
 }
 
 .hero {
@@ -11,11 +11,11 @@
     linear-gradient(155deg, rgba(255, 255, 255, 0.95), rgba(244, 251, 255, 0.92)),
     var(--card-bg);
   box-shadow: var(--shadow-sm);
-  padding: clamp(16px, 3vw, 24px);
+  padding: var(--section-padding);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 12px;
+  gap: var(--space-sm);
   flex-wrap: wrap;
 }
 
@@ -29,7 +29,7 @@
 }
 
 .hero h1 {
-  margin: 8px 0 0;
+  margin: var(--space-xs) 0 0;
   color: var(--accent);
   font-family: var(--font-fraunces), Georgia, serif;
   font-size: clamp(1.45rem, 3.2vw, 2rem);
@@ -37,7 +37,7 @@
 }
 
 .hero p {
-  margin: 9px 0 0;
+  margin: var(--space-sm) 0 0;
   color: var(--muted);
   font-size: 0.9rem;
 }
@@ -45,7 +45,7 @@
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(140px, 1fr));
-  gap: 10px;
+  gap: var(--space-sm);
 }
 
 .statCard {
@@ -53,10 +53,10 @@
   border-radius: 16px;
   background: var(--card-bg);
   box-shadow: var(--shadow-sm);
-  padding: 14px;
+  padding: var(--card-padding);
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--space-xs);
 }
 
 .statCard span {
@@ -82,12 +82,12 @@
 }
 
 .sectionHead {
-  padding: 12px 14px;
+  padding: var(--space-sm) var(--space-md);
   border-bottom: 1px solid var(--border-subtle);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-sm);
 }
 
 .sectionHead h2 {
@@ -116,7 +116,7 @@
 .table th,
 .table td {
   border-bottom: 1px solid var(--border-subtle);
-  padding: 11px 13px;
+  padding: var(--space-sm) var(--space-md);
   text-align: left;
   font-size: 0.82rem;
 }

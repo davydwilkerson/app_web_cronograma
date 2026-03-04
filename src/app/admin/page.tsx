@@ -60,7 +60,7 @@ export default async function AdminPage() {
         ]);
 
     return (
-        <div className={styles.page}>
+        <div className={`container ${styles.page}`}>
             <section className={styles.hero}>
                 <div>
                     <p className={styles.kicker}>Painel Admin</p>

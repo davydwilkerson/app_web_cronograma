@@ -78,6 +78,28 @@
   padding: var(--space-xs) var(--space-sm);
 }
 
+.xpBanner {
+  margin: 0;
+  width: fit-content;
+  max-width: 100%;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(20, 131, 95, 0.34);
+  background: rgba(20, 131, 95, 0.11);
+  color: #0d6a4b;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  padding: 6px 12px;
+  animation: fadeUp 220ms ease both;
+}
+
+.xpBanner i {
+  color: #118660;
+}
+
 .daysNav {
   display: flex;
   gap: var(--space-xs);
@@ -522,7 +544,7 @@
   z-index: 4;
   border: none;
   cursor: pointer;
-  background: rgba(2, 10, 16, 0.9);
+  background: rgba(0, 0, 0, 0.995);
   display: grid;
   place-items: center;
 }

@@ -1,3 +1,7 @@
+.gamificationSection {
+  margin-bottom: var(--space-lg);
+}
+
 .welcomeSection {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
@@ -132,6 +136,10 @@
 @media (max-width: 920px) {
   .welcomeSection {
     grid-template-columns: 1fr;
+  }
+
+  .gamificationSection {
+    margin-bottom: var(--space-md);
   }
 }
 

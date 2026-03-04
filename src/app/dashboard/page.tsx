@@ -1,9 +1,11 @@
 import { redirect } from "next/navigation";
 import { requireAuth, evaluateAccess } from "@/lib/auth/guards";
 import { prisma } from "@/lib/prisma";
+import { getGamificationSnapshot } from "@/lib/gamification";
 import { TOTAL_WEEKS } from "@/types/content";
 import WeekGrid from "@/components/dashboard/WeekGrid";
 import TrialBanner from "@/components/dashboard/TrialBanner";
+import GamificationPanel from "@/components/dashboard/GamificationPanel";
 import styles from "./page.module.css";
 
 export const metadata = {
@@ -32,6 +34,8 @@ export default async function DashboardPage() {
                 weekNum: true,
                 cardId: true,
                 isCompleted: true,
+                xpEarned: true,
+                updatedAt: true,
             },
         }),
         prisma.weekContent.findMany({
@@ -96,6 +100,17 @@ export default async function DashboardPage() {
         access.isTrial && access.trialExpiresAt
             ? new Intl.DateTimeFormat("pt-BR").format(new Date(access.trialExpiresAt))
             : "";
+    const currentWeek =
+        weeks.find((week) => !week.locked && week.percentage < 100 && week.total_cards > 0)
+            ?.week_num ||
+        weeks.find((week) => !week.locked)?.week_num ||
+        1;
+    const gamification = await getGamificationSnapshot({
+        userId: user.id,
+        currentWeek,
+        progressRows,
+        weekCards,
+    });
 
     return (
         <div className="container">
@@ -103,6 +118,10 @@ export default async function DashboardPage() {
             {access.isTrial && (
                 <TrialBanner expiresAtLabel={trialExpiresAtLabel} />
             )}
+
+            <section className={styles.gamificationSection}>
+                <GamificationPanel snapshot={gamification} variant="full" />
+            </section>
 
             {/* Welcome Section */}
             <section className={styles.welcomeSection}>

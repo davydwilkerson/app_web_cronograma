@@ -7,13 +7,16 @@ import type {
     WeekDayData,
     WeekProgressState,
 } from "@/types/week-study";
+import type { GamificationSnapshot } from "@/types/gamification";
 import { TOTAL_WEEKS } from "@/types/content";
+import GamificationPanel from "./GamificationPanel";
 import styles from "./WeekStudyClient.module.css";
 
 interface WeekStudyClientProps {
     weekNum: number;
     days: WeekDayData[];
     initialProgress: Record<string, WeekProgressState>;
+    initialGamification: GamificationSnapshot;
 }
 
 interface ActiveVideoState {
@@ -199,13 +202,18 @@ export default function WeekStudyClient({
     weekNum,
     days,
     initialProgress,
+    initialGamification,
 }: WeekStudyClientProps) {
     const cardsById = useMemo(() => buildCardMap(days), [days]);
     const allCards = useMemo(() => days.flatMap((day) => day.cards), [days]);
     const [activeDay, setActiveDay] = useState<number>(days[0]?.dayNum ?? 1);
     const [savingCardId, setSavingCardId] = useState<string>("");
     const [errorMessage, setErrorMessage] = useState<string>("");
+    const [xpGainMessage, setXpGainMessage] = useState<string>("");
     const [activeVideo, setActiveVideo] = useState<ActiveVideoState | null>(null);
+    const [gamification, setGamification] = useState<GamificationSnapshot>(
+        initialGamification
+    );
     const [playerStatsById, setPlayerStatsById] = useState<Record<string, PlayerTelemetry>>({});
     const activeVideoRef = useRef<ActiveVideoState | null>(null);
     const [progressByCard, setProgressByCard] = useState<Record<string, WeekProgressState>>(() => {
@@ -219,6 +227,16 @@ export default function WeekStudyClient({
     useEffect(() => {
         activeVideoRef.current = activeVideo;
     }, [activeVideo]);
+
+    useEffect(() => {
+        setGamification(initialGamification);
+    }, [initialGamification]);
+
+    useEffect(() => {
+        if (!xpGainMessage) return;
+        const timeout = window.setTimeout(() => setXpGainMessage(""), 2200);
+        return () => window.clearTimeout(timeout);
+    }, [xpGainMessage]);
 
     useEffect(() => {
         function handlePlayerMessage(event: MessageEvent) {
@@ -334,11 +352,13 @@ export default function WeekStudyClient({
             }
 
             const payload = (await response.json()) as {
+                xpDelta?: number;
                 progress?: {
                     cardId: string;
                     isCompleted: boolean;
                     progressData?: Record<string, number>;
                 };
+                gamification?: GamificationSnapshot;
             };
 
             const card = cardsById.get(cardId);
@@ -353,6 +373,13 @@ export default function WeekStudyClient({
                 ...prev,
                 [cardId]: normalized,
             }));
+
+            if (payload.gamification) {
+                setGamification(payload.gamification);
+            }
+            if (typeof payload.xpDelta === "number" && payload.xpDelta > 0) {
+                setXpGainMessage(`+${payload.xpDelta} XP`);
+            }
         } catch (error) {
             console.error(error);
             setErrorMessage("Nao foi possivel salvar o progresso. Tente novamente.");
@@ -554,6 +581,8 @@ export default function WeekStudyClient({
 
     return (
         <div className={styles.wrapper}>
+            <GamificationPanel snapshot={gamification} variant="compact" />
+
             <section className={styles.progressSection}>
                 <div className={styles.progressHeader}>
                     <h2>Semana {weekNum}</h2>
@@ -574,6 +603,12 @@ export default function WeekStudyClient({
             </section>
 
             {errorMessage && <p className={styles.errorBanner}>{errorMessage}</p>}
+            {xpGainMessage && (
+                <p className={styles.xpBanner}>
+                    <i className="fas fa-sparkles"></i>
+                    {xpGainMessage}
+                </p>
+            )}
 
             <nav className={styles.daysNav}>
                 {days.map((day) => (

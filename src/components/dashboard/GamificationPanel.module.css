@@ -1,0 +1,471 @@
+.panel {
+  border: 1px solid var(--border-subtle);
+  border-radius: 24px;
+  padding: var(--section-padding);
+  background:
+    radial-gradient(110% 120% at 0% 0%, rgba(31, 94, 129, 0.15), transparent 55%),
+    radial-gradient(90% 120% at 100% 0%, rgba(206, 149, 69, 0.16), transparent 60%),
+    var(--card-bg);
+  box-shadow: var(--shadow-sm);
+  display: grid;
+  gap: var(--space-md);
+  animation: fadeUp 280ms ease both;
+}
+
+.compact {
+  border-radius: 20px;
+}
+
+.hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.kicker {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.hero h2 {
+  margin: var(--space-2xs) 0 0;
+  color: var(--accent);
+  font-size: clamp(1.2rem, 2.4vw, 1.5rem);
+  font-family: var(--font-fraunces), Georgia, serif;
+  line-height: 1.2;
+}
+
+.levelChip {
+  min-height: 52px;
+  border-radius: 14px;
+  border: 1px solid rgba(206, 149, 69, 0.36);
+  background: linear-gradient(120deg, rgba(229, 178, 113, 0.3), rgba(206, 149, 69, 0.25));
+  padding: 8px 12px;
+  display: grid;
+  align-content: center;
+  justify-items: end;
+  gap: 2px;
+}
+
+.levelChip span {
+  color: #78450e;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.levelChip strong {
+  color: #0a3046;
+  font-size: 0.9rem;
+}
+
+.levelTrackWrap {
+  display: grid;
+  gap: 6px;
+}
+
+.levelTrackWrap small {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.levelTrack {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(9, 42, 61, 0.12);
+  overflow: hidden;
+}
+
+.levelTrack span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent-2), var(--gold), var(--gold-2));
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(120px, 1fr));
+  gap: var(--space-xs);
+}
+
+.metricCard {
+  border: 1px solid rgba(9, 42, 61, 0.11);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 10px 12px;
+  display: grid;
+  gap: 4px;
+}
+
+.metricCard span {
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.metricCard strong {
+  color: var(--accent);
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-sm);
+}
+
+.block {
+  border: 1px solid rgba(9, 42, 61, 0.11);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.82);
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.block header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.block h3 {
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.94rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.block h3 i {
+  color: var(--gold);
+}
+
+.block header span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.missionList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.missionList li {
+  border: 1px solid rgba(9, 42, 61, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.72);
+  padding: 8px;
+  display: grid;
+  gap: 5px;
+}
+
+.missionDone {
+  border-color: rgba(20, 131, 95, 0.42);
+  background: rgba(20, 131, 95, 0.08);
+}
+
+.missionHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.missionHead strong {
+  color: var(--accent);
+  font-size: 0.82rem;
+}
+
+.missionHead span {
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.missionList p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.73rem;
+}
+
+.missionList small {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.progressTrack {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(9, 42, 61, 0.12);
+}
+
+.progressTrack span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent-2), var(--gold));
+}
+
+.bossCard {
+  border: 1px solid rgba(9, 42, 61, 0.1);
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(247, 252, 255, 0.87));
+  padding: 10px;
+  display: grid;
+  gap: 6px;
+}
+
+.bossCard p {
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.bossCard strong {
+  color: var(--accent);
+  font-size: 1rem;
+}
+
+.bossCard small {
+  color: var(--muted);
+  font-size: 0.69rem;
+  font-weight: 700;
+}
+
+.chestRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.chestRow p {
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.chestRow small {
+  color: var(--muted);
+  font-size: 0.69rem;
+}
+
+.chestStatus {
+  border: 1px solid rgba(9, 42, 61, 0.16);
+  border-radius: 999px;
+  padding: 4px 8px;
+  color: var(--muted);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.ready {
+  border-color: rgba(20, 131, 95, 0.42);
+  color: #0f6e4f;
+  background: rgba(20, 131, 95, 0.12);
+}
+
+.badges {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 8px;
+}
+
+.badge {
+  border: 1px solid rgba(9, 42, 61, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 8px;
+  display: grid;
+  gap: 4px;
+  align-content: start;
+}
+
+.badge i {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.badge strong {
+  color: var(--accent);
+  font-size: 0.78rem;
+}
+
+.badge span {
+  color: var(--muted);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.badgeOn {
+  border-color: rgba(206, 149, 69, 0.46);
+  background: linear-gradient(140deg, rgba(229, 178, 113, 0.2), rgba(206, 149, 69, 0.12));
+}
+
+.badgeOn i {
+  color: #8e5a16;
+}
+
+.rankList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+
+.rankList li {
+  border: 1px solid rgba(9, 42, 61, 0.1);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.76);
+  padding: 8px 10px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.rankList li span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.rankList li strong {
+  color: var(--accent);
+  font-size: 0.8rem;
+}
+
+.rankList li small {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.me {
+  border-color: rgba(206, 149, 69, 0.46) !important;
+  background: linear-gradient(140deg, rgba(229, 178, 113, 0.2), rgba(206, 149, 69, 0.12)) !important;
+}
+
+.journeyBlock {
+  grid-column: 1 / -1;
+}
+
+.journeyGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(76px, 1fr));
+  gap: 8px;
+}
+
+.journeyNode {
+  border: 1px solid rgba(9, 42, 61, 0.1);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.74);
+  min-height: 50px;
+  padding: 7px 6px;
+  display: grid;
+  place-items: center;
+  gap: 2px;
+}
+
+.journeyNode span {
+  color: var(--muted);
+  font-size: 0.65rem;
+  font-weight: 800;
+}
+
+.journeyNode strong {
+  color: var(--accent);
+  font-size: 0.74rem;
+}
+
+.started {
+  border-color: rgba(31, 94, 129, 0.36);
+}
+
+.done {
+  border-color: rgba(20, 131, 95, 0.42);
+  background: rgba(20, 131, 95, 0.1);
+}
+
+.current {
+  outline: 2px solid rgba(206, 149, 69, 0.42);
+  outline-offset: 1px;
+}
+
+@media (max-width: 1050px) {
+  .metrics {
+    grid-template-columns: repeat(3, minmax(120px, 1fr));
+  }
+}
+
+@media (max-width: 840px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .journeyGrid {
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .panel {
+    border-radius: 18px;
+  }
+
+  .metrics {
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+  }
+
+  .block {
+    border-radius: 14px;
+  }
+
+  .badges {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  .hero h2 {
+    font-size: 1.1rem;
+  }
+
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .badges {
+    grid-template-columns: 1fr;
+  }
+}
+

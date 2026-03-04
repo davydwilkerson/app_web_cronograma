@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getGamificationSnapshot } from "@/lib/gamification";
+import { calculateCardXp } from "@/lib/gamification-balance";
 import { TOTAL_WEEKS } from "@/types/content";
 
 const progressSchema = z.object({
@@ -61,6 +63,7 @@ export async function POST(request: NextRequest) {
             select: {
                 progressData: true,
                 isCompleted: true,
+                xpEarned: true,
             },
         });
 
@@ -75,6 +78,13 @@ export async function POST(request: NextRequest) {
         const computedCompleted =
             hasProgress && Object.values(mergedProgress).every((value) => value >= 100);
         const nextIsCompleted = isCompleted ?? computedCompleted;
+        const totalCardXp = calculateCardXp({
+            progressData: mergedProgress,
+            isCompleted: nextIsCompleted,
+            isPerfect: computedCompleted,
+        });
+        const previousCardXp = existing?.xpEarned ?? 0;
+        const xpDelta = totalCardXp - previousCardXp;
 
         const saved = await prisma.userProgress.upsert({
             where: {
@@ -87,7 +97,7 @@ export async function POST(request: NextRequest) {
             update: {
                 progressData: mergedProgress,
                 isCompleted: nextIsCompleted,
-                xpEarned: nextIsCompleted ? 10 : 0,
+                xpEarned: totalCardXp,
             },
             create: {
                 userId,
@@ -95,26 +105,35 @@ export async function POST(request: NextRequest) {
                 cardId,
                 progressData: mergedProgress,
                 isCompleted: nextIsCompleted,
-                xpEarned: nextIsCompleted ? 10 : 0,
+                xpEarned: totalCardXp,
             },
             select: {
                 weekNum: true,
                 cardId: true,
                 isCompleted: true,
                 progressData: true,
+                xpEarned: true,
                 updatedAt: true,
             },
         });
 
+        const gamification = await getGamificationSnapshot({
+            userId,
+            currentWeek: weekNum,
+        });
+
         return NextResponse.json({
             success: true,
+            xpDelta,
             progress: {
                 weekNum: saved.weekNum,
                 cardId: saved.cardId,
                 isCompleted: saved.isCompleted,
                 progressData: normalizeProgressData(saved.progressData),
+                xpEarned: saved.xpEarned,
                 updatedAt: saved.updatedAt.toISOString(),
             },
+            gamification,
         });
     } catch (error) {
         console.error("Progress API error:", error);

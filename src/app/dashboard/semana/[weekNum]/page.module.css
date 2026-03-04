@@ -80,10 +80,40 @@
   font-size: 0.83rem;
 }
 
+@media (max-width: 900px) {
+  .page {
+    gap: var(--space-sm);
+  }
+
+  .hero::after {
+    width: 160px;
+    height: 160px;
+    right: -54px;
+    top: -70px;
+  }
+}
+
 @media (max-width: 620px) {
   .hero,
   .emptyState {
     border-radius: 16px;
+  }
+
+  .hero::after {
+    width: 130px;
+    height: 130px;
+    right: -42px;
+    top: -52px;
+  }
+}
+
+@media (max-width: 420px) {
+  .kicker {
+    font-size: 0.68rem;
+  }
+
+  .subtitle {
+    font-size: 0.84rem;
   }
 }
 

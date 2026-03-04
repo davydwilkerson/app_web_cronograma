@@ -6,39 +6,56 @@
 }
 
 .card {
-  width: min(680px, 100%);
-  background: var(--card-bg);
-  border-radius: var(--radius-lg);
+  width: min(700px, 100%);
+  border-radius: 28px;
   border: 1px solid var(--border-subtle);
   box-shadow: var(--shadow-md);
-  padding: 28px;
+  padding: clamp(20px, 4vw, 32px);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.96), rgba(244, 251, 255, 0.94)),
+    var(--card-bg);
+  animation: fadeUp 320ms ease both;
 }
 
 .kicker {
   margin: 0;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
   color: var(--muted);
-  font-size: 0.75rem;
-  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+  font-weight: 800;
 }
 
 .card h1 {
   margin: 8px 0 0;
-  font-size: clamp(1.6rem, 4vw, 2.2rem);
-  font-family: "Playfair Display", serif;
   color: var(--accent);
+  font-family: var(--font-fraunces), Georgia, serif;
+  letter-spacing: -0.01em;
+  font-size: clamp(1.55rem, 4vw, 2.3rem);
+  line-height: 1.18;
 }
 
 .card p {
   margin: 12px 0 0;
   color: var(--muted);
-  font-size: 0.96rem;
+  font-size: 0.92rem;
+  max-width: 58ch;
 }
 
 .actions {
-  margin-top: 22px;
+  margin-top: 20px;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
+
+@media (max-width: 640px) {
+  .card {
+    border-radius: 18px;
+  }
+
+  .actions a {
+    width: 100%;
+  }
+}
+

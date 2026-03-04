@@ -1,21 +1,22 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 14px;
 }
 
 .progressSection {
-  background: var(--card-bg);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius);
-  padding: 20px;
+  border-radius: 20px;
+  background: var(--card-bg);
   box-shadow: var(--shadow-sm);
+  padding: 16px;
+  animation: fadeUp 280ms ease both;
 }
 
 .progressHeader {
   display: flex;
-  align-items: baseline;
   justify-content: space-between;
+  align-items: baseline;
   gap: 12px;
   flex-wrap: wrap;
 }
@@ -23,121 +24,148 @@
 .progressHeader h2 {
   margin: 0;
   color: var(--accent);
-  font-family: "Playfair Display", serif;
-  font-size: 1.6rem;
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: clamp(1.3rem, 2.7vw, 1.8rem);
+  letter-spacing: -0.01em;
 }
 
 .progressHeader span {
   color: var(--muted);
-  font-size: 0.92rem;
+  font-size: 0.85rem;
+  font-weight: 700;
 }
 
 .progressTrack {
+  margin-top: 11px;
+  width: 100%;
   height: 12px;
-  margin-top: 12px;
   border-radius: 999px;
   overflow: hidden;
   background: var(--bg-alt);
 }
 
 .progressFill {
+  width: 0;
   height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(120deg, var(--gold), var(--gold-2));
-  transition: width 220ms ease;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent-2), var(--gold), var(--gold-2));
+  transition: width 340ms ease;
 }
 
 .progressFooter {
+  margin-top: 9px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
+  gap: 10px;
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 0.82rem;
 }
 
 .progressFooter strong {
   color: var(--accent);
-  font-size: 1rem;
+  font-size: 0.95rem;
 }
 
 .errorBanner {
   margin: 0;
-  border: 1px solid rgba(239, 68, 68, 0.25);
-  background: rgba(239, 68, 68, 0.1);
-  color: #991b1b;
-  padding: 10px 14px;
   border-radius: 12px;
-  font-size: 0.88rem;
+  border: 1px solid rgba(184, 71, 71, 0.28);
+  background: rgba(184, 71, 71, 0.1);
+  color: #9f3030;
+  font-size: 0.82rem;
+  padding: 10px 12px;
 }
 
 .daysNav {
   display: flex;
-  flex-wrap: wrap;
   gap: 8px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: thin;
 }
 
 .dayBtn {
+  flex: 0 0 auto;
+  min-width: 56px;
+  min-height: 38px;
+  border-radius: 999px;
   border: 1px solid var(--border-subtle);
   background: var(--card-bg);
   color: var(--muted);
-  border-radius: 999px;
-  padding: 10px 14px;
-  font-weight: 600;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
   cursor: pointer;
-  transition: all var(--transition);
+  transition: color var(--transition), border-color var(--transition), background var(--transition), transform var(--transition);
 }
 
 .dayBtn:hover {
   color: var(--accent);
-  border-color: var(--gold);
+  border-color: rgba(31, 94, 129, 0.3);
 }
 
 .dayBtnActive {
-  color: #063351;
-  border-color: var(--gold);
-  background: linear-gradient(120deg, var(--gold), var(--gold-2));
+  color: #0a3147;
+  border-color: rgba(206, 149, 69, 0.42);
+  background: linear-gradient(120deg, rgba(229, 178, 113, 0.38), rgba(206, 149, 69, 0.32));
+  transform: translateY(-1px);
 }
 
 .cardsSection {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .dayHeader {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
   gap: 10px;
+  border: 1px solid rgba(9, 42, 61, 0.1);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.62);
+  padding: 10px 12px;
 }
 
 .dayHeader h3 {
   margin: 0;
-  font-family: "Playfair Display", serif;
   color: var(--accent);
-  font-size: 1.35rem;
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: 1.2rem;
+  letter-spacing: -0.01em;
 }
 
 .dayHeader span {
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 700;
 }
 
 .cardsList {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .studyCard {
-  background: var(--card-bg);
   border: 1px solid var(--border-subtle);
   border-left-width: 5px;
-  border-left-color: var(--gold);
-  border-radius: var(--radius);
-  padding: 18px;
+  border-radius: 16px;
+  background: var(--card-bg);
   box-shadow: var(--shadow-sm);
+  padding: 14px;
+  animation: fadeUp 260ms ease both;
+}
+
+.studyCard:nth-child(odd) {
+  animation-delay: 40ms;
+}
+
+.studyCard:nth-child(even) {
+  animation-delay: 90ms;
 }
 
 .portugues {
@@ -174,101 +202,110 @@
 
 .cardHeader {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   align-items: flex-start;
 }
 
 .cardCheckbox {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  border: 2px solid rgba(9, 31, 47, 0.22);
-  background: var(--card-bg);
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  border: 2px solid rgba(9, 42, 61, 0.26);
+  background: #fff;
   color: transparent;
-  cursor: pointer;
   flex-shrink: 0;
+  cursor: pointer;
+  transition: border-color var(--transition), background var(--transition), color var(--transition), transform var(--transition);
+}
+
+.cardCheckbox:hover {
+  transform: translateY(-1px);
 }
 
 .cardCheckbox i {
-  font-size: 0.78rem;
+  font-size: 0.72rem;
 }
 
 .cardChecked {
-  border-color: var(--sus1);
-  background: var(--sus1);
+  border-color: var(--success);
+  background: var(--success);
   color: #fff;
 }
 
 .cardInfo {
-  flex: 1;
   min-width: 0;
+  flex: 1;
 }
 
 .disciplineBadge {
   display: inline-flex;
   align-items: center;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--accent);
-  background: rgba(9, 31, 47, 0.06);
   border-radius: 999px;
-  padding: 4px 10px;
+  border: 1px solid rgba(9, 42, 61, 0.16);
+  background: rgba(9, 42, 61, 0.06);
+  padding: 3px 9px;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .cardTitle {
   margin: 8px 0 0;
   color: var(--accent);
-  font-size: 1rem;
-  line-height: 1.4;
+  font-size: 0.96rem;
+  line-height: 1.42;
 }
 
 .cardLinks {
-  margin-top: 14px;
+  margin-top: 12px;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 7px;
 }
 
 .cardLink {
+  min-height: 34px;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
+  gap: 7px;
   border-radius: 999px;
-  border: 1px solid var(--border-subtle);
+  border: 1px solid rgba(9, 42, 61, 0.12);
+  padding: 0 11px;
   color: var(--muted);
-  font-size: 0.82rem;
-  background: var(--card-bg);
+  font-size: 0.74rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.72);
 }
 
 .cardLinkPrimary {
-  color: #063351;
-  border-color: var(--gold);
-  background: linear-gradient(120deg, var(--gold), var(--gold-2));
-  font-weight: 600;
+  color: #0a3046;
+  border-color: rgba(206, 149, 69, 0.48);
+  background: linear-gradient(120deg, rgba(229, 178, 113, 0.4), rgba(206, 149, 69, 0.34));
+  font-weight: 700;
 }
 
 .progressList {
-  margin-top: 16px;
-  padding-top: 14px;
-  border-top: 1px solid var(--border-subtle);
+  margin-top: 12px;
+  border-top: 1px solid rgba(9, 42, 61, 0.08);
+  padding-top: 12px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .progressItem {
   display: grid;
-  grid-template-columns: minmax(120px, 190px) 1fr auto;
-  align-items: center;
+  grid-template-columns: minmax(120px, 180px) 1fr auto;
   gap: 10px;
+  align-items: center;
 }
 
 .progressItemLabel {
   color: var(--accent);
-  font-size: 0.85rem;
+  font-size: 0.78rem;
+  font-weight: 600;
 }
 
 .progressButton {
@@ -277,26 +314,28 @@
   border-radius: 999px;
   overflow: hidden;
   background: var(--bg-alt);
-  cursor: pointer;
   padding: 0;
+  cursor: pointer;
 }
 
 .progressItemFill {
   display: block;
   height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(120deg, var(--gold), var(--gold-2));
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent-2), var(--gold));
+  transition: width 200ms ease;
 }
 
 .progressItem strong {
-  min-width: 44px;
   color: var(--accent);
+  min-width: 42px;
   text-align: right;
-  font-size: 0.84rem;
+  font-size: 0.75rem;
+  font-weight: 800;
 }
 
 .weekNav {
-  margin-top: 8px;
+  margin-top: 2px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -306,42 +345,63 @@
 
 .weekNavLinks {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
 .weekNavButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
+  min-height: 40px;
   border-radius: 999px;
+  padding: 0 14px;
   border: 1px solid var(--border-subtle);
   background: var(--card-bg);
   color: var(--muted);
-  font-size: 0.85rem;
-  transition: all var(--transition);
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: border-color var(--transition), color var(--transition), background var(--transition), transform var(--transition);
 }
 
 .weekNavButton:hover {
-  border-color: var(--gold);
   color: var(--accent);
+  border-color: rgba(31, 94, 129, 0.32);
 }
 
 .weekNavPrimary {
-  color: #063351;
-  border-color: var(--gold);
-  background: linear-gradient(120deg, var(--gold), var(--gold-2));
-  font-weight: 600;
+  color: #0a3046;
+  border-color: rgba(206, 149, 69, 0.52);
+  background: linear-gradient(120deg, rgba(229, 178, 113, 0.44), rgba(206, 149, 69, 0.38));
 }
 
-@media (max-width: 720px) {
+@media (max-width: 760px) {
   .progressItem {
     grid-template-columns: 1fr;
+    gap: 6px;
   }
 
   .progressItem strong {
     text-align: left;
   }
+
+  .dayHeader {
+    border-radius: 12px;
+  }
 }
+
+@media (max-width: 560px) {
+  .progressSection,
+  .studyCard {
+    border-radius: 14px;
+  }
+
+  .progressHeader h2 {
+    font-size: 1.22rem;
+  }
+
+  .cardTitle {
+    font-size: 0.9rem;
+  }
+}
+

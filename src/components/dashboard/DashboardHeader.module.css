@@ -1,103 +1,146 @@
 .desktopNav {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .navLink {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 14px;
-    border-radius: 999px;
-    font-size: 0.88rem;
-    font-weight: 500;
-    color: var(--muted);
-    text-decoration: none;
-    transition: all 260ms ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  color: var(--muted);
+  border: 1px solid transparent;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  transition: color var(--transition), border-color var(--transition), background var(--transition), transform var(--transition);
 }
 
 .navLink:hover {
-    color: var(--accent);
-    background: rgba(191, 160, 111, 0.08);
+  color: var(--accent);
+  border-color: rgba(31, 94, 129, 0.24);
+  background: rgba(31, 94, 129, 0.08);
+  transform: translateY(-1px);
+}
+
+.navLinkActive {
+  color: #0b3550;
+  border-color: rgba(206, 149, 69, 0.42);
+  background: linear-gradient(120deg, rgba(229, 178, 113, 0.24), rgba(206, 149, 69, 0.2));
 }
 
 .userSection {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .userInfo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 9px 4px 4px;
+  border-radius: 999px;
+  border: 1px solid rgba(9, 42, 61, 0.1);
+  background: rgba(255, 255, 255, 0.62);
+}
+
+[data-theme="dark"] .userInfo {
+  background: rgba(19, 41, 61, 0.7);
 }
 
 .avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 2px solid var(--gold);
-    object-fit: cover;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(206, 149, 69, 0.65);
+  background: #fff;
 }
 
 .userName {
-    font-size: 0.88rem;
-    font-weight: 600;
-    color: var(--accent);
-    max-width: 120px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  max-width: 168px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.actionButtons {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .menuBtn {
-    display: none;
+  display: none;
 }
 
-/* ── Mobile Nav ── */
 .mobileNav {
-    display: none;
-    flex-direction: column;
-    gap: 4px;
-    padding: 8px 18px 16px;
-    border-top: 1px solid var(--border-subtle);
-    margin-top: 8px;
+  display: none;
+  border-top: 1px solid var(--border-subtle);
+  padding: 10px 12px 12px;
+  margin-top: 8px;
+  gap: 8px;
+  flex-direction: column;
 }
 
 .mobileNavLink {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 14px;
-    border-radius: 12px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--accent);
-    text-decoration: none;
-    transition: background 0.2s ease;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  padding: 0 12px;
+  color: var(--accent);
+  font-size: 0.86rem;
+  font-weight: 700;
+  transition: border-color var(--transition), background var(--transition), color var(--transition);
 }
 
 .mobileNavLink:hover {
-    background: rgba(191, 160, 111, 0.08);
+  border-color: rgba(31, 94, 129, 0.26);
+  background: rgba(31, 94, 129, 0.08);
 }
 
-/* ── Responsive ── */
-@media (max-width: 768px) {
-    .desktopNav {
-        display: none;
-    }
+.mobileNavLinkActive {
+  color: #0b3550;
+  border-color: rgba(206, 149, 69, 0.42);
+  background: linear-gradient(120deg, rgba(229, 178, 113, 0.22), rgba(206, 149, 69, 0.18));
+}
 
-    .userName {
-        display: none;
-    }
+@media (max-width: 920px) {
+  .desktopNav {
+    display: none;
+  }
 
-    .menuBtn {
-        display: inline-flex;
-    }
+  .userName {
+    max-width: 118px;
+  }
 
-    .mobileNav {
-        display: flex;
-    }
+  .menuBtn {
+    display: inline-flex;
+  }
+
+  .mobileNav {
+    display: flex;
+  }
+}
+
+@media (max-width: 640px) {
+  .userInfo {
+    border: none;
+    background: transparent;
+    padding: 0;
+  }
+
+  .userName {
+    display: none;
+  }
 }

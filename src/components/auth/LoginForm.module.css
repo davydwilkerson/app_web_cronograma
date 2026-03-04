@@ -1,233 +1,238 @@
 .formContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-/* ── Google Button ── */
 .googleBtn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    width: 100%;
-    padding: 14px 16px;
-    border: 1px solid var(--border-subtle);
-    border-radius: 999px;
-    background: var(--card-bg);
-    color: var(--accent);
-    font-size: 0.95rem;
-    font-weight: 600;
-    font-family: inherit;
-    cursor: pointer;
-    transition: all 260ms ease;
+  width: 100%;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(9, 42, 61, 0.16);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(244, 250, 255, 0.94));
+  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition), background var(--transition);
 }
 
 .googleBtn:hover:not(:disabled) {
-    border-color: #4285f4;
-    background: rgba(66, 133, 244, 0.04);
-    box-shadow: 0 4px 16px rgba(66, 133, 244, 0.15);
-    transform: translateY(-1px);
+  transform: translateY(-1px);
+  border-color: rgba(66, 133, 244, 0.44);
+  box-shadow: 0 12px 24px rgba(66, 133, 244, 0.14);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(240, 248, 255, 0.96));
 }
 
 .googleBtn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+  opacity: 0.65;
+  cursor: not-allowed;
 }
 
-/* ── Divider ── */
 .divider {
-    display: flex;
-    align-items: center;
-    margin: 20px 0;
-    gap: 12px;
+  margin: 18px 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .divider::before,
 .divider::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: var(--border-subtle);
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(9, 42, 61, 0), rgba(9, 42, 61, 0.16), rgba(9, 42, 61, 0));
 }
 
 .divider span {
-    font-size: 0.8rem;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
+  color: var(--muted);
+  font-size: 0.73rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
-/* ── Form ── */
 .form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
 .inputGroup {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .label {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 .input {
-    width: 100%;
-    padding: 14px 16px;
-    border: 1px solid var(--border-subtle);
-    border-radius: 12px;
-    background: var(--bg);
-    color: var(--accent);
-    font-size: 0.95rem;
-    font-family: inherit;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    outline: none;
+  width: 100%;
+  min-height: 48px;
+  border-radius: 13px;
+  border: 1px solid rgba(9, 42, 61, 0.14);
+  background: rgba(245, 251, 255, 0.92);
+  color: var(--text-strong);
+  padding: 0 14px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
 }
 
 .input::placeholder {
-    color: var(--muted);
-    opacity: 0.6;
+  color: rgba(79, 109, 125, 0.7);
 }
 
 .input:focus {
-    border-color: var(--gold);
-    box-shadow: 0 0 0 3px rgba(191, 160, 111, 0.15);
+  border-color: rgba(31, 94, 129, 0.5);
+  box-shadow: 0 0 0 3px rgba(31, 94, 129, 0.14);
+  background: #fff;
 }
 
 .input:disabled {
-    opacity: 0.5;
+  opacity: 0.66;
 }
 
-/* ── Password wrapper ── */
 .passwordWrap {
-    position: relative;
+  position: relative;
 }
 
 .passwordWrap .input {
-    padding-right: 44px;
+  padding-right: 42px;
 }
 
 .eyeBtn {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: var(--muted);
-    cursor: pointer;
-    padding: 4px;
-    font-size: 0.9rem;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color var(--transition), background var(--transition);
 }
 
 .eyeBtn:hover {
-    color: var(--accent);
+  color: var(--accent);
+  background: rgba(31, 94, 129, 0.08);
 }
 
-/* ── Feedback ── */
 .feedback {
-    padding: 12px 14px;
-    border-radius: 10px;
-    font-size: 0.85rem;
-    line-height: 1.4;
-    animation: fadeIn 0.2s ease;
+  border-radius: 11px;
+  padding: 11px 12px;
+  font-size: 0.81rem;
+  line-height: 1.42;
+  border: 1px solid transparent;
 }
 
 .feedbackError {
-    background: rgba(239, 68, 68, 0.08);
-    color: #b91c1c;
-    border: 1px solid rgba(239, 68, 68, 0.12);
+  color: #9f3030;
+  border-color: rgba(184, 71, 71, 0.28);
+  background: rgba(184, 71, 71, 0.1);
 }
 
 .feedbackWarn {
-    background: rgba(245, 158, 11, 0.08);
-    color: #92400e;
-    border: 1px solid rgba(245, 158, 11, 0.12);
+  color: #8b5e1a;
+  border-color: rgba(179, 112, 23, 0.3);
+  background: rgba(179, 112, 23, 0.1);
 }
 
 .feedbackInfo {
-    background: rgba(16, 185, 129, 0.08);
-    color: #047857;
-    border: 1px solid rgba(16, 185, 129, 0.12);
+  color: #0d7c59;
+  border-color: rgba(20, 131, 95, 0.24);
+  background: rgba(20, 131, 95, 0.1);
 }
 
-/* ── Submit Button ── */
 .submitBtn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: 100%;
-    padding: 14px 16px;
-    border: none;
-    border-radius: 999px;
-    background: linear-gradient(120deg, var(--gold), var(--gold-2));
-    color: var(--accent);
-    font-size: 0.95rem;
-    font-weight: 700;
-    font-family: inherit;
-    cursor: pointer;
-    transition: all 260ms ease;
-    box-shadow: 0 6px 20px rgba(191, 160, 111, 0.3);
+  margin-top: 4px;
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid rgba(206, 149, 69, 0.45);
+  border-radius: 14px;
+  color: #092d42;
+  background: linear-gradient(120deg, var(--gold), var(--gold-2));
+  box-shadow: 0 12px 24px rgba(206, 149, 69, 0.24);
+  font-size: 0.91rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition);
 }
 
 .submitBtn:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(191, 160, 111, 0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 16px 28px rgba(206, 149, 69, 0.31);
 }
 
 .submitBtn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+  opacity: 0.65;
+  cursor: not-allowed;
 }
 
-/* ── Mode Links ── */
 .modeLinks {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    margin-top: 16px;
-    flex-wrap: wrap;
+  margin-top: 14px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
 }
 
 .modeLink {
-    background: none;
-    border: none;
-    color: var(--gold);
-    font-size: 0.85rem;
-    font-weight: 600;
-    font-family: inherit;
-    cursor: pointer;
-    padding: 4px;
-    transition: color 0.2s ease;
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--accent-2);
+  font-size: 0.79rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: color var(--transition);
 }
 
 .modeLink:hover {
-    color: var(--gold-2);
+  color: var(--gold);
 }
 
-/* ── Browser Info ── */
 .browserInfo {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    margin-top: 16px;
-    padding: 10px 14px;
-    background: rgba(59, 130, 246, 0.06);
-    border-radius: 10px;
-    font-size: 0.8rem;
-    color: var(--muted);
-    line-height: 1.4;
+  margin-top: 14px;
+  border: 1px solid rgba(31, 94, 129, 0.2);
+  border-radius: 10px;
+  background: rgba(31, 94, 129, 0.08);
+  padding: 10px 12px;
+  display: flex;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: var(--muted);
 }
 
 .browserInfo i {
-    color: #3b82f6;
-    margin-top: 2px;
-    flex-shrink: 0;
+  color: var(--accent-2);
+  margin-top: 1px;
 }
+
+@media (max-width: 580px) {
+  .googleBtn,
+  .submitBtn,
+  .input {
+    min-height: 46px;
+  }
+}
+

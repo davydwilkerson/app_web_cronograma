@@ -1,83 +1,88 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 14px;
 }
 
 .hero {
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius);
-  background: var(--card-bg);
+  border-radius: 22px;
+  background:
+    linear-gradient(155deg, rgba(255, 255, 255, 0.95), rgba(244, 251, 255, 0.92)),
+    var(--card-bg);
   box-shadow: var(--shadow-sm);
-  padding: 20px;
+  padding: clamp(16px, 3vw, 24px);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 14px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
 .kicker {
   margin: 0;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-size: 0.75rem;
-  font-weight: 700;
   color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .hero h1 {
-  margin: 6px 0 0;
-  font-family: "Playfair Display", serif;
+  margin: 8px 0 0;
   color: var(--accent);
-  font-size: 2rem;
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: clamp(1.45rem, 3.2vw, 2rem);
+  letter-spacing: -0.01em;
 }
 
 .hero p {
-  margin: 8px 0 0;
+  margin: 9px 0 0;
   color: var(--muted);
+  font-size: 0.9rem;
 }
 
 .statsGrid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  grid-template-columns: repeat(4, minmax(140px, 1fr));
   gap: 10px;
 }
 
 .statCard {
   border: 1px solid var(--border-subtle);
+  border-radius: 16px;
   background: var(--card-bg);
-  border-radius: 14px;
   box-shadow: var(--shadow-sm);
   padding: 14px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .statCard span {
-  font-size: 0.78rem;
   color: var(--muted);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
+  font-size: 0.68rem;
+  font-weight: 700;
 }
 
 .statCard strong {
   color: var(--accent);
-  font-size: 1.5rem;
-  line-height: 1.1;
+  font-size: 1.52rem;
+  line-height: 1;
 }
 
 .listSection {
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius);
+  border-radius: 18px;
   background: var(--card-bg);
   box-shadow: var(--shadow-sm);
   overflow: hidden;
 }
 
 .sectionHead {
-  padding: 14px 16px;
+  padding: 12px 14px;
   border-bottom: 1px solid var(--border-subtle);
   display: flex;
   justify-content: space-between;
@@ -88,12 +93,14 @@
 .sectionHead h2 {
   margin: 0;
   color: var(--accent);
-  font-size: 1.05rem;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
 }
 
 .sectionHead span {
   color: var(--muted);
-  font-size: 0.84rem;
+  font-size: 0.78rem;
+  font-weight: 700;
 }
 
 .tableWrap {
@@ -102,58 +109,62 @@
 
 .table {
   width: 100%;
-  border-collapse: collapse;
   min-width: 720px;
+  border-collapse: collapse;
 }
 
 .table th,
 .table td {
-  padding: 12px 14px;
   border-bottom: 1px solid var(--border-subtle);
+  padding: 11px 13px;
   text-align: left;
-  font-size: 0.88rem;
+  font-size: 0.82rem;
 }
 
 .table th {
-  font-size: 0.76rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  background: rgba(9, 42, 61, 0.04);
   color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.7rem;
 }
 
 .emailCell {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
 .emailCell strong {
   color: var(--accent);
+  font-size: 0.82rem;
 }
 
 .emailCell span {
-  font-size: 0.78rem;
   color: var(--muted);
+  font-size: 0.74rem;
 }
 
 .statusBadge {
   display: inline-flex;
   align-items: center;
-  padding: 4px 10px;
+  min-height: 24px;
+  padding: 0 10px;
   border-radius: 999px;
-  font-size: 0.74rem;
-  font-weight: 700;
+  font-size: 0.67rem;
+  font-weight: 800;
   text-transform: uppercase;
+  letter-spacing: 0.07em;
 }
 
 .statusActive {
-  background: rgba(16, 185, 129, 0.14);
-  color: #047857;
+  color: #0f7b5a;
+  background: rgba(20, 131, 95, 0.12);
 }
 
 .statusBlocked {
-  background: rgba(239, 68, 68, 0.14);
-  color: #b91c1c;
+  color: #9f3030;
+  background: rgba(184, 71, 71, 0.12);
 }
 
 .emptyRow {
@@ -161,14 +172,20 @@
   text-align: center;
 }
 
-@media (max-width: 980px) {
+@media (max-width: 920px) {
   .statsGrid {
     grid-template-columns: repeat(2, minmax(140px, 1fr));
   }
 }
 
-@media (max-width: 520px) {
+@media (max-width: 560px) {
+  .hero,
+  .listSection {
+    border-radius: 14px;
+  }
+
   .statsGrid {
     grid-template-columns: 1fr;
   }
 }
+

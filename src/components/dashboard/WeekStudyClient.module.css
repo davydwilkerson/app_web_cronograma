@@ -288,6 +288,8 @@
   width: fit-content;
   max-width: 100%;
   min-width: 0;
+  cursor: pointer;
+  font-family: inherit;
 }
 
 .cardLink span {
@@ -297,11 +299,93 @@
   max-width: 20ch;
 }
 
+.videoTrigger {
+  border-color: rgba(31, 94, 129, 0.24);
+}
+
+.videoTriggerActive {
+  color: #0a3046;
+  border-color: rgba(206, 149, 69, 0.52);
+  background: linear-gradient(120deg, rgba(229, 178, 113, 0.36), rgba(206, 149, 69, 0.28));
+}
+
 .cardLinkPrimary {
   color: #0a3046;
   border-color: rgba(206, 149, 69, 0.48);
   background: linear-gradient(120deg, rgba(229, 178, 113, 0.4), rgba(206, 149, 69, 0.34));
   font-weight: 700;
+}
+
+.videoEmbedWrap {
+  margin-top: var(--space-md);
+  border: 1px solid rgba(9, 42, 61, 0.14);
+  border-radius: 14px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.94), rgba(244, 251, 255, 0.9));
+  padding: var(--space-sm);
+}
+
+.videoEmbedHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.videoEmbedHead strong {
+  font-size: 0.82rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.videoCloseBtn {
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid rgba(9, 42, 61, 0.14);
+  border-radius: 999px;
+  background: var(--card-bg);
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.videoCloseBtn:hover {
+  color: var(--accent);
+  border-color: rgba(31, 94, 129, 0.3);
+}
+
+.videoFrame {
+  position: relative;
+  border: 2px solid rgba(206, 149, 69, 0.42);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #061523;
+  aspect-ratio: 16 / 9;
+  box-shadow: 0 14px 28px rgba(6, 21, 35, 0.3);
+}
+
+.videoFrame iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.videoWatermark {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  z-index: 1;
+  pointer-events: none;
+  background: rgba(9, 42, 61, 0.72);
+  color: #f1f7fb;
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .progressList {
@@ -466,6 +550,10 @@
     flex-wrap: wrap;
   }
 
+  .videoEmbedWrap {
+    padding: var(--space-xs);
+  }
+
   .weekNavButton {
     width: 100%;
     justify-content: center;
@@ -523,6 +611,15 @@
 
   .cardLink span {
     max-width: none;
+  }
+
+  .videoEmbedHead {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .videoCloseBtn {
+    width: 100%;
   }
 }
 

@@ -55,6 +55,58 @@ function getLinkIcon(type: string, label: string): string {
     return "fa-info-circle";
 }
 
+function isVideoLink(type: string, label: string): boolean {
+    const normalized = `${type} ${label}`.toLowerCase();
+    return (
+        normalized.includes("video") ||
+        normalized.includes("teoria") ||
+        type === "video"
+    );
+}
+
+function parseYouTubeVideoId(rawUrl: string): string | null {
+    try {
+        const url = new URL(rawUrl);
+        const host = url.hostname.replace(/^www\./, "").toLowerCase();
+
+        if (host === "youtu.be") {
+            const id = url.pathname.split("/").filter(Boolean)[0] || "";
+            return id || null;
+        }
+
+        if (
+            host === "youtube.com" ||
+            host === "m.youtube.com" ||
+            host === "youtube-nocookie.com"
+        ) {
+            if (url.pathname === "/watch") {
+                const id = url.searchParams.get("v") || "";
+                return id || null;
+            }
+
+            if (url.pathname.startsWith("/embed/")) {
+                const id = url.pathname.split("/embed/")[1]?.split("/")[0] || "";
+                return id || null;
+            }
+
+            if (url.pathname.startsWith("/shorts/")) {
+                const id = url.pathname.split("/shorts/")[1]?.split("/")[0] || "";
+                return id || null;
+            }
+        }
+    } catch {
+        return null;
+    }
+
+    return null;
+}
+
+function buildYoutubeEmbedUrl(rawUrl: string): string | null {
+    const videoId = parseYouTubeVideoId(rawUrl);
+    if (!videoId) return null;
+    return `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&fs=0&disablekb=1`;
+}
+
 function defaultProgress(card: WeekCardData): WeekProgressState {
     const progressData: Record<string, number> = {};
     for (const item of card.progressItems) {
@@ -103,6 +155,9 @@ export default function WeekStudyClient({
     const [activeDay, setActiveDay] = useState<number>(days[0]?.dayNum ?? 1);
     const [savingCardId, setSavingCardId] = useState<string>("");
     const [errorMessage, setErrorMessage] = useState<string>("");
+    const [activeVideoByCard, setActiveVideoByCard] = useState<
+        Record<string, string>
+    >({});
     const [progressByCard, setProgressByCard] = useState<Record<string, WeekProgressState>>(() => {
         const seeded: Record<string, WeekProgressState> = {};
         for (const card of allCards) {
@@ -218,6 +273,16 @@ export default function WeekStudyClient({
         void persistCard(card.cardId, nextState);
     }
 
+    function handleVideoToggle(cardId: string, embedUrl: string) {
+        setActiveVideoByCard((prev) => {
+            const isSame = prev[cardId] === embedUrl;
+            return {
+                ...prev,
+                [cardId]: isSame ? "" : embedUrl,
+            };
+        });
+    }
+
     return (
         <div className={styles.wrapper}>
             <section className={styles.progressSection}>
@@ -292,8 +357,40 @@ export default function WeekStudyClient({
 
                                     {card.links.length > 0 && (
                                         <div className={styles.cardLinks}>
-                                            {card.links.map((link, index) =>
-                                                link.url ? (
+                                            {card.links.map((link, index) => {
+                                                const isVideo = isVideoLink(
+                                                    link.type,
+                                                    link.label
+                                                );
+                                                const embedUrl = link.url
+                                                    ? buildYoutubeEmbedUrl(link.url)
+                                                    : null;
+                                                const isSelected =
+                                                    embedUrl &&
+                                                    activeVideoByCard[card.cardId] === embedUrl;
+
+                                                if (isVideo && embedUrl) {
+                                                    return (
+                                                        <button
+                                                            key={`${card.cardId}-link-${index}`}
+                                                            type="button"
+                                                            className={`${styles.cardLink} ${styles.videoTrigger} ${isSelected ? styles.videoTriggerActive : ""}`}
+                                                            onClick={() =>
+                                                                handleVideoToggle(
+                                                                    card.cardId,
+                                                                    embedUrl
+                                                                )
+                                                            }
+                                                        >
+                                                            <i
+                                                                className={`fas ${getLinkIcon(link.type, link.label)}`}
+                                                            ></i>
+                                                            <span>{link.label}</span>
+                                                        </button>
+                                                    );
+                                                }
+
+                                                return link.url ? (
                                                     <a
                                                         key={`${card.cardId}-link-${index}`}
                                                         href={link.url}
@@ -316,8 +413,48 @@ export default function WeekStudyClient({
                                                         ></i>
                                                         <span>{link.label}</span>
                                                     </span>
-                                                )
-                                            )}
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+
+                                    {activeVideoByCard[card.cardId] && (
+                                        <div className={styles.videoEmbedWrap}>
+                                            <div className={styles.videoEmbedHead}>
+                                                <strong>Aula em video</strong>
+                                                <button
+                                                    type="button"
+                                                    className={styles.videoCloseBtn}
+                                                    onClick={() =>
+                                                        setActiveVideoByCard((prev) => ({
+                                                            ...prev,
+                                                            [card.cardId]: "",
+                                                        }))
+                                                    }
+                                                >
+                                                    Fechar
+                                                </button>
+                                            </div>
+
+                                            <div
+                                                className={styles.videoFrame}
+                                                onContextMenu={(event) =>
+                                                    event.preventDefault()
+                                                }
+                                            >
+                                                <iframe
+                                                    src={activeVideoByCard[card.cardId]}
+                                                    title={`${card.title} - video`}
+                                                    loading="lazy"
+                                                    allow="autoplay; encrypted-media; picture-in-picture"
+                                                    allowFullScreen={false}
+                                                    referrerPolicy="strict-origin-when-cross-origin"
+                                                    sandbox="allow-scripts allow-same-origin allow-presentation"
+                                                />
+                                                <span className={styles.videoWatermark}>
+                                                    Plataforma EA
+                                                </span>
+                                            </div>
                                         </div>
                                     )}
 

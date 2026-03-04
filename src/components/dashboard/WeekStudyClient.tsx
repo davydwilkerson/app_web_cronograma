@@ -715,6 +715,9 @@ export default function WeekStudyClient({
                                                     <span
                                                         className={styles.videoClickShieldBottom}
                                                     ></span>
+                                                    <span
+                                                        className={styles.videoYoutubeMask}
+                                                    ></span>
                                                     <span className={styles.videoWatermark}>
                                                         EA Premium Player
                                                     </span>

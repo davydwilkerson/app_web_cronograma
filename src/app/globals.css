@@ -194,9 +194,9 @@ select {
 }
 
 header {
-  position: sticky;
-  top: var(--space-sm);
-  z-index: 1200;
+  position: relative;
+  top: auto;
+  z-index: 1;
   padding-top: var(--space-sm);
 }
 
@@ -470,7 +470,6 @@ header {
 
 @media (max-width: 620px) {
   header {
-    top: var(--space-xs);
     padding-top: var(--space-sm);
   }
 

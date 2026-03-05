@@ -45,6 +45,36 @@ type ScoringModel =
     | "question_value"
     | "weighted_average"
     | "negative_marking";
+type KnowledgeLevel = "iniciante" | "intermediario" | "avancado";
+type AssistantPace = "conservador" | "equilibrado" | "agressivo";
+
+interface ProfileAssistantState {
+    examDate: string;
+    concursoNome: string;
+    cidadeUf: string;
+    weekdayHours: number;
+    saturdayHours: number;
+    sundayHours: number;
+    knowledgeLevel: KnowledgeLevel;
+    pace: AssistantPace;
+    toughestDiscipline: string;
+}
+
+interface QuestionItem {
+    id: string;
+    disciplineKey: string;
+    statement: string;
+    options: string[];
+    answerIndex: number;
+    explanation: string;
+}
+
+interface QuizStats {
+    answered: number;
+    correct: number;
+    streak: number;
+    bestStreak: number;
+}
 
 const PROFILE_CONFIG: Record<
     PlannerProfile,
@@ -121,6 +151,162 @@ const SCORING_MODEL_CONFIG: Record<
             "Nota = (certas x valor) - (erradas x penalidade).",
     },
 };
+
+const KNOWLEDGE_LEVEL_LABEL: Record<KnowledgeLevel, string> = {
+    iniciante: "Iniciante",
+    intermediario: "Intermediario",
+    avancado: "Avancado",
+};
+
+const ASSISTANT_PACE_LABEL: Record<AssistantPace, string> = {
+    conservador: "Conservador",
+    equilibrado: "Equilibrado",
+    agressivo: "Agressivo",
+};
+
+const QUESTION_BANK: QuestionItem[] = [
+    {
+        id: "pt-1",
+        disciplineKey: "portugues",
+        statement: "Na frase 'Haviam muitas vagas', a forma verbal correta e:",
+        options: [
+            "Haviam muitas vagas.",
+            "Havia muitas vagas.",
+            "Houveram muitas vagas.",
+            "Haveriam muitas vagas.",
+        ],
+        answerIndex: 1,
+        explanation: "O verbo haver no sentido de existir e impessoal: Havia.",
+    },
+    {
+        id: "pt-2",
+        disciplineKey: "portugues",
+        statement: "Qual alternativa apresenta regencia correta?",
+        options: [
+            "Assisti o filme ontem.",
+            "Assisti ao filme ontem.",
+            "Assisti no filme ontem.",
+            "Assisti para o filme ontem.",
+        ],
+        answerIndex: 1,
+        explanation: "No sentido de ver, assistir exige preposicao 'a': assistir ao filme.",
+    },
+    {
+        id: "rlm-1",
+        disciplineKey: "rlm",
+        statement: "Se 3 enfermeiros fazem 3 relatorios em 3 horas, quantos relatorios 6 enfermeiros fazem em 6 horas, no mesmo ritmo?",
+        options: ["6", "9", "12", "24"],
+        answerIndex: 2,
+        explanation: "Dobrou profissionais e dobrou tempo: 4 vezes o total inicial (3 x 4 = 12).",
+    },
+    {
+        id: "rlm-2",
+        disciplineKey: "rlm",
+        statement: "Todo fiscal e servidor. Alguns servidores sao enfermeiros. Conclusao valida:",
+        options: [
+            "Todo enfermeiro e fiscal.",
+            "Algum fiscal pode ser enfermeiro.",
+            "Nenhum fiscal e enfermeiro.",
+            "Todo servidor e fiscal.",
+        ],
+        answerIndex: 1,
+        explanation: "A unica conclusao possivel e de possibilidade: algum fiscal pode ser enfermeiro.",
+    },
+    {
+        id: "esp1-1",
+        disciplineKey: "especifica1",
+        statement: "Na classificacao de risco, qual objetivo principal?",
+        options: [
+            "Atender por ordem de chegada.",
+            "Priorizar casos mais graves.",
+            "Reduzir numero de profissionais.",
+            "Encaminhar todos para internacao.",
+        ],
+        answerIndex: 1,
+        explanation: "Classificacao de risco prioriza gravidade e tempo-resposta.",
+    },
+    {
+        id: "esp1-2",
+        disciplineKey: "especifica1",
+        statement: "Qual acao e fundamental para seguranca do paciente?",
+        options: [
+            "Ignorar notificacoes de quase erro.",
+            "Checar identificacao antes de procedimentos.",
+            "Suspender protocolo de higienizacao.",
+            "Registrar apenas eventos graves.",
+        ],
+        answerIndex: 1,
+        explanation: "Identificacao correta reduz erros assistenciais.",
+    },
+    {
+        id: "esp2-1",
+        disciplineKey: "especifica2",
+        statement: "No processo de enfermagem, qual etapa define objetivos e intervencoes?",
+        options: ["Coleta de dados", "Diagnostico", "Planejamento", "Avaliacao"],
+        answerIndex: 2,
+        explanation: "No planejamento sao definidos objetivos e intervencoes.",
+    },
+    {
+        id: "esp2-2",
+        disciplineKey: "especifica2",
+        statement: "A SAE deve ser aplicada em:",
+        options: [
+            "Apenas hospitais privados.",
+            "Todos os servicos de enfermagem.",
+            "Somente UTI.",
+            "Somente atencao basica.",
+        ],
+        answerIndex: 1,
+        explanation: "A SAE e obrigatoria em todos os servicos onde ha enfermagem.",
+    },
+    {
+        id: "sus1-1",
+        disciplineKey: "sus1",
+        statement: "Um dos principios doutrinarios do SUS e:",
+        options: ["Privatizacao", "Universalidade", "Seletividade", "Segmentacao"],
+        answerIndex: 1,
+        explanation: "Universalidade e principio doutrinario do SUS.",
+    },
+    {
+        id: "sus1-2",
+        disciplineKey: "sus1",
+        statement: "A integralidade no SUS significa:",
+        options: [
+            "Atendimento so de alta complexidade.",
+            "Atencao completa e articulada.",
+            "Atendimento apenas de urgencia.",
+            "Acesso por renda.",
+        ],
+        answerIndex: 1,
+        explanation: "Integralidade envolve cuidado completo e continuo.",
+    },
+    {
+        id: "sus2-1",
+        disciplineKey: "sus2",
+        statement: "O controle social no SUS ocorre principalmente por:",
+        options: [
+            "Conselhos e conferencias de saude.",
+            "Somente ministerios.",
+            "Somente camara federal.",
+            "Apenas ouvidoria privada.",
+        ],
+        answerIndex: 0,
+        explanation: "Conselhos e conferencias viabilizam participacao social.",
+    },
+    {
+        id: "sus2-2",
+        disciplineKey: "sus2",
+        statement: "A regionalizacao busca:",
+        options: [
+            "Centralizar tudo em uma cidade.",
+            "Organizar rede por territorios.",
+            "Reduzir acesso da populacao.",
+            "Separar atencao primaria da especializada.",
+        ],
+        answerIndex: 1,
+        explanation: "Regionalizacao organiza fluxos e servicos por territorio.",
+    },
+];
 
 const WEEKDAY_ORDER: Array<{ key: WeekdayKey; label: string }> = [
     { key: "monday", label: "Segunda" },
@@ -432,6 +618,110 @@ function extractWeightsFromEdital(
     return extracted;
 }
 
+function choosePlannerProfile(level: KnowledgeLevel, pace: AssistantPace): PlannerProfile {
+    if (pace === "conservador") return "leve";
+    if (pace === "agressivo") return level === "iniciante" ? "padrao" : "hardcore";
+    if (level === "avancado") return "hardcore";
+    return "padrao";
+}
+
+function inferAutoWeight(
+    discipline: DisciplinePlanInput,
+    maxRemaining: number,
+    toughestDiscipline: string,
+    knowledgeLevel: KnowledgeLevel,
+    concursoNome: string,
+    pace: AssistantPace
+): number {
+    const normalizedConcurso = normalizeText(concursoNome);
+    let score = 1 + (discipline.remainingCards / Math.max(1, maxRemaining)) * 4;
+
+    if (discipline.key === toughestDiscipline) {
+        score += 2.3;
+    }
+
+    if (
+        (discipline.key.startsWith("especifica") || discipline.key === "sus1" || discipline.key === "sus2") &&
+        (normalizedConcurso.includes("cofen") ||
+            normalizedConcurso.includes("enferm") ||
+            normalizedConcurso.includes("fiscal"))
+    ) {
+        score += 1.8;
+    }
+
+    if (knowledgeLevel === "iniciante" && (discipline.key === "portugues" || discipline.key === "rlm")) {
+        score += 0.9;
+    }
+
+    if (knowledgeLevel === "avancado" && discipline.key === "revisao") {
+        score += 0.6;
+    }
+
+    if (pace === "agressivo") {
+        score *= 1.15;
+    }
+    if (pace === "conservador") {
+        score *= 0.9;
+    }
+
+    return clampWeight(score);
+}
+
+function buildQuestionPool(
+    disciplines: DisciplinePlanInput[],
+    disciplineFilter: string
+): QuestionItem[] {
+    const availableKeys = new Set(disciplines.map((discipline) => discipline.key));
+    const filtered = QUESTION_BANK.filter(
+        (question) =>
+            availableKeys.has(question.disciplineKey) &&
+            (disciplineFilter === "all" || question.disciplineKey === disciplineFilter)
+    );
+
+    if (filtered.length > 0) {
+        return filtered;
+    }
+
+    if (disciplineFilter !== "all") {
+        const selectedDiscipline = disciplines.find((discipline) => discipline.key === disciplineFilter);
+        if (selectedDiscipline) {
+            return [
+                {
+                    id: `fallback-${selectedDiscipline.key}`,
+                    disciplineKey: selectedDiscipline.key,
+                    statement: `Qual e a melhor estrategia para evoluir em ${selectedDiscipline.label}?`,
+                    options: [
+                        "Estudar sem revisar e sem resolver questoes.",
+                        "Seguir plano semanal, revisar e medir acertos.",
+                        "Ignorar erros para ganhar velocidade.",
+                        "Trocar de materia todo dia sem criterio.",
+                    ],
+                    answerIndex: 1,
+                    explanation:
+                        "Melhor resultado vem com plano, revisao ativa e acompanhamento de desempenho.",
+                },
+            ];
+        }
+    }
+
+    return [];
+}
+
+function getRandomQuestion(pool: QuestionItem[], usedIds: Set<string>): QuestionItem | null {
+    if (pool.length === 0) return null;
+    const unseen = pool.filter((question) => !usedIds.has(question.id));
+    const source = unseen.length > 0 ? unseen : pool;
+    const index = Math.floor(Math.random() * source.length);
+    return source[index] || null;
+}
+
+function formatDeltaMinutes(deltaMinutes: number): string {
+    const rounded = Math.round(deltaMinutes);
+    if (rounded === 0) return "0 min";
+    const sign = rounded > 0 ? "+" : "-";
+    return `${sign}${formatMinutes(Math.abs(rounded))}`;
+}
+
 function buildDefaultWeightMap(disciplines: PlannerWeightsSeed[]): Record<string, number> {
     return Object.fromEntries(
         disciplines.map((discipline) => [discipline.key, Math.max(1, discipline.remainingCards)])
@@ -505,6 +795,7 @@ export default function SmartStudyPlanner({
     disciplines,
     storageKey,
 }: SmartStudyPlannerProps) {
+    const firstDisciplineKey = disciplines[0]?.key || "";
     const [settings, setSettings] = useState<PlannerSettings>(() =>
         buildInitialSettings(
             disciplines.map((discipline) => ({
@@ -514,8 +805,32 @@ export default function SmartStudyPlanner({
             storageKey
         )
     );
+    const [profileAssistant, setProfileAssistant] = useState<ProfileAssistantState>({
+        examDate: settings.examDate,
+        concursoNome: "",
+        cidadeUf: "",
+        weekdayHours: 3,
+        saturdayHours: 3,
+        sundayHours: 2,
+        knowledgeLevel: "intermediario",
+        pace: "equilibrado",
+        toughestDiscipline: firstDisciplineKey,
+    });
+    const [profileAssistantResult, setProfileAssistantResult] = useState("");
     const [editalDraft, setEditalDraft] = useState("");
     const [assistantResult, setAssistantResult] = useState("");
+    const [rebalanceResult, setRebalanceResult] = useState("");
+    const [quizDiscipline, setQuizDiscipline] = useState<string>("all");
+    const [quizCurrent, setQuizCurrent] = useState<QuestionItem | null>(null);
+    const [quizSelectedOption, setQuizSelectedOption] = useState<number | null>(null);
+    const [quizFeedback, setQuizFeedback] = useState("");
+    const [quizUsedIds, setQuizUsedIds] = useState<string[]>([]);
+    const [quizStats, setQuizStats] = useState<QuizStats>({
+        answered: 0,
+        correct: 0,
+        streak: 0,
+        bestStreak: 0,
+    });
 
     useEffect(() => {
         localStorage.setItem(storageKey, JSON.stringify(settings));
@@ -772,6 +1087,58 @@ export default function SmartStudyPlanner({
 
     const activeProfile = PROFILE_CONFIG[settings.profile];
     const activeScoringModel = SCORING_MODEL_CONFIG[settings.scoringModel];
+    const disciplineLabelMap = useMemo(
+        () =>
+            Object.fromEntries(
+                disciplines.map((discipline) => [discipline.key, discipline.label])
+            ) as Record<string, string>,
+        [disciplines]
+    );
+    const weeklyRebalance = useMemo(() => {
+        if (!metrics.valid || metrics.averageWeeklyMinutes <= 0 || disciplinePlan.length === 0) {
+            return [] as Array<
+                (typeof disciplinePlan)[number] & {
+                    rebalanceFactor: number;
+                    rebalanceShare: number;
+                    rebalanceWeeklyMinutes: number;
+                    deltaMinutes: number;
+                }
+            >;
+        }
+
+        const adjustedRows = disciplinePlan.map((row) => {
+            const riskBoost = row.riskBand === "alto" ? 1.22 : row.riskBand === "medio" ? 1.1 : 0.92;
+            const lagBoost = 1 + row.completionGap * 0.36;
+            const urgencyBoost = 1 + metrics.urgencyLevel * (row.riskBand === "alto" ? 0.2 : 0.1);
+            const rebalanceFactor = Math.max(0.1, riskBoost * lagBoost * urgencyBoost);
+            return {
+                ...row,
+                rebalanceFactor,
+            };
+        });
+
+        const adjustedTotal = adjustedRows.reduce(
+            (sum, row) => sum + row.share * row.rebalanceFactor,
+            0
+        );
+
+        return adjustedRows
+            .map((row) => {
+                const rebalanceShare =
+                    adjustedTotal > 0
+                        ? (row.share * row.rebalanceFactor) / adjustedTotal
+                        : row.share;
+                const rebalanceWeeklyMinutes = metrics.averageWeeklyMinutes * rebalanceShare;
+                const deltaMinutes = rebalanceWeeklyMinutes - row.weeklyMinutes;
+                return {
+                    ...row,
+                    rebalanceShare,
+                    rebalanceWeeklyMinutes,
+                    deltaMinutes,
+                };
+            })
+            .sort((a, b) => Math.abs(b.deltaMinutes) - Math.abs(a.deltaMinutes));
+    }, [disciplinePlan, metrics]);
 
     function updateAvailability(weekday: WeekdayKey, value: string) {
         const next = clampMinutes(Number(value || 0));
@@ -837,6 +1204,146 @@ export default function SmartStudyPlanner({
         );
     }
 
+    function applyProfileAssistantPlan() {
+        if (!profileAssistant.examDate) {
+            setProfileAssistantResult("Informe a data da prova no Assistente de Perfil.");
+            return;
+        }
+
+        const maxRemaining = disciplines.reduce(
+            (max, discipline) => Math.max(max, discipline.remainingCards),
+            1
+        );
+        const nextProfile = choosePlannerProfile(
+            profileAssistant.knowledgeLevel,
+            profileAssistant.pace
+        );
+        const nextWeights: Record<string, number> = {};
+
+        disciplines.forEach((discipline) => {
+            nextWeights[discipline.key] = inferAutoWeight(
+                discipline,
+                maxRemaining,
+                profileAssistant.toughestDiscipline,
+                profileAssistant.knowledgeLevel,
+                profileAssistant.concursoNome,
+                profileAssistant.pace
+            );
+        });
+
+        const weekdayMinutes = clampMinutes(profileAssistant.weekdayHours * 60);
+        const saturdayMinutes = clampMinutes(profileAssistant.saturdayHours * 60);
+        const sundayMinutes = clampMinutes(profileAssistant.sundayHours * 60);
+        const weeklyTotalMinutes = weekdayMinutes * 5 + saturdayMinutes + sundayMinutes;
+
+        setSettings((prev) => ({
+            ...prev,
+            examDate: profileAssistant.examDate,
+            profile: nextProfile,
+            availabilityMinutes: {
+                monday: weekdayMinutes,
+                tuesday: weekdayMinutes,
+                wednesday: weekdayMinutes,
+                thursday: weekdayMinutes,
+                friday: weekdayMinutes,
+                saturday: saturdayMinutes,
+                sunday: sundayMinutes,
+            },
+            weightByDiscipline: nextWeights,
+        }));
+
+        const toughestLabel =
+            disciplineLabelMap[profileAssistant.toughestDiscipline] ||
+            profileAssistant.toughestDiscipline ||
+            "Nao informado";
+        const concursoInfo = profileAssistant.concursoNome
+            ? `${profileAssistant.concursoNome}${profileAssistant.cidadeUf ? ` - ${profileAssistant.cidadeUf}` : ""}`
+            : "Concurso informado";
+
+        setProfileAssistantResult(
+            `Plano automatico aplicado para ${concursoInfo}. Carga semanal: ${formatMinutes(
+                weeklyTotalMinutes
+            )}. Perfil: ${PROFILE_CONFIG[nextProfile].label}. Foco principal: ${toughestLabel}.`
+        );
+    }
+
+    function applyWeeklyRebalance() {
+        if (weeklyRebalance.length === 0) {
+            setRebalanceResult("Ainda nao ha dados suficientes para rebalancear.");
+            return;
+        }
+
+        const weightScale = Math.max(12, disciplines.length * 12);
+        setSettings((prev) => {
+            const nextWeights = { ...prev.weightByDiscipline };
+            weeklyRebalance.forEach((row) => {
+                nextWeights[row.key] = clampWeight(row.rebalanceShare * weightScale);
+            });
+            return {
+                ...prev,
+                weightByDiscipline: nextWeights,
+            };
+        });
+
+        setRebalanceResult(
+            "Rebalanceamento aplicado. Os pesos foram ajustados para priorizar as materias com maior risco nesta semana."
+        );
+    }
+
+    function startOrNextQuestion(nextFilter = quizDiscipline) {
+        const pool = buildQuestionPool(disciplines, nextFilter);
+        if (pool.length === 0) {
+            setQuizCurrent(null);
+            setQuizFeedback("Nao ha questoes disponiveis para este filtro.");
+            return;
+        }
+
+        const usedSet = new Set(quizUsedIds);
+        const question = getRandomQuestion(pool, usedSet);
+        if (!question) {
+            setQuizCurrent(null);
+            setQuizFeedback("Nao foi possivel carregar uma questao.");
+            return;
+        }
+
+        const unseenCount = pool.filter((item) => !usedSet.has(item.id)).length;
+        const nextUsedIds =
+            unseenCount > 0 ? [...quizUsedIds, question.id] : [question.id];
+
+        setQuizUsedIds(nextUsedIds);
+        setQuizCurrent(question);
+        setQuizSelectedOption(null);
+        setQuizFeedback("");
+    }
+
+    function submitQuizAnswer() {
+        if (!quizCurrent) {
+            setQuizFeedback("Clique em Iniciar Treino para carregar uma questao.");
+            return;
+        }
+        if (quizSelectedOption === null) {
+            setQuizFeedback("Selecione uma alternativa para enviar.");
+            return;
+        }
+
+        const isCorrect = quizSelectedOption === quizCurrent.answerIndex;
+        setQuizStats((prev) => {
+            const nextAnswered = prev.answered + 1;
+            const nextCorrect = prev.correct + (isCorrect ? 1 : 0);
+            const nextStreak = isCorrect ? prev.streak + 1 : 0;
+            return {
+                answered: nextAnswered,
+                correct: nextCorrect,
+                streak: nextStreak,
+                bestStreak: Math.max(prev.bestStreak, nextStreak),
+            };
+        });
+
+        setQuizFeedback(
+            `${isCorrect ? "Correto" : "Incorreto"}. ${quizCurrent.explanation}`
+        );
+    }
+
     return (
         <section className={styles.panel}>
             <header className={styles.header}>
@@ -852,6 +1359,179 @@ export default function SmartStudyPlanner({
 
             <div className={styles.formGrid}>
                 <div className={styles.configCard}>
+                    <div className={styles.profileAssistantWrap}>
+                        <h3>Assistente de Perfil (Perguntas)</h3>
+                        <div className={styles.profileAssistantGrid}>
+                            <label className={styles.field}>
+                                <span>Data da Prova</span>
+                                <input
+                                    type="date"
+                                    value={profileAssistant.examDate}
+                                    onChange={(event) =>
+                                        setProfileAssistant((prev) => ({
+                                            ...prev,
+                                            examDate: event.target.value,
+                                        }))
+                                    }
+                                />
+                            </label>
+                            <label className={styles.field}>
+                                <span>Concurso/Cargo</span>
+                                <input
+                                    type="text"
+                                    value={profileAssistant.concursoNome}
+                                    placeholder="Fiscal do Cofen"
+                                    onChange={(event) =>
+                                        setProfileAssistant((prev) => ({
+                                            ...prev,
+                                            concursoNome: event.target.value,
+                                        }))
+                                    }
+                                />
+                            </label>
+                            <label className={styles.field}>
+                                <span>Cidade/UF</span>
+                                <input
+                                    type="text"
+                                    value={profileAssistant.cidadeUf}
+                                    placeholder="Brasilia/DF"
+                                    onChange={(event) =>
+                                        setProfileAssistant((prev) => ({
+                                            ...prev,
+                                            cidadeUf: event.target.value,
+                                        }))
+                                    }
+                                />
+                            </label>
+                            <label className={styles.field}>
+                                <span>Horas Seg-Sex</span>
+                                <input
+                                    type="number"
+                                    min={0}
+                                    max={12}
+                                    step={0.5}
+                                    value={profileAssistant.weekdayHours}
+                                    onChange={(event) =>
+                                        setProfileAssistant((prev) => ({
+                                            ...prev,
+                                            weekdayHours: Math.max(
+                                                0,
+                                                Math.min(12, Number(event.target.value || 0))
+                                            ),
+                                        }))
+                                    }
+                                />
+                            </label>
+                            <label className={styles.field}>
+                                <span>Horas Sabado</span>
+                                <input
+                                    type="number"
+                                    min={0}
+                                    max={12}
+                                    step={0.5}
+                                    value={profileAssistant.saturdayHours}
+                                    onChange={(event) =>
+                                        setProfileAssistant((prev) => ({
+                                            ...prev,
+                                            saturdayHours: Math.max(
+                                                0,
+                                                Math.min(12, Number(event.target.value || 0))
+                                            ),
+                                        }))
+                                    }
+                                />
+                            </label>
+                            <label className={styles.field}>
+                                <span>Horas Domingo</span>
+                                <input
+                                    type="number"
+                                    min={0}
+                                    max={12}
+                                    step={0.5}
+                                    value={profileAssistant.sundayHours}
+                                    onChange={(event) =>
+                                        setProfileAssistant((prev) => ({
+                                            ...prev,
+                                            sundayHours: Math.max(
+                                                0,
+                                                Math.min(12, Number(event.target.value || 0))
+                                            ),
+                                        }))
+                                    }
+                                />
+                            </label>
+                            <label className={styles.field}>
+                                <span>Nivel Atual</span>
+                                <select
+                                    value={profileAssistant.knowledgeLevel}
+                                    onChange={(event) =>
+                                        setProfileAssistant((prev) => ({
+                                            ...prev,
+                                            knowledgeLevel: event.target.value as KnowledgeLevel,
+                                        }))
+                                    }
+                                >
+                                    {(Object.keys(KNOWLEDGE_LEVEL_LABEL) as KnowledgeLevel[]).map(
+                                        (levelKey) => (
+                                            <option key={levelKey} value={levelKey}>
+                                                {KNOWLEDGE_LEVEL_LABEL[levelKey]}
+                                            </option>
+                                        )
+                                    )}
+                                </select>
+                            </label>
+                            <label className={styles.field}>
+                                <span>Ritmo Desejado</span>
+                                <select
+                                    value={profileAssistant.pace}
+                                    onChange={(event) =>
+                                        setProfileAssistant((prev) => ({
+                                            ...prev,
+                                            pace: event.target.value as AssistantPace,
+                                        }))
+                                    }
+                                >
+                                    {(Object.keys(ASSISTANT_PACE_LABEL) as AssistantPace[]).map(
+                                        (paceKey) => (
+                                            <option key={paceKey} value={paceKey}>
+                                                {ASSISTANT_PACE_LABEL[paceKey]}
+                                            </option>
+                                        )
+                                    )}
+                                </select>
+                            </label>
+                            <label className={styles.field}>
+                                <span>Maior Dificuldade</span>
+                                <select
+                                    value={profileAssistant.toughestDiscipline}
+                                    onChange={(event) =>
+                                        setProfileAssistant((prev) => ({
+                                            ...prev,
+                                            toughestDiscipline: event.target.value,
+                                        }))
+                                    }
+                                >
+                                    {disciplines.map((discipline) => (
+                                        <option key={discipline.key} value={discipline.key}>
+                                            {discipline.label}
+                                        </option>
+                                    ))}
+                                </select>
+                            </label>
+                        </div>
+                        <div className={styles.profileAssistantActions}>
+                            <button
+                                type="button"
+                                className={styles.assistantButton}
+                                onClick={applyProfileAssistantPlan}
+                            >
+                                Gerar Plano Automatico
+                            </button>
+                        </div>
+                        {profileAssistantResult && (
+                            <p className={styles.assistantResult}>{profileAssistantResult}</p>
+                        )}
+                    </div>
                     <label className={styles.field}>
                         <span>Data do Concurso</span>
                         <input
@@ -1045,6 +1725,47 @@ export default function SmartStudyPlanner({
                         </article>
                     </div>
 
+                    <section className={styles.rebalanceSection}>
+                        <header className={styles.sectionHeader}>
+                            <h3>Rebalanceamento Semanal</h3>
+                            <small>Ajuste inteligente para os proximos 7 dias</small>
+                        </header>
+                        <div className={styles.rebalanceGrid}>
+                            {weeklyRebalance.slice(0, 6).map((row) => (
+                                <article key={`reb-${row.key}`} className={styles.rebalanceCard}>
+                                    <strong>{row.label}</strong>
+                                    <span>
+                                        Atual: {formatMinutes(row.weeklyMinutes)}
+                                    </span>
+                                    <span>
+                                        Sugerido: {formatMinutes(row.rebalanceWeeklyMinutes)}
+                                    </span>
+                                    <span
+                                        className={
+                                            row.deltaMinutes >= 0
+                                                ? styles.deltaPositive
+                                                : styles.deltaNegative
+                                        }
+                                    >
+                                        Ajuste: {formatDeltaMinutes(row.deltaMinutes)}
+                                    </span>
+                                </article>
+                            ))}
+                        </div>
+                        <div className={styles.rebalanceActions}>
+                            <button
+                                type="button"
+                                className={styles.assistantButton}
+                                onClick={applyWeeklyRebalance}
+                            >
+                                Aplicar Rebalanceamento
+                            </button>
+                        </div>
+                        {rebalanceResult && (
+                            <p className={styles.assistantResult}>{rebalanceResult}</p>
+                        )}
+                    </section>
+
                     <section className={styles.weightsSection}>
                         <header className={styles.sectionHeader}>
                             <h3>{activeScoringModel.weightInputLabel}</h3>
@@ -1166,6 +1887,85 @@ export default function SmartStudyPlanner({
                             </tbody>
                         </table>
                     </div>
+
+                    <section className={styles.quizSection}>
+                        <header className={styles.sectionHeader}>
+                            <h3>Treino por Questoes</h3>
+                            <small>
+                                Resolvidas: {quizStats.answered} | Acertos: {quizStats.correct} | Streak: {quizStats.streak}
+                            </small>
+                        </header>
+                        <div className={styles.quizControls}>
+                            <label className={styles.field}>
+                                <span>Filtro da Questao</span>
+                                <select
+                                    value={quizDiscipline}
+                                    onChange={(event) => {
+                                        setQuizDiscipline(event.target.value);
+                                        setQuizCurrent(null);
+                                        setQuizSelectedOption(null);
+                                        setQuizFeedback("");
+                                        setQuizUsedIds([]);
+                                    }}
+                                >
+                                    <option value="all">Todas as Disciplinas</option>
+                                    {disciplines.map((discipline) => (
+                                        <option key={discipline.key} value={discipline.key}>
+                                            {discipline.label}
+                                        </option>
+                                    ))}
+                                </select>
+                            </label>
+                            <button
+                                type="button"
+                                className={styles.assistantButton}
+                                onClick={() => startOrNextQuestion()}
+                            >
+                                {quizCurrent ? "Nova Questao" : "Iniciar Treino"}
+                            </button>
+                        </div>
+
+                        {quizCurrent && (
+                            <article className={styles.quizCard}>
+                                <p className={styles.quizMeta}>
+                                    {disciplineLabelMap[quizCurrent.disciplineKey] ||
+                                        quizCurrent.disciplineKey}
+                                </p>
+                                <h4>{quizCurrent.statement}</h4>
+                                <div className={styles.quizOptions}>
+                                    {quizCurrent.options.map((option, index) => {
+                                        const selected = quizSelectedOption === index;
+                                        return (
+                                            <button
+                                                key={`${quizCurrent.id}-${index}`}
+                                                type="button"
+                                                className={`${styles.quizOption} ${
+                                                    selected ? styles.quizOptionSelected : ""
+                                                }`}
+                                                onClick={() => setQuizSelectedOption(index)}
+                                            >
+                                                <span>{String.fromCharCode(65 + index)}</span>
+                                                <strong>{option}</strong>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                                <div className={styles.quizActions}>
+                                    <button
+                                        type="button"
+                                        className={styles.assistantButton}
+                                        onClick={submitQuizAnswer}
+                                    >
+                                        Enviar Resposta
+                                    </button>
+                                    <span className={styles.quizStatChip}>
+                                        Melhor streak: {quizStats.bestStreak}
+                                    </span>
+                                </div>
+                            </article>
+                        )}
+                        {quizFeedback && <p className={styles.quizFeedback}>{quizFeedback}</p>}
+                    </section>
                 </>
             )}
         </section>

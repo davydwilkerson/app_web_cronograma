@@ -84,6 +84,18 @@
   font-size: 0.83rem;
 }
 
+[data-theme="dark"] .hero {
+  border-color: rgba(109, 217, 229, 0.28);
+  background:
+    radial-gradient(120% 120% at 100% 0%, rgba(122, 166, 229, 0.14), transparent 60%),
+    linear-gradient(160deg, rgba(19, 41, 61, 0.9), rgba(15, 33, 50, 0.84));
+}
+
+[data-theme="dark"] .emptyState {
+  border-color: rgba(122, 166, 229, 0.34);
+  background: rgba(19, 41, 61, 0.74);
+}
+
 @media (max-width: 900px) {
   .page {
     gap: var(--space-sm);

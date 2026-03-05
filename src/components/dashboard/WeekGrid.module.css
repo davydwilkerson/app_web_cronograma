@@ -177,6 +177,29 @@
   font-size: 1.25rem;
 }
 
+[data-theme="dark"] .weekCard {
+  border-color: rgba(122, 166, 229, 0.28);
+  background:
+    radial-gradient(130% 130% at 0% 0%, rgba(109, 217, 229, 0.14), transparent 55%),
+    linear-gradient(160deg, rgba(19, 41, 61, 0.9), rgba(15, 33, 50, 0.86));
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.34);
+}
+
+[data-theme="dark"] .weekCard:hover:not(:disabled) {
+  border-color: rgba(109, 217, 229, 0.5);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.42);
+}
+
+[data-theme="dark"] .weekNumber {
+  border-color: rgba(109, 217, 229, 0.34);
+  background: rgba(15, 33, 50, 0.78);
+  color: var(--accent);
+}
+
+[data-theme="dark"] .ringBg {
+  stroke: rgba(145, 169, 187, 0.34);
+}
+
 @media (max-width: 620px) {
   .grid {
     grid-template-columns: repeat(auto-fill, minmax(144px, 1fr));

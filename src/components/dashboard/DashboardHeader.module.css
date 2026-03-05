@@ -121,6 +121,50 @@
   background: linear-gradient(120deg, rgba(229, 178, 113, 0.22), rgba(206, 149, 69, 0.18));
 }
 
+[data-theme="dark"] .navLink {
+  border-color: rgba(122, 166, 229, 0.26);
+  background: rgba(19, 41, 61, 0.76);
+  color: var(--accent-2);
+}
+
+[data-theme="dark"] .navLink:hover {
+  color: var(--accent);
+  border-color: rgba(109, 217, 229, 0.48);
+  background: linear-gradient(130deg, rgba(58, 117, 199, 0.28), rgba(109, 217, 229, 0.18));
+}
+
+[data-theme="dark"] .navLinkActive {
+  color: var(--accent);
+  border-color: rgba(240, 201, 134, 0.44);
+  background:
+    radial-gradient(130% 140% at 0% 0%, rgba(240, 201, 134, 0.2), transparent 62%),
+    linear-gradient(120deg, rgba(230, 175, 98, 0.26), rgba(133, 91, 35, 0.28));
+}
+
+[data-theme="dark"] .avatar {
+  background: rgba(19, 41, 61, 0.9);
+}
+
+[data-theme="dark"] .mobileNav {
+  border-top-color: rgba(122, 166, 229, 0.24);
+}
+
+[data-theme="dark"] .mobileNavLink {
+  color: var(--accent-2);
+}
+
+[data-theme="dark"] .mobileNavLink:hover {
+  border-color: rgba(109, 217, 229, 0.42);
+  background: rgba(58, 117, 199, 0.2);
+  color: var(--accent);
+}
+
+[data-theme="dark"] .mobileNavLinkActive {
+  color: var(--accent);
+  border-color: rgba(240, 201, 134, 0.44);
+  background: linear-gradient(120deg, rgba(230, 175, 98, 0.26), rgba(133, 91, 35, 0.28));
+}
+
 @media (max-width: 920px) {
   .desktopNav {
     display: none;

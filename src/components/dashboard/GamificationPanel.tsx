@@ -1,4 +1,4 @@
-import type { GamificationSnapshot, GamificationWeekJourneyNode } from "@/types/gamification";
+﻿import type { GamificationSnapshot, GamificationWeekJourneyNode } from "@/types/gamification";
 import styles from "./GamificationPanel.module.css";
 
 interface GamificationPanelProps {
@@ -38,12 +38,12 @@ export default function GamificationPanel({
     <section className={`${styles.panel} ${compact ? styles.compact : ""}`}>
       <div className={styles.hero}>
         <div>
-          <p className={styles.kicker}>Gamificação Ativa</p>
-          <h2>Ritmo, Recompensa e Evolução</h2>
+          <p className={styles.kicker}>GamificaÃ§Ã£o Ativa</p>
+          <h2>Ritmo, Recompensa e EvoluÃ§Ã£o</h2>
         </div>
         <div className={styles.levelChip}>
           <span>
-            {snapshot.balanceLabel} | Nível {snapshot.level.level}
+            {snapshot.balanceLabel} | NÃ­vel {snapshot.level.level}
           </span>
           <strong>{snapshot.level.title}</strong>
         </div>
@@ -56,7 +56,7 @@ export default function GamificationPanel({
         <small>
           {snapshot.level.nextLevelXp
             ? `${snapshot.level.currentXp} XP / ${snapshot.level.nextLevelXp} XP`
-            : `${snapshot.level.currentXp} XP (Nível Máximo)`}
+            : `${snapshot.level.currentXp} XP (NÃ­vel MÃ¡ximo)`}
         </small>
       </div>
 
@@ -88,7 +88,7 @@ export default function GamificationPanel({
           <header>
             <h3>
               <i className="fas fa-flag-checkered"></i>
-              Missões do Dia
+              MissÃµes do Dia
             </h3>
             <span>
               {dailyCompleted}/{snapshot.dailyMissions.length}
@@ -139,21 +139,23 @@ export default function GamificationPanel({
               Recompensa: +{snapshot.weeklyBoss.rewardXp} XP | +{snapshot.weeklyBoss.rewardCoins} moedas
             </small>
           </div>
-          <div className={styles.chestRow}>
-            <div>
-              <p>Baú Semanal</p>
-              <small>
-                Streak {snapshot.surpriseChest.currentStreak}/{snapshot.surpriseChest.requiredStreak}
-              </small>
+          <div className={[styles.bossCard, styles.chestCard].join(" ")}>
+            <div className={styles.chestRow}>
+              <div>
+                <p>Baú Semanal</p>
+                <small>
+                  Streak {snapshot.surpriseChest.currentStreak}/{snapshot.surpriseChest.requiredStreak}
+                </small>
+              </div>
+              <span className={`${styles.chestStatus} ${snapshot.surpriseChest.ready ? styles.ready : ""}`}>
+                {snapshot.surpriseChest.ready ? "Pronto para Abrir" : "Em Progresso"}
+              </span>
             </div>
-            <span className={`${styles.chestStatus} ${snapshot.surpriseChest.ready ? styles.ready : ""}`}>
-              {snapshot.surpriseChest.ready ? "Pronto para Abrir" : "Em Progresso"}
-            </span>
+            <div className={styles.progressTrack}>
+              <span style={{ width: `${snapshot.surpriseChest.progressPct}%` }} />
+            </div>
+            <small>{snapshot.surpriseChest.rewardLabel}</small>
           </div>
-          <div className={styles.progressTrack}>
-            <span style={{ width: `${snapshot.surpriseChest.progressPct}%` }} />
-          </div>
-          <small>{snapshot.surpriseChest.rewardLabel}</small>
         </article>
 
         <article className={styles.block}>

@@ -280,6 +280,14 @@
   font-weight: 700;
 }
 
+.chestCard {
+  gap: 8px;
+}
+
+.bossCard + .chestCard {
+  margin-top: 2px;
+}
+
 .chestRow {
   display: flex;
   justify-content: space-between;

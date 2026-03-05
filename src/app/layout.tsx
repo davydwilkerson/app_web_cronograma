@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Sora } from "next/font/google";
+import { Fraunces, Orbitron, Sora } from "next/font/google";
 import "./globals.css";
 
 const sora = Sora({
@@ -14,6 +14,13 @@ const fraunces = Fraunces({
   weight: ["500", "700", "800"],
   display: "swap",
   variable: "--font-fraunces",
+});
+
+const orbitron = Orbitron({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  display: "swap",
+  variable: "--font-orbitron",
 });
 
 export const metadata: Metadata = {
@@ -53,7 +60,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${sora.variable} ${fraunces.variable}`}>{children}</body>
+      <body className={`${sora.variable} ${fraunces.variable} ${orbitron.variable}`}>{children}</body>
     </html>
   );
 }

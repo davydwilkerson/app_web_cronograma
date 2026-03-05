@@ -1,15 +1,31 @@
 .panel {
-  border: 1px solid var(--border-subtle);
+  border: 1px solid rgba(78, 199, 214, 0.25);
   border-radius: 24px;
   padding: var(--section-padding);
   background:
-    radial-gradient(110% 120% at 0% 0%, rgba(31, 94, 129, 0.15), transparent 55%),
-    radial-gradient(90% 120% at 100% 0%, rgba(206, 149, 69, 0.16), transparent 60%),
-    var(--card-bg);
-  box-shadow: var(--shadow-sm);
+    radial-gradient(110% 120% at 0% 0%, rgba(78, 199, 214, 0.2), transparent 55%),
+    radial-gradient(90% 120% at 100% 0%, rgba(206, 149, 69, 0.18), transparent 60%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.88), rgba(243, 250, 255, 0.76)),
+    var(--surface-glass);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--glow-soft);
   display: grid;
   gap: var(--space-md);
   animation: fadeUp 280ms ease both;
+  position: relative;
+  overflow: hidden;
+}
+
+.panel::before {
+  content: "";
+  position: absolute;
+  left: -24%;
+  top: -26%;
+  width: 44%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(78, 199, 214, 0.18), transparent 68%);
+  pointer-events: none;
 }
 
 .compact {
@@ -28,7 +44,8 @@
   margin: 0;
   color: var(--muted);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
+  font-family: var(--font-orbitron), var(--font-sora), sans-serif;
   letter-spacing: 0.11em;
   text-transform: uppercase;
 }
@@ -44,8 +61,10 @@
 .levelChip {
   min-height: 52px;
   border-radius: 14px;
-  border: 1px solid rgba(206, 149, 69, 0.36);
-  background: linear-gradient(120deg, rgba(229, 178, 113, 0.3), rgba(206, 149, 69, 0.25));
+  border: 1px solid rgba(206, 149, 69, 0.4);
+  background:
+    radial-gradient(120% 140% at 100% 0%, rgba(229, 178, 113, 0.26), transparent 55%),
+    linear-gradient(120deg, rgba(229, 178, 113, 0.28), rgba(206, 149, 69, 0.2));
   padding: 8px 12px;
   display: grid;
   align-content: center;
@@ -99,9 +118,12 @@
 }
 
 .metricCard {
-  border: 1px solid rgba(9, 42, 61, 0.11);
+  border: 1px solid rgba(58, 117, 199, 0.18);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.8);
+  background:
+    radial-gradient(120% 140% at 0% 0%, rgba(78, 199, 214, 0.1), transparent 65%),
+    rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(8px);
   padding: 10px 12px;
   display: grid;
   gap: 4px;
@@ -117,8 +139,9 @@
 
 .metricCard strong {
   color: var(--accent);
-  font-size: 1rem;
+  font-size: 1.04rem;
   letter-spacing: -0.01em;
+  font-family: var(--font-orbitron), var(--font-sora), sans-serif;
 }
 
 .grid {
@@ -128,9 +151,10 @@
 }
 
 .block {
-  border: 1px solid rgba(9, 42, 61, 0.11);
+  border: 1px solid rgba(58, 117, 199, 0.16);
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.76);
+  backdrop-filter: blur(8px);
   padding: 12px;
   display: grid;
   gap: 10px;
@@ -180,8 +204,8 @@
 }
 
 .missionDone {
-  border-color: rgba(20, 131, 95, 0.42);
-  background: rgba(20, 131, 95, 0.08);
+  border-color: rgba(20, 131, 95, 0.46);
+  background: linear-gradient(130deg, rgba(20, 131, 95, 0.12), rgba(20, 131, 95, 0.06));
 }
 
 .missionHead {
@@ -226,7 +250,7 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--accent-2), var(--gold));
+  background: linear-gradient(90deg, var(--neon-blue), var(--neon-cyan), var(--gold));
 }
 
 .bossCard {
@@ -405,6 +429,7 @@
 .journeyNode strong {
   color: var(--accent);
   font-size: 0.74rem;
+  font-family: var(--font-orbitron), var(--font-sora), sans-serif;
 }
 
 .started {
@@ -468,4 +493,3 @@
     grid-template-columns: 1fr;
   }
 }
-

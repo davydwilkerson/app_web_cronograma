@@ -1,23 +1,25 @@
 .gamificationSection {
   margin-bottom: var(--space-lg);
+  position: relative;
 }
 
 .welcomeSection {
   display: grid;
-  grid-template-columns: 1.4fr 1fr;
+  grid-template-columns: 1.45fr 1fr;
   gap: var(--space-lg);
   align-items: stretch;
   margin-bottom: var(--space-lg);
 }
 
 .welcomeContent {
-  border: 1px solid var(--border-subtle);
+  border: 1px solid rgba(78, 199, 214, 0.18);
   border-radius: 24px;
   padding: var(--section-padding);
   background:
-    linear-gradient(140deg, rgba(255, 255, 255, 0.92), rgba(245, 251, 255, 0.93)),
+    radial-gradient(130% 140% at 0% 0%, rgba(78, 199, 214, 0.12), transparent 55%),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.9), rgba(245, 251, 255, 0.85)),
     var(--card-bg);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--glow-soft);
   position: relative;
   overflow: hidden;
   animation: fadeUp 320ms ease both;
@@ -42,6 +44,7 @@
   line-height: 1.1;
   letter-spacing: -0.01em;
   font-size: clamp(1.65rem, 3.2vw, 2.25rem);
+  text-wrap: balance;
 }
 
 .welcomeTitle span {
@@ -56,11 +59,14 @@
 }
 
 .overallProgress {
-  border: 1px solid var(--border-subtle);
+  border: 1px solid rgba(58, 117, 199, 0.18);
   border-radius: 24px;
   padding: var(--section-padding);
-  background: var(--card-bg);
-  box-shadow: var(--shadow-sm);
+  background:
+    radial-gradient(120% 120% at 100% 0%, rgba(58, 117, 199, 0.1), transparent 55%),
+    var(--surface-glass);
+  box-shadow: var(--glow-soft);
+  backdrop-filter: blur(10px);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -81,18 +87,21 @@
 
 .progressPct {
   color: var(--accent);
-  font-size: 1.45rem;
+  font-size: 1.55rem;
   line-height: 1;
   letter-spacing: -0.01em;
+  font-family: var(--font-orbitron), var(--font-sora), sans-serif;
+  font-weight: 700;
 }
 
 .progressTrack {
   margin-top: var(--space-sm);
   width: 100%;
-  height: 12px;
+  height: 13px;
   border-radius: 999px;
   overflow: hidden;
-  background: var(--bg-alt);
+  background: rgba(12, 37, 54, 0.1);
+  border: 1px solid rgba(58, 117, 199, 0.12);
 }
 
 .progressFill {
@@ -110,10 +119,13 @@
 }
 
 .weekSection {
-  border: 1px solid var(--border-subtle);
+  border: 1px solid rgba(78, 199, 214, 0.2);
   border-radius: 24px;
-  background: var(--card-bg);
-  box-shadow: var(--shadow-sm);
+  background:
+    radial-gradient(130% 120% at 0% 0%, rgba(78, 199, 214, 0.08), transparent 60%),
+    var(--surface-glass);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--glow-soft);
   padding: var(--section-padding);
   animation: fadeUp 420ms ease both;
 }
@@ -127,6 +139,7 @@
   font-family: var(--font-fraunces), Georgia, serif;
   font-size: clamp(1.2rem, 2.5vw, 1.55rem);
   letter-spacing: -0.01em;
+  text-shadow: 0 2px 10px rgba(18, 56, 79, 0.12);
 }
 
 .sectionTitle i {

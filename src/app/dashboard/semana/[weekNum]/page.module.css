@@ -7,13 +7,15 @@
 .hero {
   position: relative;
   overflow: hidden;
-  border: 1px solid var(--border-subtle);
+  border: 1px solid rgba(78, 199, 214, 0.2);
   border-radius: 22px;
   padding: var(--section-padding);
   background:
-    linear-gradient(160deg, rgba(255, 255, 255, 0.94), rgba(244, 251, 255, 0.9)),
-    var(--card-bg);
-  box-shadow: var(--shadow-sm);
+    radial-gradient(120% 120% at 100% 0%, rgba(58, 117, 199, 0.12), transparent 60%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.9), rgba(244, 251, 255, 0.82)),
+    var(--surface-glass);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--glow-soft);
   animation: fadeUp 320ms ease both;
 }
 
@@ -33,7 +35,8 @@
   margin: 0;
   color: var(--muted);
   font-size: 0.74rem;
-  font-weight: 800;
+  font-weight: 700;
+  font-family: var(--font-orbitron), var(--font-sora), sans-serif;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -50,8 +53,9 @@
 .subtitle {
   margin: var(--space-sm) 0 0;
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   max-width: 56ch;
+  line-height: 1.55;
 }
 
 .emptyState {

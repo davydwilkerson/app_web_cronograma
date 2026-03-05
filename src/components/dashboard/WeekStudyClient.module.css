@@ -1,19 +1,39 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  gap: var(--space-lg);
+  gap: clamp(16px, 2vw, 24px);
 }
 
 .progressSection {
-  border: 1px solid var(--border-subtle);
-  border-radius: 20px;
-  background: var(--card-bg);
-  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(78, 199, 214, 0.24);
+  border-radius: 22px;
+  background:
+    radial-gradient(120% 120% at 100% 0%, rgba(58, 117, 199, 0.12), transparent 58%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(244, 251, 255, 0.82)),
+    var(--surface-glass);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--glow-soft);
   padding: var(--section-padding);
   animation: fadeUp 280ms ease both;
 }
 
+.progressSection::before {
+  content: "";
+  position: absolute;
+  left: -26%;
+  top: -30%;
+  width: 42%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(78, 199, 214, 0.18), transparent 68%);
+  pointer-events: none;
+}
+
 .progressHeader {
+  position: relative;
+  z-index: 1;
   display: flex;
   justify-content: space-between;
   align-items: baseline;
@@ -24,36 +44,44 @@
 .progressHeader h2 {
   margin: 0;
   color: var(--accent);
-  font-family: var(--font-fraunces), Georgia, serif;
+  font-family: var(--font-orbitron), var(--font-sora), sans-serif;
   font-size: clamp(1.3rem, 2.7vw, 1.8rem);
-  letter-spacing: -0.01em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .progressHeader span {
   color: var(--muted);
-  font-size: 0.85rem;
+  font-size: 0.76rem;
   font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
 .progressTrack {
+  position: relative;
+  z-index: 1;
   margin-top: var(--space-sm);
   width: 100%;
   height: 12px;
   border-radius: 999px;
   overflow: hidden;
-  background: var(--bg-alt);
+  background: rgba(9, 42, 61, 0.12);
+  border: 1px solid rgba(58, 117, 199, 0.16);
 }
 
 .progressFill {
   width: 0;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--accent-2), var(--gold), var(--gold-2));
+  background: linear-gradient(90deg, var(--neon-blue), var(--neon-cyan), var(--gold));
   transition: width 340ms ease;
 }
 
 .progressFooter {
+  position: relative;
+  z-index: 1;
   margin-top: var(--space-xs);
   display: flex;
   justify-content: space-between;
@@ -66,6 +94,7 @@
 .progressFooter strong {
   color: var(--accent);
   font-size: 0.95rem;
+  font-family: var(--font-orbitron), var(--font-sora), sans-serif;
 }
 
 .errorBanner {
@@ -86,9 +115,9 @@
   align-items: center;
   gap: 8px;
   border-radius: 999px;
-  border: 1px solid rgba(20, 131, 95, 0.34);
-  background: rgba(20, 131, 95, 0.11);
-  color: #0d6a4b;
+  border: 1px solid rgba(78, 199, 214, 0.38);
+  background: linear-gradient(130deg, rgba(78, 199, 214, 0.16), rgba(58, 117, 199, 0.12));
+  color: #0b3b57;
   font-size: 0.8rem;
   font-weight: 800;
   letter-spacing: 0.02em;
@@ -102,7 +131,7 @@
 
 .daysNav {
   display: flex;
-  gap: var(--space-xs);
+  gap: 10px;
   flex-wrap: nowrap;
   overflow-x: auto;
   padding: 0 2px var(--space-2xs);
@@ -117,8 +146,9 @@
   min-height: 38px;
   padding: 0 var(--space-sm);
   border-radius: 999px;
-  border: 1px solid var(--border-subtle);
-  background: var(--card-bg);
+  border: 1px solid rgba(58, 117, 199, 0.18);
+  background: rgba(255, 255, 255, 0.76);
+  backdrop-filter: blur(6px);
   color: var(--muted);
   font-size: 0.82rem;
   font-weight: 800;
@@ -130,13 +160,17 @@
 
 .dayBtn:hover {
   color: var(--accent);
-  border-color: rgba(31, 94, 129, 0.3);
+  border-color: rgba(78, 199, 214, 0.46);
+  background: linear-gradient(130deg, rgba(78, 199, 214, 0.12), rgba(58, 117, 199, 0.1));
 }
 
 .dayBtnActive {
-  color: #0a3147;
-  border-color: rgba(206, 149, 69, 0.42);
-  background: linear-gradient(120deg, rgba(229, 178, 113, 0.38), rgba(206, 149, 69, 0.32));
+  color: #0a3046;
+  border-color: rgba(206, 149, 69, 0.54);
+  background:
+    radial-gradient(120% 120% at 0% 0%, rgba(229, 178, 113, 0.28), transparent 60%),
+    linear-gradient(120deg, rgba(229, 178, 113, 0.34), rgba(206, 149, 69, 0.28));
+  box-shadow: 0 10px 22px rgba(206, 149, 69, 0.2);
   transform: translateY(-1px);
 }
 
@@ -151,24 +185,30 @@
   justify-content: space-between;
   align-items: center;
   gap: var(--space-sm);
-  border: 1px solid rgba(9, 42, 61, 0.1);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(58, 117, 199, 0.16);
+  border-radius: 16px;
+  background:
+    radial-gradient(120% 120% at 100% 0%, rgba(58, 117, 199, 0.1), transparent 62%),
+    rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(8px);
   padding: var(--space-xs) var(--space-sm);
 }
 
 .dayHeader h3 {
   margin: 0;
   color: var(--accent);
-  font-family: var(--font-fraunces), Georgia, serif;
+  font-family: var(--font-orbitron), var(--font-sora), sans-serif;
   font-size: 1.2rem;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .dayHeader span {
   color: var(--muted);
-  font-size: 0.8rem;
+  font-size: 0.74rem;
   font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
@@ -179,13 +219,22 @@
 }
 
 .studyCard {
-  border: 1px solid var(--border-subtle);
+  border: 1px solid rgba(58, 117, 199, 0.2);
   border-left-width: 5px;
-  border-radius: 16px;
-  background: var(--card-bg);
-  box-shadow: var(--shadow-sm);
+  border-radius: 18px;
+  background:
+    radial-gradient(120% 130% at 0% 0%, rgba(78, 199, 214, 0.12), transparent 64%),
+    linear-gradient(150deg, rgba(255, 255, 255, 0.95), rgba(246, 251, 255, 0.88));
+  box-shadow: var(--glow-soft);
   padding: var(--card-padding);
   animation: fadeUp 260ms ease both;
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+
+.studyCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(78, 199, 214, 0.32);
+  box-shadow: 0 18px 38px rgba(9, 31, 46, 0.18);
 }
 
 .studyCard:nth-child(odd) {
@@ -238,8 +287,8 @@
   width: 30px;
   height: 30px;
   border-radius: 9px;
-  border: 2px solid rgba(9, 42, 61, 0.26);
-  background: #fff;
+  border: 2px solid rgba(58, 117, 199, 0.35);
+  background: rgba(255, 255, 255, 0.86);
   color: transparent;
   flex-shrink: 0;
   margin-top: 1px;
@@ -256,8 +305,8 @@
 }
 
 .cardChecked {
-  border-color: var(--success);
-  background: var(--success);
+  border-color: var(--neon-cyan);
+  background: linear-gradient(135deg, var(--neon-blue), var(--neon-cyan));
   color: #fff;
 }
 
@@ -270,8 +319,8 @@
   display: inline-flex;
   align-items: center;
   border-radius: 999px;
-  border: 1px solid rgba(9, 42, 61, 0.16);
-  background: rgba(9, 42, 61, 0.06);
+  border: 1px solid rgba(58, 117, 199, 0.2);
+  background: rgba(58, 117, 199, 0.1);
   padding: 3px 9px;
   color: var(--muted);
   font-size: 0.68rem;
@@ -283,8 +332,8 @@
 .cardTitle {
   margin: var(--space-xs) 0 0;
   color: var(--accent);
-  font-size: 0.96rem;
-  line-height: 1.42;
+  font-size: 1rem;
+  line-height: 1.44;
 }
 
 .cardLinks {
@@ -301,17 +350,25 @@
   align-items: center;
   gap: 7px;
   border-radius: 999px;
-  border: 1px solid rgba(9, 42, 61, 0.12);
+  border: 1px solid rgba(58, 117, 199, 0.18);
   padding: 0 var(--space-sm);
   color: var(--muted);
   font-size: 0.74rem;
   font-weight: 600;
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.78);
   width: fit-content;
   max-width: 100%;
   min-width: 0;
   cursor: pointer;
   font-family: inherit;
+  transition: border-color var(--transition), background var(--transition), color var(--transition), transform var(--transition);
+}
+
+.cardLink:hover {
+  border-color: rgba(78, 199, 214, 0.44);
+  background: linear-gradient(130deg, rgba(78, 199, 214, 0.1), rgba(58, 117, 199, 0.08));
+  color: #0a3046;
+  transform: translateY(-1px);
 }
 
 .cardLink span {
@@ -322,13 +379,15 @@
 }
 
 .videoTrigger {
-  border-color: rgba(31, 94, 129, 0.24);
+  border-color: rgba(58, 117, 199, 0.28);
 }
 
 .videoTriggerActive {
   color: #0a3046;
-  border-color: rgba(206, 149, 69, 0.52);
-  background: linear-gradient(120deg, rgba(229, 178, 113, 0.36), rgba(206, 149, 69, 0.28));
+  border-color: rgba(206, 149, 69, 0.56);
+  background:
+    radial-gradient(120% 120% at 0% 0%, rgba(229, 178, 113, 0.24), transparent 60%),
+    linear-gradient(120deg, rgba(229, 178, 113, 0.34), rgba(206, 149, 69, 0.28));
 }
 
 .cardLinkPrimary {
@@ -340,15 +399,17 @@
 
 .videoEmbedWrap {
   margin-top: var(--space-md);
-  width: min(100%, 700px);
+  width: min(100%, 690px);
   margin-inline: auto;
   display: flex;
   flex-direction: column;
-  border: 1px solid rgba(255, 255, 255, 0.72);
-  border-radius: 16px;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(245, 251, 255, 0.92));
+  border: 1px solid rgba(78, 199, 214, 0.24);
+  border-radius: 18px;
+  background:
+    radial-gradient(120% 120% at 0% 0%, rgba(78, 199, 214, 0.12), transparent 58%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(245, 251, 255, 0.92));
   padding: var(--space-sm);
-  box-shadow: 0 18px 34px rgba(8, 32, 47, 0.18);
+  box-shadow: var(--glow-soft);
 }
 
 .videoEmbedHead {
@@ -394,7 +455,7 @@
   height: 6px;
   border-radius: 999px;
   appearance: none;
-  background: linear-gradient(90deg, rgba(31, 94, 129, 0.22), rgba(206, 149, 69, 0.26));
+  background: linear-gradient(90deg, rgba(58, 117, 199, 0.22), rgba(78, 199, 214, 0.24), rgba(206, 149, 69, 0.26));
   outline: none;
   cursor: pointer;
 }
@@ -428,7 +489,7 @@
 .videoControlBtn {
   min-height: 32px;
   padding: 0 11px;
-  border: 1px solid rgba(9, 42, 61, 0.18);
+  border: 1px solid rgba(58, 117, 199, 0.18);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.88);
   color: var(--accent);
@@ -442,8 +503,8 @@
 }
 
 .videoControlBtn:hover {
-  border-color: rgba(31, 94, 129, 0.34);
-  background: rgba(241, 248, 255, 0.95);
+  border-color: rgba(78, 199, 214, 0.46);
+  background: linear-gradient(130deg, rgba(78, 199, 214, 0.14), rgba(58, 117, 199, 0.12));
   transform: translateY(-1px);
 }
 
@@ -458,7 +519,7 @@
   min-height: 32px;
   min-width: 50px;
   padding: 0 10px;
-  border: 1px solid rgba(9, 42, 61, 0.18);
+  border: 1px solid rgba(58, 117, 199, 0.18);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.88);
   color: var(--accent);
@@ -475,12 +536,12 @@
 .videoSpeedActive {
   color: #0a3046;
   border-color: rgba(206, 149, 69, 0.56);
-  background: linear-gradient(120deg, rgba(229, 178, 113, 0.34), rgba(206, 149, 69, 0.28));
+  background: linear-gradient(120deg, rgba(229, 178, 113, 0.34), rgba(206, 149, 69, 0.3));
 }
 
 .videoCloseBtn {
-  border-color: rgba(13, 52, 76, 0.35);
-  background: rgba(13, 52, 76, 0.92);
+  border-color: rgba(58, 117, 199, 0.42);
+  background: linear-gradient(130deg, rgba(13, 52, 76, 0.96), rgba(31, 94, 129, 0.94));
   color: #f1f7fb;
 }
 
@@ -493,16 +554,16 @@
 .videoFrame {
   order: 1;
   position: relative;
-  border-radius: 18px;
-  padding: 4px;
-  background: linear-gradient(135deg, #ffffff 0%, #f3dfbe 44%, #1f5e81 100%);
+  border-radius: 20px;
+  padding: 5px;
+  background: linear-gradient(135deg, #ffffff 0%, #f0c986 38%, #4ec7d6 68%, #1f5e81 100%);
   overflow: hidden;
   box-shadow: 0 14px 28px rgba(6, 21, 35, 0.34);
 }
 
 .videoViewport {
   position: relative;
-  border-radius: 14px;
+  border-radius: 16px;
   overflow: hidden;
   background: #05111b;
   aspect-ratio: 16 / 9;
@@ -510,10 +571,10 @@
 
 .videoViewport iframe {
   position: absolute;
-  left: -5%;
-  top: -10%;
-  width: 110%;
-  height: 120%;
+  left: -6%;
+  top: -12%;
+  width: 112%;
+  height: 124%;
   border: 0;
 }
 
@@ -528,14 +589,14 @@
 
 .videoClickShieldTop {
   top: 0;
-  height: 40px;
-  background: linear-gradient(180deg, rgba(4, 18, 28, 0.98), rgba(4, 18, 28, 0));
+  height: 48px;
+  background: linear-gradient(180deg, rgba(4, 18, 28, 1), rgba(4, 18, 28, 0));
 }
 
 .videoClickShieldBottom {
   bottom: 0;
-  height: 38px;
-  background: linear-gradient(0deg, rgba(4, 18, 28, 0.98), rgba(4, 18, 28, 0));
+  height: 46px;
+  background: linear-gradient(0deg, rgba(4, 18, 28, 1), rgba(4, 18, 28, 0));
 }
 
 .videoPauseOverlay {
@@ -544,7 +605,7 @@
   z-index: 4;
   border: none;
   cursor: pointer;
-  background: rgba(0, 0, 0, 0.995);
+  background: rgba(0, 0, 0, 0.998);
   display: grid;
   place-items: center;
 }
@@ -581,7 +642,7 @@
 
 .progressList {
   margin-top: var(--space-sm);
-  border-top: 1px solid rgba(9, 42, 61, 0.08);
+  border-top: 1px solid rgba(58, 117, 199, 0.14);
   padding-top: var(--space-sm);
   display: flex;
   flex-direction: column;
@@ -597,8 +658,10 @@
 
 .progressItemLabel {
   color: var(--accent);
-  font-size: 0.78rem;
-  font-weight: 600;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
 .progressButton {
@@ -607,7 +670,7 @@
   border: none;
   border-radius: 999px;
   overflow: hidden;
-  background: var(--bg-alt);
+  background: rgba(9, 42, 61, 0.12);
   padding: 0;
   cursor: pointer;
 }
@@ -616,7 +679,7 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--accent-2), var(--gold));
+  background: linear-gradient(90deg, var(--neon-blue), var(--neon-cyan), var(--gold));
   transition: width 200ms ease;
 }
 
@@ -625,8 +688,9 @@
   min-width: 42px;
   text-align: right;
   justify-self: end;
-  font-size: 0.75rem;
+  font-size: 0.74rem;
   font-weight: 800;
+  font-family: var(--font-orbitron), var(--font-sora), sans-serif;
 }
 
 .weekNav {
@@ -648,8 +712,8 @@
   min-height: 40px;
   border-radius: 999px;
   padding: 0 14px;
-  border: 1px solid var(--border-subtle);
-  background: var(--card-bg);
+  border: 1px solid rgba(58, 117, 199, 0.2);
+  background: rgba(255, 255, 255, 0.78);
   color: var(--muted);
   font-size: 0.8rem;
   font-weight: 700;
@@ -661,13 +725,16 @@
 
 .weekNavButton:hover {
   color: var(--accent);
-  border-color: rgba(31, 94, 129, 0.32);
+  border-color: rgba(78, 199, 214, 0.44);
+  background: linear-gradient(130deg, rgba(78, 199, 214, 0.12), rgba(58, 117, 199, 0.1));
 }
 
 .weekNavPrimary {
   color: #0a3046;
   border-color: rgba(206, 149, 69, 0.52);
-  background: linear-gradient(120deg, rgba(229, 178, 113, 0.44), rgba(206, 149, 69, 0.38));
+  background:
+    radial-gradient(120% 120% at 0% 0%, rgba(229, 178, 113, 0.22), transparent 60%),
+    linear-gradient(120deg, rgba(229, 178, 113, 0.42), rgba(206, 149, 69, 0.36));
 }
 
 @media (max-width: 1100px) {

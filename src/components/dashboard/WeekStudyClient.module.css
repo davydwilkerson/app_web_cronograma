@@ -130,31 +130,32 @@
 }
 
 .daysNav {
-  display: flex;
+  display: grid;
+  width: 100%;
   gap: 10px;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  padding: 0 2px var(--space-2xs);
-  scroll-snap-type: x proximity;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
+  align-items: stretch;
+  padding: 0 2px;
 }
 
 .dayBtn {
-  flex: 0 0 auto;
-  min-width: 62px;
-  min-height: 38px;
-  padding: 0 var(--space-sm);
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  padding: 0 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 999px;
   border: 1px solid rgba(58, 117, 199, 0.18);
   background: rgba(255, 255, 255, 0.76);
   backdrop-filter: blur(6px);
   color: var(--muted);
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 800;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
   cursor: pointer;
-  scroll-snap-align: start;
+  text-transform: uppercase;
+  white-space: nowrap;
   transition: color var(--transition), border-color var(--transition), background var(--transition), transform var(--transition);
 }
 
@@ -799,8 +800,14 @@
 }
 
 @media (max-width: 640px) {
+  .daysNav {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 8px;
+  }
+
   .dayBtn {
-    min-width: 56px;
+    min-height: 38px;
+    font-size: 0.74rem;
   }
 
   .cardLinks {
@@ -851,11 +858,14 @@
 }
 
 @media (max-width: 420px) {
+  .daysNav {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
   .dayBtn {
-    min-width: 48px;
     min-height: 36px;
-    padding: 0 10px;
-    font-size: 0.76rem;
+    padding: 0 6px;
+    font-size: 0.7rem;
   }
 
   .cardCheckbox {

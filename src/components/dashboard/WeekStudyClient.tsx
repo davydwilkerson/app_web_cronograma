@@ -593,7 +593,10 @@ export default function WeekStudyClient({
                 </p>
             )}
 
-            <nav className={styles.daysNav}>
+            <nav
+                className={styles.daysNav}
+                style={{ gridTemplateColumns: `repeat(${days.length}, minmax(0, 1fr))` }}
+            >
                 {days.map((day) => (
                     <button
                         key={day.dayNum}
@@ -601,7 +604,7 @@ export default function WeekStudyClient({
                         onClick={() => setActiveDay(day.dayNum)}
                         className={`${styles.dayBtn} ${activeDay === day.dayNum ? styles.dayBtnActive : ""}`}
                     >
-                        D{day.dayNum}
+                        DIA {day.dayNum}
                     </button>
                 ))}
             </nav>

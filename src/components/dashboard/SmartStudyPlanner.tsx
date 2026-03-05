@@ -28,6 +28,8 @@ interface SmartStudyPlannerProps {
 interface PlannerSettings {
     examDate: string;
     profile: PlannerProfile;
+    scoringModel: ScoringModel;
+    wrongPenalty: number;
     availabilityMinutes: Record<WeekdayKey, number>;
     weightByDiscipline: Record<string, number>;
 }
@@ -38,6 +40,11 @@ interface PlannerWeightsSeed {
 }
 
 type PlannerProfile = "leve" | "padrao" | "hardcore";
+type ScoringModel =
+    | "discipline_weight"
+    | "question_value"
+    | "weighted_average"
+    | "negative_marking";
 
 const PROFILE_CONFIG: Record<
     PlannerProfile,
@@ -73,6 +80,45 @@ const PROFILE_CONFIG: Record<
         urgencyFactor: 1.28,
         riskMultiplier: 1.34,
         description: "Concentracao forte nas materias criticas.",
+    },
+};
+
+const SCORING_MODEL_CONFIG: Record<
+    ScoringModel,
+    {
+        label: string;
+        weightInputLabel: string;
+        tableWeightLabel: string;
+        formulaText: string;
+    }
+> = {
+    discipline_weight: {
+        label: "Peso por Disciplina",
+        weightInputLabel: "Peso da Disciplina",
+        tableWeightLabel: "Peso",
+        formulaText:
+            "Nota = acertos por disciplina x peso da disciplina.",
+    },
+    question_value: {
+        label: "Valor por Questao",
+        weightInputLabel: "Valor por Questao",
+        tableWeightLabel: "Valor",
+        formulaText:
+            "Nota = quantidade de acertos x valor de cada questao.",
+    },
+    weighted_average: {
+        label: "Media Ponderada",
+        weightInputLabel: "Peso da Media",
+        tableWeightLabel: "Peso",
+        formulaText:
+            "Nota final = soma(nota da disciplina x peso) / soma dos pesos.",
+    },
+    negative_marking: {
+        label: "Com Penalidade",
+        weightInputLabel: "Valor por Acerto",
+        tableWeightLabel: "Valor",
+        formulaText:
+            "Nota = (certas x valor) - (erradas x penalidade).",
     },
 };
 
@@ -137,6 +183,11 @@ function clampMinutes(value: number): number {
     return Math.max(0, Math.min(24 * 60, Math.round(value)));
 }
 
+function clampWeight(value: number): number {
+    if (!Number.isFinite(value)) return 0;
+    return Math.max(0, Math.min(1000, Math.round(value * 10) / 10));
+}
+
 function formatMinutes(minutes: number): string {
     const safe = Math.max(0, Math.round(minutes));
     const hours = Math.floor(safe / 60);
@@ -154,6 +205,10 @@ function percent(value: number): string {
     return `${Math.round(value * 100)}%`;
 }
 
+function formatScore(value: number): string {
+    return (Math.round(value * 10) / 10).toString().replace(".", ",");
+}
+
 function clamp01(value: number): number {
     return Math.max(0, Math.min(1, value));
 }
@@ -168,6 +223,213 @@ function emptyWeekdayCount(): Record<WeekdayKey, number> {
         saturday: 0,
         sunday: 0,
     };
+}
+
+function clampPenalty(value: number): number {
+    if (!Number.isFinite(value)) return 1;
+    return Math.max(0, Math.min(2, Math.round(value * 10) / 10));
+}
+
+function getScoringModel(value: unknown): ScoringModel {
+    if (
+        value === "discipline_weight" ||
+        value === "question_value" ||
+        value === "weighted_average" ||
+        value === "negative_marking"
+    ) {
+        return value;
+    }
+    return "discipline_weight";
+}
+
+function computeScorePotential(
+    model: ScoringModel,
+    weight: number,
+    remainingCards: number,
+    workloadShare: number,
+    completionGap: number,
+    wrongPenalty: number
+): number {
+    const safeWeight = Math.max(0, weight);
+    const safeRemaining = Math.max(0, remainingCards);
+
+    if (model === "weighted_average") {
+        return safeWeight * (0.7 + workloadShare * 0.3);
+    }
+
+    if (model === "negative_marking") {
+        return safeRemaining * safeWeight * (1 + completionGap * wrongPenalty);
+    }
+
+    return safeRemaining * safeWeight;
+}
+
+function normalizeText(value: string): string {
+    return value
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9:;,+\-./\s]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+function parseNumericToken(value: string): number {
+    return Number(value.replace(",", "."));
+}
+
+function firstNumberByPatterns(text: string, patterns: RegExp[]): number | null {
+    for (const pattern of patterns) {
+        const match = text.match(pattern);
+        if (match?.[1]) {
+            const parsed = parseNumericToken(match[1]);
+            if (Number.isFinite(parsed)) {
+                return Math.abs(parsed);
+            }
+        }
+    }
+    return null;
+}
+
+function detectScoringModelFromEdital(text: string): ScoringModel {
+    const normalized = normalizeText(text);
+
+    if (
+        normalized.includes("errada anula") ||
+        normalized.includes("pontuacao negativa") ||
+        normalized.includes("penalidade por erro") ||
+        /\+\s*1\s*\/\s*-\s*1/.test(normalized)
+    ) {
+        return "negative_marking";
+    }
+
+    if (
+        normalized.includes("media ponderada") ||
+        (normalized.includes("nota final") && normalized.includes("soma") && normalized.includes("peso"))
+    ) {
+        return "weighted_average";
+    }
+
+    if (
+        normalized.includes("cada questao vale") ||
+        normalized.includes("valor por questao") ||
+        (normalized.includes("questao") && normalized.includes("vale"))
+    ) {
+        return "question_value";
+    }
+
+    return "discipline_weight";
+}
+
+function detectPenaltyFromEdital(text: string): number | null {
+    const normalized = normalizeText(text);
+
+    if (normalized.includes("anula uma certa") || normalized.includes("errada anula uma certa")) {
+        return 1;
+    }
+
+    return firstNumberByPatterns(normalized, [
+        /penalidade(?: por erro)?\s*[:=]?\s*(-?\d+(?:[.,]\d+)?)/,
+        /errada(?:s)?\s*vale(?:m)?\s*(-?\d+(?:[.,]\d+)?)/,
+        /erro(?:s)?\s*vale(?:m)?\s*(-?\d+(?:[.,]\d+)?)/,
+        /\+\s*1\s*\/\s*-\s*(\d+(?:[.,]\d+)?)/,
+    ]);
+}
+
+function extractDisciplineValue(line: string, model: ScoringModel): number | null {
+    const normalized = normalizeText(line);
+    const pesoPatterns = [
+        /peso(?: da disciplina| da materia|)?\s*[:=]?\s*(-?\d+(?:[.,]\d+)?)/,
+        /p(?:eso)?\s*[:=]\s*(-?\d+(?:[.,]\d+)?)/,
+    ];
+    const valorPatterns = [
+        /cada questao vale\s*(-?\d+(?:[.,]\d+)?)/,
+        /valor(?: por questao| da questao|)\s*[:=]?\s*(-?\d+(?:[.,]\d+)?)/,
+        /vale\s*(-?\d+(?:[.,]\d+)?)\s*pontos?/,
+    ];
+
+    if (model === "weighted_average" || model === "discipline_weight") {
+        const parsed = firstNumberByPatterns(normalized, pesoPatterns);
+        if (parsed !== null) return parsed;
+    }
+
+    if (model === "question_value" || model === "negative_marking") {
+        const parsed = firstNumberByPatterns(normalized, [...valorPatterns, ...pesoPatterns]);
+        if (parsed !== null) return parsed;
+    }
+
+    return firstNumberByPatterns(normalized, [...pesoPatterns, ...valorPatterns]);
+}
+
+function buildDisciplineAliases(discipline: DisciplinePlanInput): string[] {
+    const aliases = new Set<string>();
+    const baseLabel = normalizeText(discipline.label);
+    const baseKey = normalizeText(discipline.key.replace(/\d+/g, " "));
+
+    aliases.add(baseLabel);
+    aliases.add(baseKey);
+    aliases.add(normalizeText(discipline.key));
+
+    if (discipline.key === "portugues") {
+        aliases.add("portugues");
+        aliases.add("lingua portuguesa");
+    }
+    if (discipline.key === "rlm") {
+        aliases.add("rlm");
+        aliases.add("raciocinio logico");
+        aliases.add("raciocinio logico matematico");
+    }
+    if (discipline.key.startsWith("especifica")) {
+        aliases.add("especifica");
+        aliases.add("especificas");
+        aliases.add("especifica de enfermagem");
+        aliases.add("enfermagem");
+    }
+    if (discipline.key.startsWith("sus")) {
+        aliases.add("sus");
+        aliases.add("saude publica");
+    }
+    if (discipline.key === "revisao") {
+        aliases.add("revisao");
+    }
+    if (discipline.key === "simulado") {
+        aliases.add("simulado");
+    }
+
+    return Array.from(aliases).filter((alias) => alias.length > 1);
+}
+
+function extractWeightsFromEdital(
+    text: string,
+    disciplines: DisciplinePlanInput[],
+    model: ScoringModel
+): Record<string, number> {
+    const lines = text
+        .replace(/\r/g, "")
+        .split(/\n|;/)
+        .map((line) => line.trim())
+        .filter((line) => line.length > 0);
+
+    const normalizedLines = lines.map((line) => normalizeText(line));
+    const extracted: Record<string, number> = {};
+
+    disciplines.forEach((discipline) => {
+        const aliases = buildDisciplineAliases(discipline);
+
+        for (let i = 0; i < normalizedLines.length; i += 1) {
+            const line = normalizedLines[i];
+            const hasAlias = aliases.some((alias) => line.includes(alias));
+            if (!hasAlias) continue;
+
+            const parsed = extractDisciplineValue(lines[i], model);
+            if (parsed !== null) {
+                extracted[discipline.key] = clampWeight(parsed);
+                break;
+            }
+        }
+    });
+
+    return extracted;
 }
 
 function buildDefaultWeightMap(disciplines: PlannerWeightsSeed[]): Record<string, number> {
@@ -192,13 +454,7 @@ function sanitizeWeights(
     return Object.fromEntries(
         disciplines.map((discipline) => [
             discipline.key,
-            Math.max(
-                0,
-                Math.min(
-                    1000,
-                    Math.round(Number(input?.[discipline.key] ?? Math.max(1, discipline.remainingCards)))
-                )
-            ),
+            clampWeight(Number(input?.[discipline.key] ?? Math.max(1, discipline.remainingCards))),
         ])
     );
 }
@@ -210,6 +466,8 @@ function buildInitialSettings(
     const fallback: PlannerSettings = {
         examDate: buildDefaultExamDate(),
         profile: "padrao",
+        scoringModel: "discipline_weight",
+        wrongPenalty: 1,
         availabilityMinutes: sanitizeAvailability(),
         weightByDiscipline: buildDefaultWeightMap(disciplines),
     };
@@ -227,9 +485,14 @@ function buildInitialSettings(
             parsed.profile === "leve" || parsed.profile === "hardcore"
                 ? parsed.profile
                 : "padrao";
+        const scoringModel = getScoringModel(parsed.scoringModel);
+        const wrongPenalty = clampPenalty(Number(parsed.wrongPenalty ?? 1));
+
         return {
             examDate: typeof parsed.examDate === "string" ? parsed.examDate : fallback.examDate,
             profile,
+            scoringModel,
+            wrongPenalty,
             availabilityMinutes: sanitizeAvailability(parsed.availabilityMinutes),
             weightByDiscipline: sanitizeWeights(disciplines, parsed.weightByDiscipline),
         };
@@ -251,6 +514,8 @@ export default function SmartStudyPlanner({
             storageKey
         )
     );
+    const [editalDraft, setEditalDraft] = useState("");
+    const [assistantResult, setAssistantResult] = useState("");
 
     useEffect(() => {
         localStorage.setItem(storageKey, JSON.stringify(settings));
@@ -339,6 +604,8 @@ export default function SmartStudyPlanner({
 
     const disciplinePlan = useMemo(() => {
         const profile = PROFILE_CONFIG[settings.profile];
+        const scoringModel = settings.scoringModel;
+        const wrongPenalty = settings.wrongPenalty;
         const totalRemainingCards = disciplines.reduce(
             (sum, discipline) => sum + discipline.remainingCards,
             0
@@ -376,11 +643,25 @@ export default function SmartStudyPlanner({
             const completionGap = clamp01(1 - completionRatio);
             const urgencyBoost =
                 1 + metrics.urgencyLevel * 0.45 * profile.urgencyFactor;
+            const scorePotential = computeScorePotential(
+                scoringModel,
+                weight,
+                discipline.remainingCards,
+                workloadShare,
+                completionGap,
+                wrongPenalty
+            );
             const adjustedWeight =
-                Math.pow(weight + 1, profile.weightExponent) - 1;
+                Math.pow(scorePotential + 1, profile.weightExponent) - 1;
             const backlogBoost = 1 + workloadShare * profile.backlogFactor;
+            const penaltyBoost =
+                scoringModel === "negative_marking"
+                    ? 1 + wrongPenalty * completionGap * 0.22
+                    : 1;
             const riskScore = clamp01(
-                (completionGap * 0.58 + workloadShare * 0.42) * urgencyBoost
+                (completionGap * 0.58 + workloadShare * 0.42) *
+                    urgencyBoost *
+                    penaltyBoost
             );
             const criticality = weightShare * 0.62 + workloadShare * 0.38;
             const priorityScore =
@@ -412,6 +693,7 @@ export default function SmartStudyPlanner({
                 riskScore,
                 riskBand,
                 recommendation,
+                scorePotential,
                 priorityScore,
             };
         });
@@ -462,7 +744,14 @@ export default function SmartStudyPlanner({
                 };
             })
             .sort((a, b) => b.totalMinutesForDiscipline - a.totalMinutesForDiscipline);
-    }, [disciplines, metrics, settings.profile, settings.weightByDiscipline]);
+    }, [
+        disciplines,
+        metrics,
+        settings.profile,
+        settings.scoringModel,
+        settings.weightByDiscipline,
+        settings.wrongPenalty,
+    ]);
 
     const totalWeight = useMemo(
         () =>
@@ -482,6 +771,7 @@ export default function SmartStudyPlanner({
     );
 
     const activeProfile = PROFILE_CONFIG[settings.profile];
+    const activeScoringModel = SCORING_MODEL_CONFIG[settings.scoringModel];
 
     function updateAvailability(weekday: WeekdayKey, value: string) {
         const next = clampMinutes(Number(value || 0));
@@ -495,7 +785,7 @@ export default function SmartStudyPlanner({
     }
 
     function updateWeight(disciplineKey: string, value: string) {
-        const next = Math.max(0, Math.min(1000, Math.round(Number(value || 0))));
+        const next = clampWeight(Number(value || 0));
         setSettings((prev) => ({
             ...prev,
             weightByDiscipline: {
@@ -503,6 +793,48 @@ export default function SmartStudyPlanner({
                 [disciplineKey]: next,
             },
         }));
+    }
+
+    function applyEditalAssistant() {
+        const raw = editalDraft.trim();
+        if (!raw) {
+            setAssistantResult("Cole um trecho do edital para aplicar automaticamente.");
+            return;
+        }
+
+        const detectedModel = detectScoringModelFromEdital(raw);
+        const detectedPenalty = detectPenaltyFromEdital(raw);
+        const extractedWeights = extractWeightsFromEdital(raw, disciplines, detectedModel);
+        const updatedCount = Object.keys(extractedWeights).length;
+
+        setSettings((prev) => {
+            const nextWeights = { ...prev.weightByDiscipline };
+            disciplines.forEach((discipline) => {
+                const found = extractedWeights[discipline.key];
+                if (typeof found === "number" && Number.isFinite(found)) {
+                    nextWeights[discipline.key] = clampWeight(found);
+                }
+            });
+
+            return {
+                ...prev,
+                scoringModel: detectedModel,
+                wrongPenalty:
+                    detectedModel === "negative_marking"
+                        ? clampPenalty(detectedPenalty ?? prev.wrongPenalty)
+                        : prev.wrongPenalty,
+                weightByDiscipline: nextWeights,
+            };
+        });
+
+        const modelLabel = SCORING_MODEL_CONFIG[detectedModel].label;
+        const penaltyLabel =
+            detectedModel === "negative_marking"
+                ? ` | Penalidade: ${formatScore(clampPenalty(detectedPenalty ?? settings.wrongPenalty))}`
+                : "";
+        setAssistantResult(
+            `Assistente aplicado. Modelo detectado: ${modelLabel}. Disciplinas atualizadas: ${updatedCount}/${disciplines.length}${penaltyLabel}.`
+        );
     }
 
     return (
@@ -560,6 +892,86 @@ export default function SmartStudyPlanner({
                         <small className={styles.profileDescription}>
                             {activeProfile.description}
                         </small>
+                    </div>
+                    <div className={styles.modelWrap}>
+                        <span className={styles.modelLabel}>Modelo de Pontuacao do Edital</span>
+                        <div className={styles.modelSwitch}>
+                            {(Object.keys(SCORING_MODEL_CONFIG) as ScoringModel[]).map(
+                                (modelKey) => (
+                                    <button
+                                        key={modelKey}
+                                        type="button"
+                                        className={`${styles.modelButton} ${
+                                            settings.scoringModel === modelKey
+                                                ? styles.modelButtonActive
+                                                : ""
+                                        }`}
+                                        onClick={() =>
+                                            setSettings((prev) => ({
+                                                ...prev,
+                                                scoringModel: modelKey,
+                                            }))
+                                        }
+                                    >
+                                        {SCORING_MODEL_CONFIG[modelKey].label}
+                                    </button>
+                                )
+                            )}
+                        </div>
+                        {settings.scoringModel === "negative_marking" && (
+                            <label className={styles.inlineField}>
+                                <span>Penalidade por Erro</span>
+                                <input
+                                    type="number"
+                                    min={0}
+                                    max={2}
+                                    step={0.1}
+                                    value={settings.wrongPenalty}
+                                    onChange={(event) =>
+                                        setSettings((prev) => ({
+                                            ...prev,
+                                            wrongPenalty: clampPenalty(
+                                                Number(event.target.value)
+                                            ),
+                                        }))
+                                    }
+                                />
+                            </label>
+                        )}
+                        <small className={styles.modelFormula}>
+                            {activeScoringModel.formulaText}
+                        </small>
+                    </div>
+                    <div className={styles.assistantWrap}>
+                        <span className={styles.modelLabel}>Assistente de Edital</span>
+                        <textarea
+                            className={styles.assistantTextarea}
+                            value={editalDraft}
+                            onChange={(event) => setEditalDraft(event.target.value)}
+                            placeholder="Cole aqui o trecho do edital com pesos/valores por disciplina. Ex: Portugues peso 2; Especificas peso 3; errada anula uma certa."
+                        />
+                        <div className={styles.assistantActions}>
+                            <button
+                                type="button"
+                                className={styles.assistantButton}
+                                onClick={applyEditalAssistant}
+                            >
+                                Aplicar Assistente
+                            </button>
+                            <button
+                                type="button"
+                                className={styles.assistantGhostButton}
+                                onClick={() => {
+                                    setEditalDraft("");
+                                    setAssistantResult("");
+                                }}
+                            >
+                                Limpar
+                            </button>
+                        </div>
+                        {assistantResult && (
+                            <p className={styles.assistantResult}>{assistantResult}</p>
+                        )}
                     </div>
                 </div>
 
@@ -627,11 +1039,15 @@ export default function SmartStudyPlanner({
                             <span>Total de Cards</span>
                             <strong>{metrics.totalCards}</strong>
                         </article>
+                        <article>
+                            <span>Modelo</span>
+                            <strong>{activeScoringModel.label}</strong>
+                        </article>
                     </div>
 
                     <section className={styles.weightsSection}>
                         <header className={styles.sectionHeader}>
-                            <h3>Pesos na Prova</h3>
+                            <h3>{activeScoringModel.weightInputLabel}</h3>
                             <small>
                                 Perfil: {activeProfile.label} | Total: {totalWeight}
                             </small>
@@ -644,12 +1060,16 @@ export default function SmartStudyPlanner({
                                         type="number"
                                         min={0}
                                         max={1000}
+                                        step={0.1}
                                         value={row.weight}
                                         onChange={(event) =>
                                             updateWeight(row.key, event.target.value)
                                         }
                                     />
-                                    <small>{row.remainingCards} cards restantes</small>
+                                    <small>
+                                        {row.remainingCards} cards restantes | potencial{" "}
+                                        {formatScore(row.scorePotential)}
+                                    </small>
                                 </label>
                             ))}
                         </div>
@@ -667,7 +1087,8 @@ export default function SmartStudyPlanner({
                                     <th>Materia</th>
                                     <th>Concluido</th>
                                     <th>Cards</th>
-                                    <th>Peso</th>
+                                    <th>{activeScoringModel.tableWeightLabel}</th>
+                                    <th>Potencial</th>
                                     <th>Participacao</th>
                                     <th>Prioridade</th>
                                     <th>Risco</th>
@@ -689,12 +1110,14 @@ export default function SmartStudyPlanner({
                                                 type="number"
                                                 min={0}
                                                 max={1000}
+                                                step={0.1}
                                                 value={row.weight}
                                                 onChange={(event) =>
                                                     updateWeight(row.key, event.target.value)
                                                 }
                                             />
                                         </td>
+                                        <td>{formatScore(row.scorePotential)}</td>
                                         <td>
                                             <div className={styles.shareCell}>
                                                 <span>{percent(row.share)}</span>

@@ -110,10 +110,6 @@ export default async function DashboardPage() {
         <div className="container">
             {access.isTrial && <TrialBanner expiresAtLabel={trialExpiresAtLabel} />}
 
-            <section className={styles.gamificationSection}>
-                <GamificationPanel snapshot={gamification} variant="full" />
-            </section>
-
             <section className={styles.welcomeSection}>
                 <div className={styles.welcomeContent}>
                     <h1 className={styles.welcomeTitle}>
@@ -148,7 +144,10 @@ export default async function DashboardPage() {
                 </h2>
                 <WeekGrid weeks={weeks} />
             </section>
+
+            <section className={styles.gamificationSection}>
+                <GamificationPanel snapshot={gamification} variant="full" />
+            </section>
         </div>
     );
 }
-

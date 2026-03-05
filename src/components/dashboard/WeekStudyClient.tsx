@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type {
@@ -206,9 +207,12 @@ export default function WeekStudyClient({
     const [savingCardId, setSavingCardId] = useState<string>("");
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [xpGainMessage, setXpGainMessage] = useState<string>("");
+    const [showNurseCelebration, setShowNurseCelebration] = useState(false);
+    const [nurseCelebrationTick, setNurseCelebrationTick] = useState(0);
     const [activeVideo, setActiveVideo] = useState<ActiveVideoState | null>(null);
     const [playerStatsById, setPlayerStatsById] = useState<Record<string, PlayerTelemetry>>({});
     const activeVideoRef = useRef<ActiveVideoState | null>(null);
+    const nurseTimeoutRef = useRef<number | null>(null);
     const [progressByCard, setProgressByCard] = useState<Record<string, WeekProgressState>>(() => {
         const seeded: Record<string, WeekProgressState> = {};
         for (const card of allCards) {
@@ -226,6 +230,14 @@ export default function WeekStudyClient({
         const timeout = window.setTimeout(() => setXpGainMessage(""), 2200);
         return () => window.clearTimeout(timeout);
     }, [xpGainMessage]);
+
+    useEffect(() => {
+        return () => {
+            if (nurseTimeoutRef.current) {
+                window.clearTimeout(nurseTimeoutRef.current);
+            }
+        };
+    }, []);
 
     useEffect(() => {
         function handlePlayerMessage(event: MessageEvent) {
@@ -373,6 +385,17 @@ export default function WeekStudyClient({
         }
     }
 
+    function triggerNurseCelebration() {
+        setNurseCelebrationTick((prev) => prev + 1);
+        setShowNurseCelebration(true);
+        if (nurseTimeoutRef.current) {
+            window.clearTimeout(nurseTimeoutRef.current);
+        }
+        nurseTimeoutRef.current = window.setTimeout(() => {
+            setShowNurseCelebration(false);
+        }, 1900);
+    }
+
     function handleToggleCard(card: WeekCardData) {
         const current = normalizeProgress(card, progressByCard[card.cardId]);
         const markCompleted = !current.isCompleted;
@@ -391,6 +414,9 @@ export default function WeekStudyClient({
             ...prev,
             [card.cardId]: nextState,
         }));
+        if (markCompleted) {
+            triggerNurseCelebration();
+        }
         void persistCard(card.cardId, nextState);
     }
 
@@ -566,6 +592,28 @@ export default function WeekStudyClient({
 
     return (
         <div className={styles.wrapper}>
+            {showNurseCelebration && (
+                <div className={styles.nurseCelebrationOverlay} aria-hidden="true">
+                    <div
+                        key={nurseCelebrationTick}
+                        className={styles.nurseCelebrationActor}
+                    >
+                        <div className={styles.nurseCelebrationAvatarShell}>
+                            <Image
+                                src="/assets/avatar-nurse-trophy.svg"
+                                alt=""
+                                width={94}
+                                height={94}
+                                className={styles.nurseCelebrationAvatar}
+                            />
+                        </div>
+                        <span className={styles.nurseCelebrationThumb}>
+                            <i className="fas fa-thumbs-up"></i>
+                        </span>
+                    </div>
+                </div>
+            )}
+
             <section className={styles.progressSection}>
                 <div className={styles.progressHeader}>
                     <h2>Semana {weekNum}</h2>

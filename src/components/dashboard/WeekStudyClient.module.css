@@ -129,6 +129,113 @@
   color: #118660;
 }
 
+.nurseCelebrationOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3200;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+}
+
+.nurseCelebrationActor {
+  position: relative;
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 10px;
+  transform-origin: center bottom;
+  filter: drop-shadow(0 18px 30px rgba(7, 24, 38, 0.28));
+  animation: nurseWalkCenter 1.9s cubic-bezier(0.22, 0.9, 0.2, 1) forwards;
+}
+
+.nurseCelebrationAvatarShell {
+  width: 98px;
+  height: 98px;
+  border-radius: 24px;
+  border: 1px solid rgba(78, 199, 214, 0.4);
+  background:
+    radial-gradient(110% 110% at 0% 0%, rgba(78, 199, 214, 0.22), transparent 58%),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.96), rgba(238, 248, 255, 0.88));
+  backdrop-filter: blur(8px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.88),
+    0 16px 26px rgba(7, 24, 38, 0.22);
+  display: grid;
+  place-items: center;
+  transform: perspective(600px) rotateY(-8deg);
+}
+
+.nurseCelebrationAvatar {
+  width: 78px;
+  height: 78px;
+  object-fit: contain;
+}
+
+.nurseCelebrationThumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(206, 149, 69, 0.5);
+  background: linear-gradient(135deg, rgba(229, 178, 113, 0.94), rgba(206, 149, 69, 0.94));
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 12px 20px rgba(206, 149, 69, 0.35);
+  opacity: 0;
+  transform: translateY(8px) scale(0.7);
+  animation: nurseThumbUp 1.9s ease-out forwards;
+}
+
+.nurseCelebrationThumb i {
+  font-size: 1rem;
+}
+
+@keyframes nurseWalkCenter {
+  0% {
+    opacity: 0;
+    transform: translateX(-45vw) translateY(10px) scale(0.75);
+  }
+  20% {
+    opacity: 1;
+  }
+  55% {
+    opacity: 1;
+    transform: translateX(0) translateY(0) scale(1);
+  }
+  78% {
+    opacity: 1;
+    transform: translateX(0) translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(24vw) translateY(-4px) scale(0.88);
+  }
+}
+
+@keyframes nurseThumbUp {
+  0%,
+  35% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.7);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  63% {
+    transform: translateY(-3px) scale(1.08);
+  }
+  76% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.7);
+  }
+}
+
 .daysNav {
   display: grid;
   width: 100%;
@@ -800,6 +907,21 @@
 }
 
 @media (max-width: 640px) {
+  .nurseCelebrationAvatarShell {
+    width: 86px;
+    height: 86px;
+  }
+
+  .nurseCelebrationAvatar {
+    width: 68px;
+    height: 68px;
+  }
+
+  .nurseCelebrationThumb {
+    width: 40px;
+    height: 40px;
+  }
+
   .daysNav {
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 8px;
@@ -858,6 +980,26 @@
 }
 
 @media (max-width: 420px) {
+  .nurseCelebrationActor {
+    gap: 8px;
+  }
+
+  .nurseCelebrationAvatarShell {
+    width: 76px;
+    height: 76px;
+    border-radius: 18px;
+  }
+
+  .nurseCelebrationAvatar {
+    width: 60px;
+    height: 60px;
+  }
+
+  .nurseCelebrationThumb {
+    width: 34px;
+    height: 34px;
+  }
+
   .daysNav {
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }

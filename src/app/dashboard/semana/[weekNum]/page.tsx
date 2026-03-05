@@ -1,7 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { evaluateAccess, requireAuth } from "@/lib/auth/guards";
-import { getGamificationSnapshot } from "@/lib/gamification";
 import { TOTAL_WEEKS } from "@/types/content";
 import type {
     WeekCardData,
@@ -123,7 +122,7 @@ export default async function WeekDetailPage({ params }: WeekPageProps) {
         redirect("/dashboard?error=trial_locked");
     }
 
-    const [rows, progressRows, gamification] = await Promise.all([
+    const [rows, progressRows] = await Promise.all([
         prisma.weekContent.findMany({
             where: { weekNum },
             orderBy: [{ dayNum: "asc" }, { cardOrder: "asc" }],
@@ -146,10 +145,6 @@ export default async function WeekDetailPage({ params }: WeekPageProps) {
                 isCompleted: true,
                 progressData: true,
             },
-        }),
-        getGamificationSnapshot({
-            userId: user.id,
-            currentWeek: weekNum,
         }),
     ]);
 
@@ -197,7 +192,6 @@ export default async function WeekDetailPage({ params }: WeekPageProps) {
                     weekNum={weekNum}
                     days={days}
                     initialProgress={initialProgress}
-                    initialGamification={gamification}
                 />
             ) : (
                 <section className={styles.emptyState}>

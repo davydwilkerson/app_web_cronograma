@@ -600,10 +600,10 @@ export default function WeekStudyClient({
                     >
                         <div className={styles.nurseCelebrationAvatarShell}>
                             <Image
-                                src="/assets/avatar-nurse-trophy.svg"
+                                src="/assets/nurse-3d-thumbs-up.svg"
                                 alt=""
-                                width={94}
-                                height={94}
+                                width={122}
+                                height={122}
                                 className={styles.nurseCelebrationAvatar}
                             />
                         </div>

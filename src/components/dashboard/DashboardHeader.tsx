@@ -42,7 +42,7 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
           <div className="header-inner">
             <a href="/dashboard" className="logo">
               <span className="logo-text">
-                Cronograma <span>EA</span>
+                Cronograma <span>Enfermeiro Aprovado</span>
               </span>
             </a>
 

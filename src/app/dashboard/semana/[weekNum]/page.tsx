@@ -179,14 +179,6 @@ export default async function WeekDetailPage({ params }: WeekPageProps) {
 
     return (
         <div className={`container ${styles.page}`}>
-            <section className={styles.hero}>
-                <p className={styles.kicker}>Cronograma Semanal</p>
-                <h1>Semana {weekNum}</h1>
-                <p className={styles.subtitle}>
-                    Estudo Organizado por Dia com Progresso Sincronizado.
-                </p>
-            </section>
-
             {days.length > 0 ? (
                 <WeekStudyClient
                     weekNum={weekNum}

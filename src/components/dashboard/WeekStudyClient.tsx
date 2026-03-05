@@ -758,7 +758,7 @@ export default function WeekStudyClient({
                                                         title="Voltar 10 segundos"
                                                         aria-label="Voltar 10 segundos"
                                                     >
-                                                        <i className="fas fa-rotate-left"></i>
+                                                        <i className="fas fa-angles-left"></i>
                                                         10s
                                                     </button>
 
@@ -769,7 +769,7 @@ export default function WeekStudyClient({
                                                         title="Avançar 10 segundos"
                                                         aria-label="Avançar 10 segundos"
                                                     >
-                                                        <i className="fas fa-forward"></i>
+                                                        <i className="fas fa-angles-right"></i>
                                                         10s
                                                     </button>
                                                 </div>

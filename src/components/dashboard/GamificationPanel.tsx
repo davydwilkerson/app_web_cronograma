@@ -8,6 +8,12 @@ interface GamificationPanelProps {
   variant?: "full" | "compact";
 }
 
+interface InfoHintProps {
+  label: string;
+  description: string;
+  direction?: "top" | "bottom";
+}
+
 interface JourneyPhase {
   upToWeek: number;
   label: string;
@@ -322,6 +328,26 @@ function formatLeaderboardName(value: string): string {
   return parts.join(" ");
 }
 
+function InfoHint({
+  label,
+  description,
+  direction = "bottom",
+}: InfoHintProps) {
+  return (
+    <button
+      type="button"
+      className={`${styles.infoHint} ${direction === "top" ? styles.infoHintTop : styles.infoHintBottom}`}
+      aria-label={`${label}: ${description}`}
+    >
+      <span className={styles.infoHintIcon}>?</span>
+      <span className={styles.infoHintBubble} role="tooltip">
+        <strong>{label}</strong>
+        <span>{description}</span>
+      </span>
+    </button>
+  );
+}
+
 export default function GamificationPanel({
   snapshot,
   currentUserName,
@@ -356,6 +382,33 @@ export default function GamificationPanel({
         helper: "O protocolo inicial ainda vai ser iniciado.",
         footnote: "Proxima entrada clinica",
       };
+  const metricCards = [
+    {
+      label: "Pontuacao Total",
+      value: snapshot.totalXp,
+      help: "Soma de todos os pontos ganhos ao concluir cards, metas e avancos no cronograma.",
+    },
+    {
+      label: "Dias Seguidos",
+      value: `${snapshot.streak} dias`,
+      help: "Quantidade de dias consecutivos em que houve estudo registrado no sistema.",
+    },
+    {
+      label: "Ritmo de Hoje",
+      value: `${snapshot.todayFocusCombo} cards`,
+      help: "Mostra quantos cards ja tiveram atividade hoje, indicando o ritmo do seu dia.",
+    },
+    {
+      label: "Moedas",
+      value: snapshot.coins,
+      help: "Saldo acumulado com pontos, missoes e conquistas dentro da gamificacao.",
+    },
+    {
+      label: "Posicao",
+      value: snapshot.userRank ? `#${snapshot.userRank}` : "-",
+      help: "Sua colocacao no ranking de alunos com base na pontuacao acumulada.",
+    },
+  ];
 
   return (
     <section className={`${styles.panel} ${compact ? styles.compact : ""}`}>
@@ -384,49 +437,58 @@ export default function GamificationPanel({
       </div>
 
       <div className={styles.metrics}>
-        <article className={styles.metricCard}>
-          <span>Pontuacao Total</span>
-          <strong>{snapshot.totalXp}</strong>
-        </article>
-        <article className={styles.metricCard}>
-          <span>Dias Seguidos</span>
-          <strong>{snapshot.streak} dias</strong>
-        </article>
-        <article className={styles.metricCard}>
-          <span>Ritmo de Hoje</span>
-          <strong>{snapshot.todayFocusCombo} cards</strong>
-        </article>
-        <article className={styles.metricCard}>
-          <span>Moedas</span>
-          <strong>{snapshot.coins}</strong>
-        </article>
-        <article className={styles.metricCard}>
-          <span>Posicao</span>
-          <strong>{snapshot.userRank ? `#${snapshot.userRank}` : "-"}</strong>
-        </article>
+        {metricCards.map((metric) => (
+          <article key={metric.label} className={styles.metricCard}>
+            <div className={styles.metricCardHead}>
+              <span className={styles.metricCardLabel}>{metric.label}</span>
+              <InfoHint label={metric.label} description={metric.help} />
+            </div>
+            <strong>{metric.value}</strong>
+          </article>
+        ))}
       </div>
 
       <div className={styles.grid}>
         <article className={styles.block}>
           <header>
-            <h3>
-              <i className="fas fa-flag-checkered"></i>
-              Missoes do Dia
-            </h3>
-            <span>
+            <div className={styles.headerTitleWrap}>
+              <h3>
+                <i className="fas fa-flag-checkered"></i>
+                Missoes do Dia
+              </h3>
+              <InfoHint
+                label="Missoes do Dia"
+                description="Metas curtas para orientar o estudo de hoje e gerar pontos e moedas."
+              />
+            </div>
+            <span className={styles.headerMeta}>
               {dailyCompleted}/{snapshot.dailyMissions.length}
             </span>
           </header>
           <ul className={styles.missionList}>
-            {snapshot.dailyMissions.map((mission) => (
-              <li key={mission.id} className={mission.completed ? styles.missionDone : ""}>
+            {snapshot.dailyMissions.map((mission) => {
+              const missionTitle = getReadableMissionTitle(mission.id, mission.title);
+              const missionDescription = getReadableMissionDescription(
+                mission.id,
+                mission.target,
+                mission.description
+              );
+
+              return (
+                <li key={mission.id} className={mission.completed ? styles.missionDone : ""}>
                 <div className={styles.missionHead}>
-                  <strong>{getReadableMissionTitle(mission.id, mission.title)}</strong>
-                  <span>
+                  <div className={styles.missionTitleWrap}>
+                    <strong>{missionTitle}</strong>
+                    <InfoHint
+                      label={missionTitle}
+                      description={`${missionDescription} Progresso atual: ${mission.progress}/${mission.target}. Recompensa: +${mission.rewardXp} pontos e +${mission.rewardCoins} moedas.`}
+                    />
+                  </div>
+                  <span className={styles.missionProgress}>
                     {mission.progress}/{mission.target}
                   </span>
                 </div>
-                <p>{getReadableMissionDescription(mission.id, mission.target, mission.description)}</p>
+                <p>{missionDescription}</p>
                 <div className={styles.progressTrack}>
                   <span style={{ width: `${pct(mission.progress, mission.target)}%` }} />
                 </div>
@@ -434,71 +496,119 @@ export default function GamificationPanel({
                   +{mission.rewardXp} pontos | +{mission.rewardCoins} moedas
                 </small>
               </li>
-            ))}
+              );
+            })}
           </ul>
         </article>
 
         <article className={styles.block}>
           <header>
-            <h3>
-              <i className="fas fa-trophy"></i>
-              Conquistas
-            </h3>
-            <span>
+            <div className={styles.headerTitleWrap}>
+              <h3>
+                <i className="fas fa-trophy"></i>
+                Conquistas
+              </h3>
+              <InfoHint
+                label="Conquistas"
+                description="Marcos liberados conforme voce mantem constancia e avanca no cronograma."
+              />
+            </div>
+            <span className={styles.headerMeta}>
               {snapshot.achievements.filter((achievement) => achievement.unlocked).length}/
               {snapshot.achievements.length}
             </span>
           </header>
           <div className={styles.badges}>
-            {achievements.map((achievement) => (
-              <div
-                key={achievement.id}
-                className={`${styles.badge} ${achievement.unlocked ? styles.badgeOn : ""}`}
-                title={getReadableAchievementDescription(achievement.id, achievement.description)}
-              >
-                <i className={`fas ${achievement.icon}`}></i>
-                <strong>{getReadableAchievementTitle(achievement.id, achievement.title)}</strong>
-                <span>{achievement.unlocked ? "Desbloqueado" : "Bloqueado"}</span>
-              </div>
-            ))}
+            {achievements.map((achievement) => {
+              const achievementTitle = getReadableAchievementTitle(
+                achievement.id,
+                achievement.title
+              );
+              const achievementDescription = getReadableAchievementDescription(
+                achievement.id,
+                achievement.description
+              );
+
+              return (
+                <div
+                  key={achievement.id}
+                  className={`${styles.badge} ${achievement.unlocked ? styles.badgeOn : ""}`}
+                >
+                  <div className={styles.badgeTop}>
+                    <i className={`fas ${achievement.icon}`}></i>
+                    <InfoHint
+                      label={achievementTitle}
+                      description={`${achievementDescription} Status atual: ${
+                        achievement.unlocked ? "desbloqueada" : "bloqueada"
+                      }.`}
+                    />
+                  </div>
+                  <strong>{achievementTitle}</strong>
+                  <span className={styles.badgeStatus}>
+                    {achievement.unlocked ? "Desbloqueado" : "Bloqueado"}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </article>
 
         {!compact && (
           <article className={styles.block}>
             <header>
-              <h3>
-                <i className="fas fa-ranking-star"></i>
-                Classificacao Semanal
-              </h3>
-              <span>Alunos em destaque</span>
+              <div className={styles.headerTitleWrap}>
+                <h3>
+                  <i className="fas fa-ranking-star"></i>
+                  Classificacao Semanal
+                </h3>
+                <InfoHint
+                  label="Classificacao Semanal"
+                  description="Lista os alunos com maior pontuacao acumulada e mostra sua posicao no ranking."
+                />
+              </div>
+              <span className={styles.headerMeta}>Alunos em destaque</span>
             </header>
             <ol className={styles.rankList}>
-              {snapshot.leaderboard.map((entry) => (
-                <li
-                  key={`${entry.userId}-${entry.rank}`}
-                  className={entry.isCurrentUser ? styles.me : ""}
-                >
-                  <span>#{entry.rank}</span>
-                  <strong>
-                    {formatLeaderboardName(
-                      entry.isCurrentUser && currentUserName ? currentUserName : entry.displayName
-                    )}
-                  </strong>
+              {snapshot.leaderboard.map((entry) => {
+                const leaderboardName = formatLeaderboardName(
+                  entry.isCurrentUser && currentUserName ? currentUserName : entry.displayName
+                );
+
+                return (
+                  <li
+                    key={`${entry.userId}-${entry.rank}`}
+                    className={entry.isCurrentUser ? styles.me : ""}
+                  >
+                  <span className={styles.rankPosition}>#{entry.rank}</span>
+                  <div className={styles.rankNameWrap}>
+                    <strong>{leaderboardName}</strong>
+                    <InfoHint
+                      label={leaderboardName}
+                      description={`Posicao ${entry.rank} no ranking. Esta linha mostra o nome do aluno e a pontuacao acumulada de ${entry.xp} pontos.`}
+                      direction="top"
+                    />
+                  </div>
                   <small>{entry.xp} pontos</small>
                 </li>
-              ))}
+                );
+              })}
             </ol>
           </article>
         )}
 
         <article className={`${styles.block} ${styles.journeyBlock}`}>
           <header>
-            <h3>
-              <i className="fas fa-route"></i>
-              Roadmap Clinico do Aluno
-            </h3>
-            <span>{visibleRangeLabel}</span>
+            <div className={styles.headerTitleWrap}>
+              <h3>
+                <i className="fas fa-route"></i>
+                Roadmap Clinico do Aluno
+              </h3>
+              <InfoHint
+                label="Roadmap Clinico do Aluno"
+                description="Mostra em que etapa o aluno esta, quais semanas ja foram vencidas e o que falta ate a alta para aprovacao."
+              />
+            </div>
+            <span className={styles.headerMeta}>{visibleRangeLabel}</span>
           </header>
 
           <div className={styles.journeyHero}>
@@ -507,7 +617,13 @@ export default function GamificationPanel({
                 <i className={`fas ${activePhase.icon}`}></i>
                 <span>{activePhase.ward}</span>
               </div>
-              <p className={styles.journeyLeadLabel}>Boletim Clinico Atual</p>
+              <div className={styles.journeyLeadHead}>
+                <p className={styles.journeyLeadLabel}>Boletim Clinico Atual</p>
+                <InfoHint
+                  label="Boletim Clinico Atual"
+                  description="Resume a fase atual do aluno, quantos cards ja concluiu nesta etapa e qual e o quadro clinico de estudo neste momento."
+                />
+              </div>
               <strong>
                 Semana {activeJourneyWeek?.weekNum || snapshot.currentWeek} | {activeWeekState.label}
               </strong>
@@ -520,15 +636,33 @@ export default function GamificationPanel({
 
             <div className={styles.journeyStats}>
               <div className={styles.journeyStat}>
-                <span>Quadros Revertidos</span>
+                <div className={styles.journeyStatHead}>
+                  <span className={styles.journeyStatLabel}>Quadros Revertidos</span>
+                  <InfoHint
+                    label="Quadros Revertidos"
+                    description="Quantidade de semanas que ja foram concluídas com 100 por cento dos cards."
+                  />
+                </div>
                 <strong>{completedWeeks}</strong>
               </div>
               <div className={styles.journeyStat}>
-                <span>Em Tratamento</span>
+                <div className={styles.journeyStatHead}>
+                  <span className={styles.journeyStatLabel}>Em Tratamento</span>
+                  <InfoHint
+                    label="Em Tratamento"
+                    description="Semanas que ja tiveram inicio, mas ainda nao foram finalizadas por completo."
+                  />
+                </div>
                 <strong>{weeksInProgress}</strong>
               </div>
               <div className={styles.journeyStat}>
-                <span>Semanas Ate Alta</span>
+                <div className={styles.journeyStatHead}>
+                  <span className={styles.journeyStatLabel}>Semanas Ate Alta</span>
+                  <InfoHint
+                    label="Semanas Ate Alta"
+                    description="Numero de semanas restantes ate concluir todo o cronograma e chegar na etapa final."
+                  />
+                </div>
                 <strong>{remainingWeeks}</strong>
               </div>
             </div>

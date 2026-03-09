@@ -4,6 +4,7 @@ import styles from "./GamificationPanel.module.css";
 
 interface GamificationPanelProps {
   snapshot: GamificationSnapshot;
+  currentUserName?: string;
   variant?: "full" | "compact";
 }
 
@@ -300,8 +301,30 @@ function getReadableAchievementDescription(
   }
 }
 
+function toDisplayNameToken(value: string): string {
+  if (!value) return "";
+  return value.charAt(0).toLocaleUpperCase("pt-BR") + value.slice(1).toLocaleLowerCase("pt-BR");
+}
+
+function formatLeaderboardName(value: string): string {
+  const parts = value
+    .replace(/[._-]+/g, " ")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map(toDisplayNameToken);
+
+  if (parts.length === 0) {
+    return "Aluno";
+  }
+
+  return parts.join(" ");
+}
+
 export default function GamificationPanel({
   snapshot,
+  currentUserName,
   variant = "full",
 }: GamificationPanelProps) {
   const compact = variant === "compact";
@@ -457,7 +480,11 @@ export default function GamificationPanel({
                   className={entry.isCurrentUser ? styles.me : ""}
                 >
                   <span>#{entry.rank}</span>
-                  <strong>{entry.displayName}</strong>
+                  <strong>
+                    {formatLeaderboardName(
+                      entry.isCurrentUser && currentUserName ? currentUserName : entry.displayName
+                    )}
+                  </strong>
                   <small>{entry.xp} pontos</small>
                 </li>
               ))}

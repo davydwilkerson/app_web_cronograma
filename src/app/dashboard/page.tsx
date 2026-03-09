@@ -164,7 +164,11 @@ export default async function DashboardPage() {
             </section>
 
             <section className={styles.gamificationSection}>
-                <GamificationPanel snapshot={gamification} variant="full" />
+                <GamificationPanel
+                    snapshot={gamification}
+                    currentUserName={user.displayName}
+                    variant="full"
+                />
             </section>
         </div>
     );

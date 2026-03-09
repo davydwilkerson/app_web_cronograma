@@ -376,8 +376,7 @@
 }
 
 .journeyLead::after,
-.journeyStat::after,
-.stopCard::before {
+.journeyStat::after {
   content: "";
   position: absolute;
   inset: auto -16% -58% auto;
@@ -527,343 +526,276 @@
   background: linear-gradient(135deg, rgba(58, 117, 199, 0.5), rgba(79, 109, 125, 0.26));
 }
 
-.journeyRoad {
+.journeyRoadmap {
+  position: relative;
   display: grid;
   gap: 18px;
+  padding: 126px 0 18px;
 }
 
-.roadRow {
-  --road-columns: 4;
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(var(--road-columns), minmax(0, 1fr));
-  gap: 14px;
-  align-items: start;
-  padding-top: 18px;
-}
-
-.roadRow::before {
-  content: "";
+.stethoscopeTop {
   position: absolute;
-  left: clamp(28px, 5vw, 44px);
-  right: clamp(28px, 5vw, 44px);
-  top: 45px;
-  height: 8px;
-  border-radius: 999px;
-  background: linear-gradient(
-    90deg,
-    rgba(58, 117, 199, 0.24),
-    rgba(78, 199, 214, 0.24),
-    rgba(206, 149, 69, 0.28)
-  );
-  box-shadow: inset 0 0 0 1px rgba(58, 117, 199, 0.1);
+  left: 50%;
+  top: 0;
+  width: 170px;
+  height: 118px;
+  transform: translateX(-50%);
+  pointer-events: none;
 }
 
-.bridgeRight::after,
-.bridgeLeft::after {
-  content: "";
+.scopeEarLeft,
+.scopeEarRight {
   position: absolute;
-  top: 45px;
-  bottom: -18px;
+  top: 0;
+  width: 34px;
+  height: 34px;
+  border: 4px solid rgba(255, 255, 255, 0.94);
+  border-bottom: none;
+  border-radius: 22px 22px 0 0;
+}
+
+.scopeEarLeft {
+  left: 36px;
+  transform: rotate(-14deg);
+}
+
+.scopeEarRight {
+  right: 36px;
+  transform: rotate(14deg);
+}
+
+.scopeTube {
+  position: absolute;
+  left: 50%;
+  top: 20px;
+  width: 86px;
+  height: 68px;
+  transform: translateX(-50%);
+  border: 4px solid rgba(255, 255, 255, 0.94);
+  border-top: none;
+  border-radius: 0 0 56px 56px;
+}
+
+.scopeChest {
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  width: 26px;
+  height: 26px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, 0.94);
+  background: rgba(255, 255, 255, 0.24);
+  box-shadow: 0 12px 26px rgba(8, 31, 46, 0.18);
+}
+
+.timelineRail {
+  position: absolute;
+  left: 50%;
+  top: 102px;
+  bottom: 24px;
   width: 8px;
+  transform: translateX(-50%);
   border-radius: 999px;
-  background: linear-gradient(
-    180deg,
-    rgba(206, 149, 69, 0.28),
-    rgba(78, 199, 214, 0.22),
-    rgba(58, 117, 199, 0.18)
-  );
-  box-shadow: inset 0 0 0 1px rgba(58, 117, 199, 0.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(205, 236, 244, 0.86));
+  box-shadow:
+    0 0 0 1px rgba(19, 93, 115, 0.12),
+    0 14px 34px rgba(8, 31, 46, 0.12);
 }
 
-.bridgeRight::after {
-  right: clamp(28px, 5vw, 44px);
-}
-
-.bridgeLeft::after {
-  left: clamp(28px, 5vw, 44px);
-}
-
-.roadStop {
-  --phase-a: var(--accent-2);
-  --phase-b: var(--gold);
-  --phase-glow: rgba(78, 199, 214, 0.14);
+.roadmapStep {
+  --phase-a: #0d7692;
+  --phase-b: #71cfe0;
+  --phase-glow: rgba(113, 207, 224, 0.18);
   position: relative;
   display: grid;
-  gap: 10px;
-  min-width: 0;
+  grid-template-columns: 1fr 120px 1fr;
+  align-items: center;
+  min-height: 130px;
 }
 
-.stopMarkerWrap {
+.stepLeft .stepCard {
+  grid-column: 1;
+  justify-self: end;
+}
+
+.stepRight .stepCard {
+  grid-column: 3;
+  justify-self: start;
+}
+
+.stepLeft .stepConnector {
+  grid-column: 2;
+  justify-self: end;
+}
+
+.stepRight .stepConnector {
+  grid-column: 2;
+  justify-self: start;
+}
+
+.stepLeft .stepMarker {
+  grid-column: 2;
+  justify-self: end;
+  transform: translateX(50%);
+}
+
+.stepRight .stepMarker {
+  grid-column: 2;
+  justify-self: start;
+  transform: translateX(-50%);
+}
+
+.stepConnector {
+  width: 52px;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--phase-a), var(--phase-b));
+  box-shadow: 0 8px 18px var(--phase-glow);
+}
+
+.stepMarker {
   position: relative;
   z-index: 1;
-  min-height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 62px;
+  height: 62px;
+  display: grid;
+  place-items: center;
 }
 
-.stopPulse {
-  position: absolute;
-  width: 68px;
-  height: 68px;
+.stepMarkerCore {
+  width: 62px;
+  height: 62px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(58, 117, 199, 0.18), transparent 68%);
+  border: 4px solid rgba(255, 255, 255, 0.96);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.98), rgba(226, 244, 248, 0.9));
+  display: grid;
+  place-items: center;
+  color: #0d344c;
+  font-size: 1rem;
+  box-shadow:
+    0 0 0 6px rgba(114, 206, 223, 0.16),
+    0 18px 36px rgba(8, 31, 46, 0.14);
 }
 
-.stopMarker {
-  position: relative;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  border: 1px solid rgba(58, 117, 199, 0.22);
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.98), rgba(234, 242, 248, 0.86));
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--accent);
-  font-size: 0.84rem;
-  font-weight: 800;
-  font-family: var(--font-orbitron), var(--font-sora), sans-serif;
-  box-shadow: 0 10px 26px rgba(10, 38, 56, 0.14);
-}
-
-.stopCard {
+.stepCard {
+  width: min(100%, 360px);
   position: relative;
   overflow: hidden;
-  min-height: 158px;
-  border: 1px solid rgba(58, 117, 199, 0.16);
+  border: 1px solid rgba(19, 93, 115, 0.16);
   border-radius: 18px;
   background:
-    linear-gradient(160deg, rgba(255, 255, 255, 0.92), rgba(243, 250, 255, 0.8)),
-    rgba(255, 255, 255, 0.8);
-  padding: 14px 14px 12px;
+    linear-gradient(160deg, rgba(255, 255, 255, 0.97), rgba(242, 251, 253, 0.88)),
+    rgba(255, 255, 255, 0.92);
+  box-shadow: 0 20px 40px rgba(8, 31, 46, 0.12);
+  padding: 14px 16px 12px;
   display: grid;
-  gap: 10px;
-  box-shadow: 0 14px 34px rgba(10, 38, 56, 0.1);
-  transition:
-    transform var(--transition),
-    box-shadow var(--transition),
-    border-color var(--transition);
+  gap: 8px;
 }
 
-.stopCard::after {
+.stepCard::before {
   content: "";
   position: absolute;
   inset: 0 0 auto 0;
   height: 4px;
   background: linear-gradient(90deg, var(--phase-a), var(--phase-b));
-  opacity: 0.92;
 }
 
-.roadStop:hover .stopCard {
-  transform: translateY(-3px);
-  box-shadow: 0 18px 38px rgba(10, 38, 56, 0.14);
-}
-
-.stopCardHead {
+.stepCardTop {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.stopCardHead span {
-  color: var(--muted);
-  font-size: 0.66rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.stopTheme {
-  display: grid;
-  gap: 6px;
-}
-
-.stopWeekLabel {
-  color: var(--muted);
-  font-size: 0.66rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.phasePill {
-  width: fit-content;
-  border: 1px solid rgba(255, 255, 255, 0.34);
-  border-radius: 999px;
-  background: linear-gradient(135deg, var(--phase-a), var(--phase-b));
-  padding: 5px 8px;
-  display: inline-flex;
   align-items: center;
-  gap: 6px;
-  color: #0a3046;
-  box-shadow: 0 10px 20px var(--phase-glow);
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
-.phasePill i {
-  font-size: 0.74rem;
-}
-
-.phasePill span {
-  color: #0a3046;
-  font-size: 0.64rem;
+.stepRoadmapLabel {
+  color: #0d6f8b;
+  font-size: 0.7rem;
   font-weight: 800;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
-.stopCardHead strong {
-  color: var(--accent);
-  font-size: 0.82rem;
-  font-family: var(--font-fraunces), Georgia, serif;
-  text-align: right;
-}
-
-.stopStatus {
-  max-width: 11ch;
-  border: 1px solid rgba(9, 42, 61, 0.08);
+.stepWard {
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.64);
-  padding: 6px 8px;
-  line-height: 1.1;
+  background: rgba(13, 111, 139, 0.08);
+  padding: 5px 8px;
+  color: #0d5165;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
-.stopDescription {
-  margin: 0;
-  min-height: 2.6em;
-  color: var(--muted);
-  font-size: 0.74rem;
-  line-height: 1.45;
-}
-
-.stopNumbers {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 8px;
-}
-
-.stopNumbers strong {
+.stepHeadline {
   color: var(--accent);
-  font-size: 1.12rem;
-  font-family: var(--font-orbitron), var(--font-sora), sans-serif;
+  font-size: 0.95rem;
+  font-family: var(--font-fraunces), Georgia, serif;
+  line-height: 1.2;
 }
 
-.stopNumbers span {
+.stepBody {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+
+.stepMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
   color: var(--muted);
   font-size: 0.72rem;
   font-weight: 700;
 }
 
-.stopProgress {
-  width: 100%;
-  height: 8px;
-  border-radius: 999px;
-  overflow: hidden;
-  background: rgba(9, 42, 61, 0.1);
+.stepMeta strong {
+  color: var(--accent);
+  font-size: 1rem;
+  font-family: var(--font-orbitron), var(--font-sora), sans-serif;
 }
 
-.stopProgress span {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, var(--neon-blue), var(--neon-cyan), var(--gold));
-}
-
-.stopFootnote {
-  color: var(--muted);
+.stepFootnote {
+  color: #0d6f8b;
   font-size: 0.66rem;
   font-weight: 800;
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
-.stopCurrent .stopPulse {
-  background: radial-gradient(circle, rgba(206, 149, 69, 0.28), transparent 68%);
-}
-
-.stopCurrent .stopStatus {
-  border-color: rgba(206, 149, 69, 0.28);
-  background: rgba(255, 245, 224, 0.84);
-}
-
-.stopCurrent .stopMarker {
-  border-color: rgba(206, 149, 69, 0.52);
-  background: linear-gradient(160deg, #fff2d6, #f7d796);
-  color: #0a3046;
+.stopCurrent .stepMarkerCore {
   box-shadow:
-    0 0 0 6px rgba(206, 149, 69, 0.16),
-    0 14px 28px rgba(206, 149, 69, 0.28);
+    0 0 0 6px rgba(114, 206, 223, 0.2),
+    0 18px 36px rgba(8, 31, 46, 0.16);
 }
 
-.stopCurrent .stopCard {
-  border-color: rgba(206, 149, 69, 0.42);
-  background: linear-gradient(160deg, rgba(255, 248, 236, 0.96), rgba(255, 255, 255, 0.82));
+.stopCurrent .stepCard {
+  border-color: rgba(19, 93, 115, 0.24);
 }
 
-.stopCurrent .stopProgress span {
-  background: linear-gradient(90deg, var(--gold), var(--gold-2), #f7d796);
+.stopDone .stepMarkerCore,
+.stopStarted .stepMarkerCore,
+.stopPlanned .stepMarkerCore,
+.stopEmpty .stepMarkerCore {
+  box-shadow:
+    0 0 0 6px rgba(114, 206, 223, 0.12),
+    0 18px 36px rgba(8, 31, 46, 0.12);
 }
 
-.stopDone .stopPulse {
-  background: radial-gradient(circle, rgba(20, 131, 95, 0.2), transparent 68%);
+.stopDone .stepCard {
+  border-color: rgba(19, 93, 115, 0.18);
 }
 
-.stopDone .stopStatus {
-  border-color: rgba(20, 131, 95, 0.24);
-  background: rgba(232, 250, 243, 0.86);
+.stopStarted .stepCard {
+  border-color: rgba(19, 93, 115, 0.16);
 }
 
-.stopDone .stopMarker {
-  border-color: rgba(20, 131, 95, 0.42);
-  background: linear-gradient(160deg, rgba(226, 252, 242, 0.98), rgba(159, 234, 206, 0.84));
-  color: #0e4c37;
-}
-
-.stopDone .stopCard {
-  border-color: rgba(20, 131, 95, 0.3);
-  background: linear-gradient(160deg, rgba(235, 252, 244, 0.92), rgba(255, 255, 255, 0.78));
-}
-
-.stopDone .stopProgress span {
-  background: linear-gradient(90deg, #14835f, #56c89a);
-}
-
-.stopStarted .stopMarker {
-  border-color: rgba(58, 117, 199, 0.4);
-  background: linear-gradient(160deg, rgba(235, 245, 255, 0.98), rgba(189, 217, 255, 0.86));
-  color: #123f61;
-}
-
-.stopStarted .stopCard {
-  border-color: rgba(58, 117, 199, 0.28);
-}
-
-.stopStarted .stopStatus {
-  border-color: rgba(58, 117, 199, 0.2);
-  background: rgba(236, 244, 255, 0.84);
-}
-
-.stopPlanned .stopCard {
+.stopPlanned .stepCard,
+.stopEmpty .stepCard {
   border-style: dashed;
-}
-
-.stopPlanned .stopStatus,
-.stopEmpty .stopStatus {
-  background: rgba(245, 248, 251, 0.82);
-}
-
-.stopEmpty .stopPulse {
-  opacity: 0.48;
-}
-
-.stopEmpty .stopMarker,
-.stopPlanned .stopMarker {
-  border-color: rgba(79, 109, 125, 0.22);
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.94), rgba(237, 243, 247, 0.84));
-  color: var(--muted);
 }
 
 [data-theme="dark"] .panel {
@@ -897,14 +829,13 @@
 [data-theme="dark"] .journeyLead,
 [data-theme="dark"] .journeyStat,
 [data-theme="dark"] .legendItem,
-[data-theme="dark"] .stopCard {
+[data-theme="dark"] .stepCard {
   border-color: rgba(122, 166, 229, 0.24);
   background: rgba(15, 33, 50, 0.76);
 }
 
 [data-theme="dark"] .journeyLead::after,
-[data-theme="dark"] .journeyStat::after,
-[data-theme="dark"] .stopCard::before {
+[data-theme="dark"] .journeyStat::after {
   background: radial-gradient(circle, rgba(240, 201, 134, 0.12), transparent 68%);
 }
 
@@ -925,52 +856,45 @@
   color: #081b2a;
 }
 
-[data-theme="dark"] .stopStatus {
-  border-color: rgba(122, 166, 229, 0.16);
-  background: rgba(10, 27, 40, 0.58);
+[data-theme="dark"] .scopeEarLeft,
+[data-theme="dark"] .scopeEarRight,
+[data-theme="dark"] .scopeTube,
+[data-theme="dark"] .scopeChest {
+  border-color: rgba(236, 248, 252, 0.92);
 }
 
-[data-theme="dark"] .stopCurrent .stopStatus {
-  border-color: rgba(240, 201, 134, 0.22);
-  background: rgba(70, 50, 22, 0.46);
+[data-theme="dark"] .scopeChest {
+  background: rgba(236, 248, 252, 0.18);
 }
 
-[data-theme="dark"] .stopDone .stopStatus {
-  border-color: rgba(62, 189, 146, 0.24);
-  background: rgba(16, 58, 45, 0.48);
+[data-theme="dark"] .timelineRail {
+  background: linear-gradient(180deg, rgba(236, 248, 252, 0.84), rgba(109, 217, 229, 0.28));
+  box-shadow:
+    0 0 0 1px rgba(122, 166, 229, 0.12),
+    0 14px 34px rgba(0, 0, 0, 0.24);
 }
 
-[data-theme="dark"] .stopStarted .stopStatus {
-  border-color: rgba(122, 166, 229, 0.22);
-  background: rgba(18, 45, 71, 0.48);
+[data-theme="dark"] .stepMarkerCore {
+  border-color: rgba(236, 248, 252, 0.92);
+  background: linear-gradient(160deg, rgba(18, 45, 71, 0.96), rgba(14, 35, 53, 0.92));
+  color: #eef6fb;
+  box-shadow:
+    0 0 0 6px rgba(109, 217, 229, 0.1),
+    0 18px 36px rgba(0, 0, 0, 0.26);
 }
 
-[data-theme="dark"] .roadRow::before {
-  background: linear-gradient(
-    90deg,
-    rgba(122, 166, 229, 0.22),
-    rgba(109, 217, 229, 0.18),
-    rgba(240, 201, 134, 0.22)
-  );
-  box-shadow: inset 0 0 0 1px rgba(122, 166, 229, 0.14);
+[data-theme="dark"] .stepWard {
+  background: rgba(109, 217, 229, 0.14);
+  color: #d8f4f8;
 }
 
-[data-theme="dark"] .bridgeRight::after,
-[data-theme="dark"] .bridgeLeft::after {
-  background: linear-gradient(
-    180deg,
-    rgba(240, 201, 134, 0.2),
-    rgba(109, 217, 229, 0.16),
-    rgba(122, 166, 229, 0.16)
-  );
-  box-shadow: inset 0 0 0 1px rgba(122, 166, 229, 0.12);
+[data-theme="dark"] .stepRoadmapLabel,
+[data-theme="dark"] .stepFootnote {
+  color: #93dbea;
 }
 
-[data-theme="dark"] .stopMarker {
-  border-color: rgba(122, 166, 229, 0.3);
-  background: linear-gradient(160deg, rgba(22, 50, 74, 0.98), rgba(16, 38, 58, 0.88));
-  color: var(--text-strong);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.28);
+[data-theme="dark"] .stepBody {
+  color: var(--muted);
 }
 
 [data-theme="dark"] .missionDone {
@@ -988,39 +912,20 @@
   color: #f0c986;
 }
 
-[data-theme="dark"] .stopCurrent .stopMarker {
-  border-color: rgba(240, 201, 134, 0.48);
-  background: linear-gradient(160deg, rgba(98, 69, 28, 0.96), rgba(240, 201, 134, 0.28));
-  color: #fff6e4;
-  box-shadow:
-    0 0 0 6px rgba(240, 201, 134, 0.08),
-    0 14px 28px rgba(0, 0, 0, 0.3);
+[data-theme="dark"] .stopCurrent .stepCard {
+  border-color: rgba(109, 217, 229, 0.3);
 }
 
-[data-theme="dark"] .stopCurrent .stopCard {
-  border-color: rgba(240, 201, 134, 0.32);
-  background: linear-gradient(160deg, rgba(62, 45, 20, 0.34), rgba(15, 33, 50, 0.82));
+[data-theme="dark"] .stopDone .stepCard {
+  border-color: rgba(109, 217, 229, 0.24);
 }
 
-[data-theme="dark"] .stopDone .stopMarker {
-  border-color: rgba(62, 189, 146, 0.44);
-  background: linear-gradient(160deg, rgba(17, 66, 51, 0.94), rgba(62, 189, 146, 0.26));
-  color: #dff8ef;
+[data-theme="dark"] .stopStarted .stepCard {
+  border-color: rgba(109, 217, 229, 0.22);
 }
 
-[data-theme="dark"] .stopDone .stopCard {
-  border-color: rgba(62, 189, 146, 0.28);
-  background: linear-gradient(160deg, rgba(13, 56, 43, 0.36), rgba(15, 33, 50, 0.82));
-}
-
-[data-theme="dark"] .stopStarted .stopMarker {
-  border-color: rgba(122, 166, 229, 0.38);
-  background: linear-gradient(160deg, rgba(23, 55, 86, 0.94), rgba(122, 166, 229, 0.22));
-  color: #edf5fd;
-}
-
-[data-theme="dark"] .stopPlanned .stopCard,
-[data-theme="dark"] .stopEmpty .stopCard {
+[data-theme="dark"] .stopPlanned .stepCard,
+[data-theme="dark"] .stopEmpty .stepCard {
   border-color: rgba(145, 169, 187, 0.18);
 }
 
@@ -1039,8 +944,8 @@
     grid-template-columns: 1fr;
   }
 
-  .roadRow {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .journeyRoadmap {
+    padding-top: 104px;
   }
 }
 
@@ -1065,54 +970,55 @@
     grid-template-columns: 1fr;
   }
 
-  .roadRow {
-    grid-template-columns: 1fr;
-    gap: 12px;
-    padding-top: 0;
-    padding-left: 18px;
+  .stethoscopeTop {
+    left: 24px;
+    transform: none;
+    width: 112px;
+    height: 92px;
   }
 
-  .roadRow::before {
-    left: 26px;
-    right: auto;
-    top: 12px;
-    bottom: 0;
-    width: 8px;
-    height: auto;
-    background: linear-gradient(
-      180deg,
-      rgba(58, 117, 199, 0.24),
-      rgba(78, 199, 214, 0.24),
-      rgba(206, 149, 69, 0.28)
-    );
+  .scopeEarLeft {
+    left: 12px;
   }
 
-  .bridgeRight::after,
-  .bridgeLeft::after {
-    left: 26px;
-    right: auto;
-    top: auto;
-    bottom: -18px;
-    width: 8px;
-    height: 24px;
+  .scopeEarRight {
+    right: 12px;
   }
 
-  .roadStop {
-    grid-template-columns: auto 1fr;
-    align-items: start;
-    gap: 10px;
+  .scopeTube {
+    width: 64px;
+    height: 54px;
   }
 
-  .stopMarkerWrap {
-    min-height: 0;
-    padding-top: 6px;
+  .timelineRail {
+    left: 39px;
+    top: 84px;
+    transform: none;
   }
 
-  .stopCard {
+  .roadmapStep {
+    grid-template-columns: 78px 1fr;
     min-height: 0;
   }
 
-  .roadStop:hover .stopCard {
+  .stepLeft .stepCard,
+  .stepRight .stepCard {
+    grid-column: 2;
+    justify-self: stretch;
+  }
+
+  .stepLeft .stepConnector,
+  .stepRight .stepConnector {
+    grid-column: 1;
+    justify-self: start;
+    width: 28px;
+    transform: translateX(35px);
+  }
+
+  .stepLeft .stepMarker,
+  .stepRight .stepMarker {
+    grid-column: 1;
+    justify-self: center;
     transform: none;
   }
 }

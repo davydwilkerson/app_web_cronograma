@@ -20,54 +20,54 @@ interface JourneyPhase {
 
 const JOURNEY_PHASES: JourneyPhase[] = [
   {
-    upToWeek: 4,
+    upToWeek: 1,
     label: "Estado gravissimo",
     ward: "Sala Vermelha",
-    brief: "Chegou sem metodo, sem rotina e sem leitura de prova. O foco agora e sobreviver ao caos do estudo.",
+    brief: "Chega sem metodo, sem rotina e sem leitura de prova. O objetivo e sair do colapso do estudo.",
     icon: "fa-ambulance",
-    colorA: "#b84747",
-    colorB: "#d1664f",
-    glow: "rgba(184, 71, 71, 0.2)",
+    colorA: "#0b6a88",
+    colorB: "#2499ba",
+    glow: "rgba(36, 153, 186, 0.18)",
   },
   {
-    upToWeek: 8,
+    upToWeek: 2,
     label: "Estado grave",
     ward: "UTI do Cronograma",
-    brief: "Ja responde aos primeiros protocolos, mas ainda exige intervencao forte de rotina e disciplina.",
+    brief: "Ja entrou no protocolo, mas ainda depende de intervencao forte para ganhar ritmo e constancia.",
     icon: "fa-heartbeat",
-    colorA: "#d1664f",
-    colorB: "#ce9545",
-    glow: "rgba(209, 102, 79, 0.2)",
+    colorA: "#0d7692",
+    colorB: "#4bb5cb",
+    glow: "rgba(75, 181, 203, 0.18)",
+  },
+  {
+    upToWeek: 3,
+    label: "Quadro delicado",
+    ward: "Monitorizacao Intensiva",
+    brief: "Os sinais vitais do estudo melhoram. Revisao, execucao e disciplina comecam a responder.",
+    icon: "fa-notes-medical",
+    colorA: "#117f97",
+    colorB: "#5cc2d6",
+    glow: "rgba(92, 194, 214, 0.18)",
+  },
+  {
+    upToWeek: 4,
+    label: "Sinais de estabilizacao",
+    ward: "Observacao Clinica",
+    brief: "O aluno respira melhor dentro do cronograma e ja sustenta uma rotina mais segura.",
+    icon: "fa-stethoscope",
+    colorA: "#14889d",
+    colorB: "#71cfe0",
+    glow: "rgba(113, 207, 224, 0.18)",
   },
   {
     upToWeek: 12,
-    label: "Quadro delicado",
-    ward: "Monitorizacao Intensiva",
-    brief: "Os sinais vitais do estudo melhoram. Revisao, execucao e constancia comecam a estabilizar.",
-    icon: "fa-notes-medical",
-    colorA: "#ce9545",
-    colorB: "#f1c46d",
-    glow: "rgba(206, 149, 69, 0.22)",
-  },
-  {
-    upToWeek: 16,
-    label: "Estavel sob observacao",
-    ward: "Observacao Clinica",
-    brief: "O aluno passa a estudar com mais seguranca, leitura melhor da prova e menos oscilacao.",
-    icon: "fa-stethoscope",
-    colorA: "#3a75c7",
-    colorB: "#4ec7d6",
-    glow: "rgba(58, 117, 199, 0.18)",
-  },
-  {
-    upToWeek: 20,
     label: "Recuperacao assistida",
     ward: "Enfermaria de Revisao",
-    brief: "O conteudo circula melhor. Simulados, revisoes e conduta de prova ficam mais firmes.",
+    brief: "Conteudo em circulacao, revisao forte e mais dominio nas decisoes de prova.",
     icon: "fa-briefcase-medical",
-    colorA: "#14835f",
-    colorB: "#56c89a",
-    glow: "rgba(20, 131, 95, 0.18)",
+    colorA: "#1f8ca5",
+    colorB: "#89d7e4",
+    glow: "rgba(137, 215, 228, 0.18)",
   },
   {
     upToWeek: 24,
@@ -75,9 +75,9 @@ const JOURNEY_PHASES: JourneyPhase[] = [
     ward: "Protocolo de Alta",
     brief: "Paciente academico pronto para sair da unidade e enfrentar a prova com autonomia.",
     icon: "fa-award",
-    colorA: "#ce9545",
-    colorB: "#4ec7d6",
-    glow: "rgba(229, 178, 113, 0.2)",
+    colorA: "#1d7f99",
+    colorB: "#7ed1df",
+    glow: "rgba(126, 209, 223, 0.18)",
   },
 ];
 
@@ -86,35 +86,15 @@ function pct(progress: number, target: number): number {
   return Math.max(0, Math.min(100, Math.round((progress / target) * 100)));
 }
 
-function journeySlice(
-  nodes: GamificationWeekJourneyNode[],
-  currentWeek: number,
-  variant: "full" | "compact"
-): GamificationWeekJourneyNode[] {
-  if (variant === "full") {
-    return nodes;
-  }
-
-  const from = Math.max(0, currentWeek - 7);
-  const to = Math.min(nodes.length, from + 12);
-  return nodes.slice(from, to);
-}
-
-function groupJourneyRows(
-  nodes: GamificationWeekJourneyNode[],
-  rowSize: number
-): GamificationWeekJourneyNode[][] {
-  const rows: GamificationWeekJourneyNode[][] = [];
-
-  for (let index = 0; index < nodes.length; index += rowSize) {
-    rows.push(nodes.slice(index, index + rowSize));
-  }
-
-  return rows;
+function journeySlice(nodes: GamificationWeekJourneyNode[]): GamificationWeekJourneyNode[] {
+  return nodes.slice(0, 4);
 }
 
 function getJourneyPhase(weekNum: number): JourneyPhase {
-  return JOURNEY_PHASES.find((phase) => weekNum <= phase.upToWeek) || JOURNEY_PHASES[JOURNEY_PHASES.length - 1];
+  return (
+    JOURNEY_PHASES.find((phase) => weekNum <= phase.upToWeek) ||
+    JOURNEY_PHASES[JOURNEY_PHASES.length - 1]
+  );
 }
 
 function getPhaseStyle(phase: JourneyPhase): CSSProperties {
@@ -135,7 +115,7 @@ function getJourneyNodeState(week: GamificationWeekJourneyNode, phase: JourneyPh
     return {
       tone: "current",
       label: "Em atendimento",
-      helper: `${phase.ward} | ${phase.label}. ${phase.brief}`,
+      helper: `${phase.label}. ${phase.brief}`,
       footnote: "Paciente em atendimento agora",
     };
   }
@@ -144,7 +124,7 @@ function getJourneyNodeState(week: GamificationWeekJourneyNode, phase: JourneyPh
     return {
       tone: "done",
       label: "Quadro revertido",
-      helper: `${phase.ward} liberada. ${phase.label} passou pelo protocolo com sucesso.`,
+      helper: `${phase.ward} concluida com resposta clinica positiva ao protocolo.`,
       footnote: "Liberado da ala",
     };
   }
@@ -153,7 +133,7 @@ function getJourneyNodeState(week: GamificationWeekJourneyNode, phase: JourneyPh
     return {
       tone: "started",
       label: "Em tratamento",
-      helper: `${phase.ward} em acompanhamento. O quadro ja responde ao protocolo de estudo.`,
+      helper: `${phase.ward} em andamento. O quadro ja responde ao tratamento de estudo.`,
       footnote: "Monitorizacao ativa",
     };
   }
@@ -162,7 +142,7 @@ function getJourneyNodeState(week: GamificationWeekJourneyNode, phase: JourneyPh
     return {
       tone: "planned",
       label: "Aguardando triagem",
-      helper: `${phase.ward} sera a proxima unidade. Ainda nao iniciou essa conduta.`,
+      helper: `${phase.ward} sera a proxima etapa do protocolo nas primeiras semanas.`,
       footnote: "Proxima entrada clinica",
     };
   }
@@ -170,7 +150,7 @@ function getJourneyNodeState(week: GamificationWeekJourneyNode, phase: JourneyPh
   return {
     tone: "empty",
     label: "Sem prontuario",
-    helper: `Ainda nao ha prontuario clinico da fase ${phase.label} no banco.`,
+    helper: `Ainda nao ha registro clinico da fase ${phase.label} no banco.`,
     footnote: "Sem registro de protocolo",
   };
 }
@@ -198,8 +178,7 @@ export default function GamificationPanel({
 }: GamificationPanelProps) {
   const compact = variant === "compact";
   const achievements = compact ? snapshot.achievements.slice(0, 6) : snapshot.achievements;
-  const journey = journeySlice(snapshot.weekJourney, snapshot.currentWeek, variant);
-  const roadRows = groupJourneyRows(journey, compact ? 3 : 4);
+  const journey = journeySlice(snapshot.weekJourney);
   const dailyCompleted = snapshot.dailyMissions.filter((mission) => mission.completed).length;
   const completedWeeks = snapshot.weekJourney.filter((week) => week.percentage >= 100).length;
   const weeksInProgress = snapshot.weekJourney.filter(
@@ -216,8 +195,8 @@ export default function GamificationPanel({
     ? getJourneyNodeState(activeJourneyWeek, activePhase)
     : {
         tone: "planned" as const,
-        label: "Na fila",
-        helper: "A proxima fase da trilha esta pronta para iniciar.",
+        label: "Aguardando triagem",
+        helper: "O protocolo inicial ainda vai ser iniciado.",
         footnote: "Proxima entrada clinica",
       };
 
@@ -226,7 +205,7 @@ export default function GamificationPanel({
       <div className={styles.hero}>
         <div>
           <p className={styles.kicker}>Gamificacao Ativa</p>
-          <h2>Paciente academico em protocolo de alta rumo a aprovacao</h2>
+          <h2>Infografico clinico do aluno ate estabilizar o estudo</h2>
         </div>
         <div className={styles.levelChip}>
           <span>
@@ -356,9 +335,9 @@ export default function GamificationPanel({
           <header>
             <h3>
               <i className="fas fa-route"></i>
-              Protocolo Clinico da Aprovacao
+              Roadmap Clinico Inicial
             </h3>
-            <span>Da sala vermelha a alta | 24 semanas</span>
+            <span>Somente semanas 01 a 04</span>
           </header>
 
           <div className={styles.journeyHero}>
@@ -373,7 +352,7 @@ export default function GamificationPanel({
               </strong>
               <p>
                 {activeJourneyWeek?.totalCards
-                  ? `${activePhase.label}. ${activeJourneyWeek.completedCards} de ${activeJourneyWeek.totalCards} cards concluidos nesta etapa. ${activePhase.brief}`
+                  ? `${activePhase.label}. ${activeJourneyWeek.completedCards} de ${activeJourneyWeek.totalCards} cards concluidos. ${activePhase.brief}`
                   : "Esta semana ainda nao tem cards carregados no banco."}
               </p>
             </div>
@@ -413,79 +392,56 @@ export default function GamificationPanel({
             </span>
           </div>
 
-          <div className={styles.journeyRoad}>
-            {roadRows.map((row, rowIndex) => {
-              const isLastRow = rowIndex === roadRows.length - 1;
-              const displayRow = rowIndex % 2 === 1 ? [...row].reverse() : row;
-              const bridgeClass = !isLastRow
-                ? rowIndex % 2 === 0
-                  ? styles.bridgeRight
-                  : styles.bridgeLeft
-                : "";
-              const rowStyle: CSSProperties = {
-                ["--road-columns" as string]: String(displayRow.length),
-              };
+          <div className={styles.journeyRoadmap}>
+            <div className={styles.stethoscopeTop}>
+              <span className={styles.scopeEarLeft}></span>
+              <span className={styles.scopeEarRight}></span>
+              <span className={styles.scopeTube}></span>
+              <span className={styles.scopeChest}></span>
+            </div>
+
+            <div className={styles.timelineRail}></div>
+
+            {journey.map((week, index) => {
+              const phase = getJourneyPhase(week.weekNum);
+              const journeyState = getJourneyNodeState(week, phase);
+              const phaseStyle = getPhaseStyle(phase);
+              const sideClass = index % 2 === 0 ? styles.stepRight : styles.stepLeft;
 
               return (
-                <div
-                  key={`journey-row-${rowIndex}`}
-                  className={`${styles.roadRow} ${bridgeClass}`}
-                  style={rowStyle}
+                <article
+                  key={week.weekNum}
+                  className={`${styles.roadmapStep} ${sideClass} ${getStopToneClass(journeyState.tone)}`}
+                  style={phaseStyle}
+                  title={`Semana ${week.weekNum} - ${week.percentage}%`}
                 >
-                  {displayRow.map((week) => {
-                    const phase = getJourneyPhase(week.weekNum);
-                    const journeyState = getJourneyNodeState(week, phase);
-                    const phaseStyle = getPhaseStyle(phase);
+                  <div className={styles.stepConnector}></div>
 
-                    return (
-                      <article
-                        key={week.weekNum}
-                        className={`${styles.roadStop} ${getStopToneClass(journeyState.tone)}`}
-                        style={phaseStyle}
-                        title={`Semana ${week.weekNum} - ${week.percentage}%`}
-                      >
-                        <div className={styles.stopMarkerWrap}>
-                          <span className={styles.stopPulse}></span>
-                          <span className={styles.stopMarker}>
-                            {String(week.weekNum).padStart(2, "0")}
-                          </span>
-                        </div>
+                  <div className={styles.stepMarker}>
+                    <div className={styles.stepMarkerCore}>
+                      <i className={`fas ${phase.icon}`}></i>
+                    </div>
+                  </div>
 
-                        <div className={styles.stopCard}>
-                          <div className={styles.stopCardHead}>
-                            <div className={styles.stopTheme}>
-                              <span className={styles.stopWeekLabel}>Semana {week.weekNum}</span>
-                              <span className={styles.phasePill}>
-                                <i className={`fas ${phase.icon}`}></i>
-                                <span>{phase.ward}</span>
-                              </span>
-                            </div>
-                            <strong className={styles.stopStatus}>{journeyState.label}</strong>
-                          </div>
+                  <div className={styles.stepCard}>
+                    <div className={styles.stepCardTop}>
+                      <span className={styles.stepRoadmapLabel}>
+                        Medical Roadmap {String(week.weekNum).padStart(2, "0")}
+                      </span>
+                      <span className={styles.stepWard}>{phase.ward}</span>
+                    </div>
 
-                          <p className={styles.stopDescription}>{journeyState.helper}</p>
+                    <strong className={styles.stepHeadline}>{phase.label}</strong>
+                    <p className={styles.stepBody}>{journeyState.helper}</p>
 
-                          <div className={styles.stopNumbers}>
-                            <strong>{week.percentage}%</strong>
-                            <span>
-                              {week.totalCards > 0
-                                ? `${week.completedCards}/${week.totalCards} cards`
-                                : "Sem cards"}
-                            </span>
-                          </div>
+                    <div className={styles.stepMeta}>
+                      <span>{week.totalCards > 0 ? `${week.completedCards}/${week.totalCards} cards` : "Sem cards"}</span>
+                      <strong>{week.percentage}%</strong>
+                    </div>
 
-                          <div className={styles.stopProgress}>
-                            <span style={{ width: `${week.percentage}%` }} />
-                          </div>
-
-                          <small className={styles.stopFootnote}>
-                            {journeyState.footnote}
-                          </small>
-                        </div>
-                      </article>
-                    );
-                  })}
-                </div>
+                    <small className={styles.stepFootnote}>{journeyState.footnote}</small>
+                  </div>
+                </article>
               );
             })}
           </div>

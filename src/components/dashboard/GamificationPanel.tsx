@@ -10,6 +10,7 @@ interface GamificationPanelProps {
 interface JourneyPhase {
   upToWeek: number;
   label: string;
+  ward: string;
   brief: string;
   icon: string;
   colorA: string;
@@ -20,53 +21,59 @@ interface JourneyPhase {
 const JOURNEY_PHASES: JourneyPhase[] = [
   {
     upToWeek: 4,
-    label: "Triagem",
-    brief: "Ajuste de ritmo, leitura clinica e base forte.",
-    icon: "fa-stethoscope",
-    colorA: "#4ec7d6",
-    colorB: "#3a75c7",
-    glow: "rgba(78, 199, 214, 0.18)",
+    label: "Estado gravissimo",
+    ward: "Sala Vermelha",
+    brief: "Chegou sem metodo, sem rotina e sem leitura de prova. O foco agora e sobreviver ao caos do estudo.",
+    icon: "fa-ambulance",
+    colorA: "#b84747",
+    colorB: "#d1664f",
+    glow: "rgba(184, 71, 71, 0.2)",
   },
   {
     upToWeek: 8,
-    label: "Base Assistencial",
-    brief: "Protocolos, fundamentos e seguranca de conduta.",
-    icon: "fa-notes-medical",
-    colorA: "#14835f",
-    colorB: "#56c89a",
-    glow: "rgba(20, 131, 95, 0.18)",
+    label: "Estado grave",
+    ward: "UTI do Cronograma",
+    brief: "Ja responde aos primeiros protocolos, mas ainda exige intervencao forte de rotina e disciplina.",
+    icon: "fa-heartbeat",
+    colorA: "#d1664f",
+    colorB: "#ce9545",
+    glow: "rgba(209, 102, 79, 0.2)",
   },
   {
     upToWeek: 12,
-    label: "Rotina de Plantao",
-    brief: "Ritmo de execucao, disciplina e constancia de estudo.",
-    icon: "fa-briefcase-medical",
+    label: "Quadro delicado",
+    ward: "Monitorizacao Intensiva",
+    brief: "Os sinais vitais do estudo melhoram. Revisao, execucao e constancia comecam a estabilizar.",
+    icon: "fa-notes-medical",
+    colorA: "#ce9545",
+    colorB: "#f1c46d",
+    glow: "rgba(206, 149, 69, 0.22)",
+  },
+  {
+    upToWeek: 16,
+    label: "Estavel sob observacao",
+    ward: "Observacao Clinica",
+    brief: "O aluno passa a estudar com mais seguranca, leitura melhor da prova e menos oscilacao.",
+    icon: "fa-stethoscope",
     colorA: "#3a75c7",
     colorB: "#4ec7d6",
     glow: "rgba(58, 117, 199, 0.18)",
   },
   {
-    upToWeek: 16,
-    label: "Conduta Segura",
-    brief: "Tomada de decisao, revisao e leitura de prova.",
-    icon: "fa-heartbeat",
-    colorA: "#ce9545",
-    colorB: "#f1c46d",
-    glow: "rgba(206, 149, 69, 0.2)",
-  },
-  {
     upToWeek: 20,
-    label: "Reta de Alta",
-    brief: "Aceleracao final, revisao forte e ajuste fino.",
-    icon: "fa-bolt",
-    colorA: "#d1664f",
-    colorB: "#ce9545",
-    glow: "rgba(209, 102, 79, 0.18)",
+    label: "Recuperacao assistida",
+    ward: "Enfermaria de Revisao",
+    brief: "O conteudo circula melhor. Simulados, revisoes e conduta de prova ficam mais firmes.",
+    icon: "fa-briefcase-medical",
+    colorA: "#14835f",
+    colorB: "#56c89a",
+    glow: "rgba(20, 131, 95, 0.18)",
   },
   {
     upToWeek: 24,
-    label: "Mapa de Aprovacao",
-    brief: "Performance final para chegar pronto na aprovacao.",
+    label: "Alta para aprovacao",
+    ward: "Protocolo de Alta",
+    brief: "Paciente academico pronto para sair da unidade e enfrentar a prova com autonomia.",
     icon: "fa-award",
     colorA: "#ce9545",
     colorB: "#4ec7d6",
@@ -127,44 +134,44 @@ function getJourneyNodeState(week: GamificationWeekJourneyNode, phase: JourneyPh
   if (week.isCurrent) {
     return {
       tone: "current",
-      label: "Plantao atual",
-      helper: `${phase.label}: ${phase.brief}`,
-      footnote: "Missao principal do momento",
+      label: "Em atendimento",
+      helper: `${phase.ward} | ${phase.label}. ${phase.brief}`,
+      footnote: "Paciente em atendimento agora",
     };
   }
 
   if (week.percentage >= 100) {
     return {
       tone: "done",
-      label: "Plantao fechado",
-      helper: `${phase.label} concluida com checklist entregue.`,
-      footnote: "Etapa clinica encerrada",
+      label: "Quadro revertido",
+      helper: `${phase.ward} liberada. ${phase.label} passou pelo protocolo com sucesso.`,
+      footnote: "Liberado da ala",
     };
   }
 
   if (week.completedCards > 0) {
     return {
       tone: "started",
-      label: "Missao ativa",
-      helper: `${phase.label} em andamento com progresso iniciado.`,
-      footnote: "Continue o plantao",
+      label: "Em tratamento",
+      helper: `${phase.ward} em acompanhamento. O quadro ja responde ao protocolo de estudo.`,
+      footnote: "Monitorizacao ativa",
     };
   }
 
   if (week.totalCards > 0) {
     return {
       tone: "planned",
-      label: "Na fila",
-      helper: `${phase.label} sera a proxima estacao da trilha clinica.`,
-      footnote: "Proximo plantao",
+      label: "Aguardando triagem",
+      helper: `${phase.ward} sera a proxima unidade. Ainda nao iniciou essa conduta.`,
+      footnote: "Proxima entrada clinica",
     };
   }
 
   return {
     tone: "empty",
-    label: "Aguardando",
-    helper: `Conteudo da fase ${phase.label} ainda nao foi carregado.`,
-    footnote: "Sem cards no banco",
+    label: "Sem prontuario",
+    helper: `Ainda nao ha prontuario clinico da fase ${phase.label} no banco.`,
+    footnote: "Sem registro de protocolo",
   };
 }
 
@@ -211,7 +218,7 @@ export default function GamificationPanel({
         tone: "planned" as const,
         label: "Na fila",
         helper: "A proxima fase da trilha esta pronta para iniciar.",
-        footnote: "Proximo plantao",
+        footnote: "Proxima entrada clinica",
       };
 
   return (
@@ -219,7 +226,7 @@ export default function GamificationPanel({
       <div className={styles.hero}>
         <div>
           <p className={styles.kicker}>Gamificacao Ativa</p>
-          <h2>Missao diaria, trilha clinica e mapa de aprovacao</h2>
+          <h2>Paciente academico em protocolo de alta rumo a aprovacao</h2>
         </div>
         <div className={styles.levelChip}>
           <span>
@@ -349,39 +356,39 @@ export default function GamificationPanel({
           <header>
             <h3>
               <i className="fas fa-route"></i>
-              Mapa de Aprovacao
+              Protocolo Clinico da Aprovacao
             </h3>
-            <span>Trilha clinica | 24 semanas</span>
+            <span>Da sala vermelha a alta | 24 semanas</span>
           </header>
 
           <div className={styles.journeyHero}>
             <div className={styles.journeyLead} style={activePhaseStyle}>
               <div className={styles.journeyThemePill}>
                 <i className={`fas ${activePhase.icon}`}></i>
-                <span>{activePhase.label}</span>
+                <span>{activePhase.ward}</span>
               </div>
-              <p className={styles.journeyLeadLabel}>Plantao Atual</p>
+              <p className={styles.journeyLeadLabel}>Boletim Clinico Atual</p>
               <strong>
                 Semana {activeJourneyWeek?.weekNum || snapshot.currentWeek} | {activeWeekState.label}
               </strong>
               <p>
                 {activeJourneyWeek?.totalCards
-                  ? `${activeJourneyWeek.completedCards} de ${activeJourneyWeek.totalCards} cards concluidos nesta etapa. ${activePhase.brief}`
+                  ? `${activePhase.label}. ${activeJourneyWeek.completedCards} de ${activeJourneyWeek.totalCards} cards concluidos nesta etapa. ${activePhase.brief}`
                   : "Esta semana ainda nao tem cards carregados no banco."}
               </p>
             </div>
 
             <div className={styles.journeyStats}>
               <div className={styles.journeyStat}>
-                <span>Plantoes Fechados</span>
+                <span>Quadros Revertidos</span>
                 <strong>{completedWeeks}</strong>
               </div>
               <div className={styles.journeyStat}>
-                <span>Missoes Ativas</span>
+                <span>Em Tratamento</span>
                 <strong>{weeksInProgress}</strong>
               </div>
               <div className={styles.journeyStat}>
-                <span>Ate a Aprovacao</span>
+                <span>Semanas Ate Alta</span>
                 <strong>{remainingWeeks}</strong>
               </div>
             </div>
@@ -390,19 +397,19 @@ export default function GamificationPanel({
           <div className={styles.journeyLegend}>
             <span className={styles.legendItem}>
               <i className={`${styles.legendDot} ${styles.legendCurrent}`}></i>
-              Plantao atual
+              Em atendimento
             </span>
             <span className={styles.legendItem}>
               <i className={`${styles.legendDot} ${styles.legendDone}`}></i>
-              Plantao fechado
+              Quadro revertido
             </span>
             <span className={styles.legendItem}>
               <i className={`${styles.legendDot} ${styles.legendStarted}`}></i>
-              Missao ativa
+              Em tratamento
             </span>
             <span className={styles.legendItem}>
               <i className={`${styles.legendDot} ${styles.legendPlanned}`}></i>
-              Proximo plantao
+              Aguardando triagem
             </span>
           </div>
 
@@ -450,7 +457,7 @@ export default function GamificationPanel({
                               <span className={styles.stopWeekLabel}>Semana {week.weekNum}</span>
                               <span className={styles.phasePill}>
                                 <i className={`fas ${phase.icon}`}></i>
-                                <span>{phase.label}</span>
+                                <span>{phase.ward}</span>
                               </span>
                             </div>
                             <strong className={styles.stopStatus}>{journeyState.label}</strong>

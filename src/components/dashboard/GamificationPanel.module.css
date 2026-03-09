@@ -338,6 +338,25 @@
 
 .journeyBlock {
   grid-column: 1 / -1;
+  position: relative;
+  overflow: hidden;
+}
+
+.journeyBlock::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(9, 42, 61, 0.03) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(9, 42, 61, 0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.28), transparent 82%);
+  pointer-events: none;
+}
+
+.journeyBlock > * {
+  position: relative;
+  z-index: 1;
 }
 
 .journeyHero {
@@ -403,6 +422,7 @@
   gap: 8px;
   color: #0a3046;
   box-shadow: 0 10px 24px var(--phase-glow);
+  font-family: var(--font-orbitron), var(--font-sora), sans-serif;
 }
 
 .journeyThemePill i {
@@ -703,6 +723,11 @@
 
 .stopStatus {
   max-width: 11ch;
+  border: 1px solid rgba(9, 42, 61, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.64);
+  padding: 6px 8px;
+  line-height: 1.1;
 }
 
 .stopDescription {
@@ -759,6 +784,11 @@
   background: radial-gradient(circle, rgba(206, 149, 69, 0.28), transparent 68%);
 }
 
+.stopCurrent .stopStatus {
+  border-color: rgba(206, 149, 69, 0.28);
+  background: rgba(255, 245, 224, 0.84);
+}
+
 .stopCurrent .stopMarker {
   border-color: rgba(206, 149, 69, 0.52);
   background: linear-gradient(160deg, #fff2d6, #f7d796);
@@ -779,6 +809,11 @@
 
 .stopDone .stopPulse {
   background: radial-gradient(circle, rgba(20, 131, 95, 0.2), transparent 68%);
+}
+
+.stopDone .stopStatus {
+  border-color: rgba(20, 131, 95, 0.24);
+  background: rgba(232, 250, 243, 0.86);
 }
 
 .stopDone .stopMarker {
@@ -806,8 +841,18 @@
   border-color: rgba(58, 117, 199, 0.28);
 }
 
+.stopStarted .stopStatus {
+  border-color: rgba(58, 117, 199, 0.2);
+  background: rgba(236, 244, 255, 0.84);
+}
+
 .stopPlanned .stopCard {
   border-style: dashed;
+}
+
+.stopPlanned .stopStatus,
+.stopEmpty .stopStatus {
+  background: rgba(245, 248, 251, 0.82);
 }
 
 .stopEmpty .stopPulse {
@@ -863,6 +908,13 @@
   background: radial-gradient(circle, rgba(240, 201, 134, 0.12), transparent 68%);
 }
 
+[data-theme="dark"] .journeyBlock::before {
+  background:
+    linear-gradient(90deg, rgba(219, 237, 249, 0.04) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(219, 237, 249, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
 [data-theme="dark"] .journeyThemePill,
 [data-theme="dark"] .phasePill {
   color: #081b2a;
@@ -871,6 +923,26 @@
 [data-theme="dark"] .phasePill span,
 [data-theme="dark"] .journeyThemePill span {
   color: #081b2a;
+}
+
+[data-theme="dark"] .stopStatus {
+  border-color: rgba(122, 166, 229, 0.16);
+  background: rgba(10, 27, 40, 0.58);
+}
+
+[data-theme="dark"] .stopCurrent .stopStatus {
+  border-color: rgba(240, 201, 134, 0.22);
+  background: rgba(70, 50, 22, 0.46);
+}
+
+[data-theme="dark"] .stopDone .stopStatus {
+  border-color: rgba(62, 189, 146, 0.24);
+  background: rgba(16, 58, 45, 0.48);
+}
+
+[data-theme="dark"] .stopStarted .stopStatus {
+  border-color: rgba(122, 166, 229, 0.22);
+  background: rgba(18, 45, 71, 0.48);
 }
 
 [data-theme="dark"] .roadRow::before {

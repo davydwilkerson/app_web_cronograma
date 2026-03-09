@@ -217,6 +217,89 @@ function getStopToneClass(
   }
 }
 
+function getReadableMissionTitle(missionId: string, fallback: string): string {
+  switch (missionId) {
+    case "daily-cards":
+      return "Meta de Cards do Dia";
+    case "daily-touch":
+      return "Ritmo de Estudo";
+    case "daily-xp":
+      return "Meta de Pontos";
+    default:
+      return fallback;
+  }
+}
+
+function getReadableMissionDescription(
+  missionId: string,
+  target: number,
+  fallback: string
+): string {
+  switch (missionId) {
+    case "daily-cards":
+      return `Concluir ${target} card(s) hoje`;
+    case "daily-touch":
+      return `Avancar em ${target} card(s) ao longo do dia`;
+    case "daily-xp":
+      return `Somar ${target} pontos hoje`;
+    default:
+      return fallback;
+  }
+}
+
+function getReadableAchievementTitle(achievementId: string, fallback: string): string {
+  switch (achievementId) {
+    case "first-blood":
+      return "Primeiro Passo";
+    case "combo-runner":
+      return "Ritmo Forte no Dia";
+    case "streak-3":
+      return "Constancia 3 Dias";
+    case "streak-7":
+      return "7 Dias Seguidos";
+    case "week-master":
+      return "Semana Concluida";
+    case "half-journey":
+      return "Varias Semanas Iniciadas";
+    case "centurion":
+      return "Muitos Cards Concluidos";
+    case "marathon":
+      return "Dia Perfeito";
+    case "xp-legend":
+      return "Pontuacao de Destaque";
+    default:
+      return fallback;
+  }
+}
+
+function getReadableAchievementDescription(
+  achievementId: string,
+  fallback: string
+): string {
+  switch (achievementId) {
+    case "first-blood":
+      return "Concluiu o primeiro card.";
+    case "combo-runner":
+      return "Teve um dia forte de estudo e avancou em varios cards.";
+    case "streak-3":
+      return "Manteve 3 dias seguidos de estudo.";
+    case "streak-7":
+      return "Manteve 7 dias seguidos de estudo.";
+    case "week-master":
+      return "Finalizou uma semana completa.";
+    case "half-journey":
+      return "Ja iniciou varias semanas do cronograma.";
+    case "centurion":
+      return "Concluiu uma grande quantidade de cards.";
+    case "marathon":
+      return "Teve um dia de estudo com alto rendimento.";
+    case "xp-legend":
+      return "Ultrapassou uma pontuacao alta no cronograma.";
+    default:
+      return fallback;
+  }
+}
+
 export default function GamificationPanel({
   snapshot,
   variant = "full",
@@ -272,30 +355,30 @@ export default function GamificationPanel({
         </div>
         <small>
           {snapshot.level.nextLevelXp
-            ? `${snapshot.level.currentXp} XP / ${snapshot.level.nextLevelXp} XP`
-            : `${snapshot.level.currentXp} XP (Nivel Maximo)`}
+            ? `${snapshot.level.currentXp} pontos / ${snapshot.level.nextLevelXp} pontos`
+            : `${snapshot.level.currentXp} pontos (Nivel Maximo)`}
         </small>
       </div>
 
       <div className={styles.metrics}>
         <article className={styles.metricCard}>
-          <span>XP Total</span>
+          <span>Pontuacao Total</span>
           <strong>{snapshot.totalXp}</strong>
         </article>
         <article className={styles.metricCard}>
-          <span>Streak</span>
+          <span>Dias Seguidos</span>
           <strong>{snapshot.streak} dias</strong>
         </article>
         <article className={styles.metricCard}>
-          <span>Combo Hoje</span>
-          <strong>{snapshot.todayFocusCombo}x</strong>
+          <span>Ritmo de Hoje</span>
+          <strong>{snapshot.todayFocusCombo} cards</strong>
         </article>
         <article className={styles.metricCard}>
           <span>Moedas</span>
           <strong>{snapshot.coins}</strong>
         </article>
         <article className={styles.metricCard}>
-          <span>Ranking</span>
+          <span>Posicao</span>
           <strong>{snapshot.userRank ? `#${snapshot.userRank}` : "-"}</strong>
         </article>
       </div>
@@ -315,17 +398,17 @@ export default function GamificationPanel({
             {snapshot.dailyMissions.map((mission) => (
               <li key={mission.id} className={mission.completed ? styles.missionDone : ""}>
                 <div className={styles.missionHead}>
-                  <strong>{mission.title}</strong>
+                  <strong>{getReadableMissionTitle(mission.id, mission.title)}</strong>
                   <span>
                     {mission.progress}/{mission.target}
                   </span>
                 </div>
-                <p>{mission.description}</p>
+                <p>{getReadableMissionDescription(mission.id, mission.target, mission.description)}</p>
                 <div className={styles.progressTrack}>
                   <span style={{ width: `${pct(mission.progress, mission.target)}%` }} />
                 </div>
                 <small>
-                  +{mission.rewardXp} XP | +{mission.rewardCoins} moedas
+                  +{mission.rewardXp} pontos | +{mission.rewardCoins} moedas
                 </small>
               </li>
             ))}
@@ -348,10 +431,10 @@ export default function GamificationPanel({
               <div
                 key={achievement.id}
                 className={`${styles.badge} ${achievement.unlocked ? styles.badgeOn : ""}`}
-                title={achievement.description}
+                title={getReadableAchievementDescription(achievement.id, achievement.description)}
               >
                 <i className={`fas ${achievement.icon}`}></i>
-                <strong>{achievement.title}</strong>
+                <strong>{getReadableAchievementTitle(achievement.id, achievement.title)}</strong>
                 <span>{achievement.unlocked ? "Desbloqueado" : "Bloqueado"}</span>
               </div>
             ))}
@@ -363,9 +446,9 @@ export default function GamificationPanel({
             <header>
               <h3>
                 <i className="fas fa-ranking-star"></i>
-                Ranking Semanal
+                Classificacao Semanal
               </h3>
-              <span>Top Jogadores</span>
+              <span>Alunos em destaque</span>
             </header>
             <ol className={styles.rankList}>
               {snapshot.leaderboard.map((entry) => (
@@ -375,7 +458,7 @@ export default function GamificationPanel({
                 >
                   <span>#{entry.rank}</span>
                   <strong>{entry.displayName}</strong>
-                  <small>{entry.xp} XP</small>
+                  <small>{entry.xp} pontos</small>
                 </li>
               ))}
             </ol>

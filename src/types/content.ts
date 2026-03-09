@@ -87,7 +87,7 @@ export const XP_CONFIG = {
         { level: 2, title: "Estudante", xpRequired: 100 },
         { level: 3, title: "Dedicado", xpRequired: 250 },
         { level: 4, title: "Avançado", xpRequired: 500 },
-        { level: 5, title: "Expert", xpRequired: 800 },
+        { level: 5, title: "Experiente", xpRequired: 800 },
         { level: 6, title: "Mestre", xpRequired: 1200 },
         { level: 7, title: "Lenda", xpRequired: 1800 },
         { level: 8, title: "Aprovado!", xpRequired: 2500 },

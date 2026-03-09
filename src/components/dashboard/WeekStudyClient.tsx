@@ -375,7 +375,7 @@ export default function WeekStudyClient({
             }));
 
             if (typeof payload.xpDelta === "number" && payload.xpDelta > 0) {
-                setXpGainMessage(`+${payload.xpDelta} XP`);
+                setXpGainMessage(`+${payload.xpDelta} pontos`);
             }
         } catch (error) {
             console.error(error);

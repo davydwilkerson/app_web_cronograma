@@ -2,11 +2,10 @@ import { redirect } from "next/navigation";
 import { requireAuth, evaluateAccess } from "@/lib/auth/guards";
 import { prisma } from "@/lib/prisma";
 import { getGamificationSnapshot } from "@/lib/gamification";
-import { DISCIPLINE_CONFIG, TOTAL_WEEKS } from "@/types/content";
+import { TOTAL_WEEKS } from "@/types/content";
 import WeekGrid from "@/components/dashboard/WeekGrid";
 import TrialBanner from "@/components/dashboard/TrialBanner";
 import GamificationPanel from "@/components/dashboard/GamificationPanel";
-import SmartStudyPlanner from "@/components/dashboard/SmartStudyPlanner";
 import styles from "./page.module.css";
 
 export const metadata = {
@@ -27,25 +26,38 @@ export default async function DashboardPage() {
         redirect(`/login?${params.toString()}`);
     }
 
-    const [progressRows, weekCards] = await Promise.all([
-        prisma.userProgress.findMany({
-            where: { userId: user.id },
-            select: {
-                weekNum: true,
-                cardId: true,
-                isCompleted: true,
-                xpEarned: true,
-                updatedAt: true,
-            },
-        }),
-        prisma.weekContent.findMany({
-            select: {
-                weekNum: true,
-                cardId: true,
-                discipline: true,
-            },
-        }),
-    ]);
+    let progressRows: Array<{
+        weekNum: number;
+        cardId: string;
+        isCompleted: boolean;
+        xpEarned: number;
+        updatedAt: Date;
+    }> = [];
+    let weekCards: Array<{ weekNum: number; cardId: string; discipline: string }> = [];
+
+    try {
+        [progressRows, weekCards] = await Promise.all([
+            prisma.userProgress.findMany({
+                where: { userId: user.id },
+                select: {
+                    weekNum: true,
+                    cardId: true,
+                    isCompleted: true,
+                    xpEarned: true,
+                    updatedAt: true,
+                },
+            }),
+            prisma.weekContent.findMany({
+                select: {
+                    weekNum: true,
+                    cardId: true,
+                    discipline: true,
+                },
+            }),
+        ]);
+    } catch (error) {
+        console.error("[dashboard] failed to load progress/content:", error);
+    }
 
     const weekProgress: Record<number, { total: number; completed: number }> = {};
     const uniqueCards = new Map<string, { weekNum: number; cardId: string; discipline: string }>();
@@ -72,46 +84,6 @@ export default async function DashboardPage() {
             }
             weekProgress[row.weekNum].completed++;
         }
-    });
-
-    const completedCardSet = new Set<string>();
-    progressRows.forEach((row) => {
-        if (row.isCompleted) {
-            completedCardSet.add(`${row.weekNum}-${row.cardId}`);
-        }
-    });
-
-    const plannerMap = new Map<
-        string,
-        { key: string; label: string; totalCards: number; completedCards: number; remainingCards: number }
-    >();
-
-    uniqueCards.forEach((card) => {
-        const key = card.discipline;
-        const label = DISCIPLINE_CONFIG[key as keyof typeof DISCIPLINE_CONFIG]?.label || key;
-        const existing = plannerMap.get(key) || {
-            key,
-            label,
-            totalCards: 0,
-            completedCards: 0,
-            remainingCards: 0,
-        };
-
-        existing.totalCards += 1;
-        if (completedCardSet.has(`${card.weekNum}-${card.cardId}`)) {
-            existing.completedCards += 1;
-        } else {
-            existing.remainingCards += 1;
-        }
-
-        plannerMap.set(key, existing);
-    });
-
-    const plannerDisciplines = Array.from(plannerMap.values()).sort((a, b) => {
-        if (b.remainingCards !== a.remainingCards) {
-            return b.remainingCards - a.remainingCards;
-        }
-        return a.label.localeCompare(b.label, "pt-BR");
     });
 
     const weeks = Array.from({ length: TOTAL_WEEKS }, (_, i) => {
@@ -189,13 +161,6 @@ export default async function DashboardPage() {
                     Semanas de Estudo
                 </h2>
                 <WeekGrid weeks={weeks} />
-            </section>
-
-            <section className={styles.plannerSection}>
-                <SmartStudyPlanner
-                    disciplines={plannerDisciplines}
-                    storageKey={`smart-planner:${user.id}`}
-                />
             </section>
 
             <section className={styles.gamificationSection}>

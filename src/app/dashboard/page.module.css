@@ -3,12 +3,6 @@
   position: relative;
 }
 
-.plannerSection {
-  margin-top: var(--space-lg);
-  margin-bottom: var(--space-lg);
-  position: relative;
-}
-
 .welcomeSection {
   display: grid;
   grid-template-columns: 1.45fr 1fr;
@@ -184,11 +178,6 @@
   }
 
   .gamificationSection {
-    margin-bottom: var(--space-md);
-  }
-
-  .plannerSection {
-    margin-top: var(--space-md);
     margin-bottom: var(--space-md);
   }
 }

@@ -25,9 +25,9 @@ const JOURNEY_PHASES: JourneyPhase[] = [
     ward: "Sala Vermelha",
     brief: "Chega sem metodo, sem rotina e sem leitura de prova. O objetivo e sair do colapso do estudo.",
     icon: "fa-ambulance",
-    colorA: "#0b6a88",
-    colorB: "#2499ba",
-    glow: "rgba(36, 153, 186, 0.18)",
+    colorA: "#b90f2d",
+    colorB: "#ef3b56",
+    glow: "rgba(239, 59, 86, 0.22)",
   },
   {
     upToWeek: 2,
@@ -35,9 +35,9 @@ const JOURNEY_PHASES: JourneyPhase[] = [
     ward: "UTI do Cronograma",
     brief: "Ja entrou no protocolo, mas ainda depende de intervencao forte para ganhar ritmo e constancia.",
     icon: "fa-heartbeat",
-    colorA: "#0d7692",
-    colorB: "#4bb5cb",
-    glow: "rgba(75, 181, 203, 0.18)",
+    colorA: "#c9263c",
+    colorB: "#f36d7b",
+    glow: "rgba(243, 109, 123, 0.22)",
   },
   {
     upToWeek: 3,
@@ -45,9 +45,9 @@ const JOURNEY_PHASES: JourneyPhase[] = [
     ward: "Monitorizacao Intensiva",
     brief: "Os sinais vitais do estudo melhoram. Revisao, execucao e disciplina comecam a responder.",
     icon: "fa-notes-medical",
-    colorA: "#117f97",
-    colorB: "#5cc2d6",
-    glow: "rgba(92, 194, 214, 0.18)",
+    colorA: "#de6b11",
+    colorB: "#f6a23d",
+    glow: "rgba(246, 162, 61, 0.22)",
   },
   {
     upToWeek: 4,
@@ -55,9 +55,19 @@ const JOURNEY_PHASES: JourneyPhase[] = [
     ward: "Observacao Clinica",
     brief: "O aluno respira melhor dentro do cronograma e ja sustenta uma rotina mais segura.",
     icon: "fa-stethoscope",
-    colorA: "#14889d",
-    colorB: "#71cfe0",
-    glow: "rgba(113, 207, 224, 0.18)",
+    colorA: "#d19c11",
+    colorB: "#f1ce5f",
+    glow: "rgba(241, 206, 95, 0.22)",
+  },
+  {
+    upToWeek: 8,
+    label: "Estabilizacao assistida",
+    ward: "Enfermaria de Estabilizacao",
+    brief: "A rotina ainda precisa de observacao, mas ja existe resposta constante aos protocolos.",
+    icon: "fa-procedures",
+    colorA: "#a9a81a",
+    colorB: "#d9dc57",
+    glow: "rgba(217, 220, 87, 0.2)",
   },
   {
     upToWeek: 12,
@@ -65,9 +75,29 @@ const JOURNEY_PHASES: JourneyPhase[] = [
     ward: "Enfermaria de Revisao",
     brief: "Conteudo em circulacao, revisao forte e mais dominio nas decisoes de prova.",
     icon: "fa-briefcase-medical",
-    colorA: "#1f8ca5",
-    colorB: "#89d7e4",
-    glow: "rgba(137, 215, 228, 0.18)",
+    colorA: "#78a61f",
+    colorB: "#a9d94a",
+    glow: "rgba(169, 217, 74, 0.22)",
+  },
+  {
+    upToWeek: 16,
+    label: "Recuperacao consistente",
+    ward: "Ala de Consolidacao",
+    brief: "O aluno ja responde bem ao tratamento, com revisao, prova e leitura muito mais maduras.",
+    icon: "fa-clipboard-check",
+    colorA: "#4b9e24",
+    colorB: "#72d25c",
+    glow: "rgba(114, 210, 92, 0.22)",
+  },
+  {
+    upToWeek: 20,
+    label: "Pre-alta monitorada",
+    ward: "Protocolo de Alta Assistida",
+    brief: "Fase de consolidar o quadro e evitar recaidas na disciplina e na revisao.",
+    icon: "fa-user-md",
+    colorA: "#219152",
+    colorB: "#4fd183",
+    glow: "rgba(79, 209, 131, 0.22)",
   },
   {
     upToWeek: 24,
@@ -75,9 +105,9 @@ const JOURNEY_PHASES: JourneyPhase[] = [
     ward: "Protocolo de Alta",
     brief: "Paciente academico pronto para sair da unidade e enfrentar a prova com autonomia.",
     icon: "fa-award",
-    colorA: "#1d7f99",
-    colorB: "#7ed1df",
-    glow: "rgba(126, 209, 223, 0.18)",
+    colorA: "#0f7a3d",
+    colorB: "#18c35f",
+    glow: "rgba(24, 195, 95, 0.24)",
   },
 ];
 
@@ -86,8 +116,23 @@ function pct(progress: number, target: number): number {
   return Math.max(0, Math.min(100, Math.round((progress / target) * 100)));
 }
 
-function journeySlice(nodes: GamificationWeekJourneyNode[]): GamificationWeekJourneyNode[] {
-  return nodes.slice(0, 4);
+function getJourneyWindow(nodes: GamificationWeekJourneyNode[]): GamificationWeekJourneyNode[] {
+  const windowSize = 4;
+  if (nodes.length <= windowSize) {
+    return nodes;
+  }
+
+  let leadingCompleted = 0;
+  for (const node of nodes) {
+    if (node.percentage >= 100) {
+      leadingCompleted += 1;
+      continue;
+    }
+    break;
+  }
+
+  const start = Math.max(0, Math.min(nodes.length - windowSize, leadingCompleted - (windowSize - 1)));
+  return nodes.slice(start, start + windowSize);
 }
 
 function getJourneyPhase(weekNum: number): JourneyPhase {
@@ -142,7 +187,7 @@ function getJourneyNodeState(week: GamificationWeekJourneyNode, phase: JourneyPh
     return {
       tone: "planned",
       label: "Aguardando triagem",
-      helper: `${phase.ward} sera a proxima etapa do protocolo nas primeiras semanas.`,
+      helper: `${phase.ward} sera a proxima etapa do protocolo clinico conforme o aluno avancar.`,
       footnote: "Proxima entrada clinica",
     };
   }
@@ -178,7 +223,7 @@ export default function GamificationPanel({
 }: GamificationPanelProps) {
   const compact = variant === "compact";
   const achievements = compact ? snapshot.achievements.slice(0, 6) : snapshot.achievements;
-  const journey = journeySlice(snapshot.weekJourney);
+  const journey = getJourneyWindow(snapshot.weekJourney);
   const dailyCompleted = snapshot.dailyMissions.filter((mission) => mission.completed).length;
   const completedWeeks = snapshot.weekJourney.filter((week) => week.percentage >= 100).length;
   const weeksInProgress = snapshot.weekJourney.filter(
@@ -191,6 +236,12 @@ export default function GamificationPanel({
   const remainingWeeks = Math.max(0, snapshot.weekJourney.length - completedWeeks);
   const activePhase = getJourneyPhase(activeJourneyWeek?.weekNum || snapshot.currentWeek);
   const activePhaseStyle = getPhaseStyle(activePhase);
+  const visibleRangeLabel =
+    journey.length > 0
+      ? `Semanas ${String(journey[0].weekNum).padStart(2, "0")} a ${String(
+          journey[journey.length - 1].weekNum
+        ).padStart(2, "0")}`
+      : "Semanas 01 a 04";
   const activeWeekState = activeJourneyWeek
     ? getJourneyNodeState(activeJourneyWeek, activePhase)
     : {
@@ -335,9 +386,9 @@ export default function GamificationPanel({
           <header>
             <h3>
               <i className="fas fa-route"></i>
-              Roadmap Clinico Inicial
+              Roadmap Clinico do Aluno
             </h3>
-            <span>Somente semanas 01 a 04</span>
+            <span>{visibleRangeLabel}</span>
           </header>
 
           <div className={styles.journeyHero}>
@@ -426,7 +477,7 @@ export default function GamificationPanel({
                   <div className={styles.stepCard}>
                     <div className={styles.stepCardTop}>
                       <span className={styles.stepRoadmapLabel}>
-                        Medical Roadmap {String(week.weekNum).padStart(2, "0")}
+                        Prontuario {String(week.weekNum).padStart(2, "0")}
                       </span>
                       <span className={styles.stepWard}>{phase.ward}</span>
                     </div>

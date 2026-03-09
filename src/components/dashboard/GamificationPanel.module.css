@@ -419,7 +419,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: #0a3046;
+  color: #f9fdff;
   box-shadow: 0 10px 24px var(--phase-glow);
   font-family: var(--font-orbitron), var(--font-sora), sans-serif;
 }
@@ -671,7 +671,7 @@
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.98), rgba(226, 244, 248, 0.9));
   display: grid;
   place-items: center;
-  color: #0d344c;
+  color: var(--phase-a);
   font-size: 1rem;
   box-shadow:
     0 0 0 6px rgba(114, 206, 223, 0.16),
@@ -682,12 +682,12 @@
   width: min(100%, 360px);
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(19, 93, 115, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 18px;
-  background:
-    linear-gradient(160deg, rgba(255, 255, 255, 0.97), rgba(242, 251, 253, 0.88)),
-    rgba(255, 255, 255, 0.92);
-  box-shadow: 0 20px 40px rgba(8, 31, 46, 0.12);
+  background: linear-gradient(145deg, var(--phase-a), var(--phase-b));
+  box-shadow:
+    0 20px 40px rgba(8, 31, 46, 0.14),
+    0 14px 28px var(--phase-glow);
   padding: 14px 16px 12px;
   display: grid;
   gap: 8px;
@@ -696,9 +696,17 @@
 .stepCard::before {
   content: "";
   position: absolute;
-  inset: 0 0 auto 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--phase-a), var(--phase-b));
+  inset: 0;
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgba(255, 255, 255, 0.24), transparent 55%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0) 45%),
+    linear-gradient(180deg, rgba(5, 18, 28, 0.04), rgba(5, 18, 28, 0.12));
+  pointer-events: none;
+}
+
+.stepCard > * {
+  position: relative;
+  z-index: 1;
 }
 
 .stepCardTop {
@@ -710,7 +718,7 @@
 }
 
 .stepRoadmapLabel {
-  color: #0d6f8b;
+  color: rgba(248, 252, 255, 0.92);
   font-size: 0.7rem;
   font-weight: 800;
   letter-spacing: 0.06em;
@@ -719,9 +727,10 @@
 
 .stepWard {
   border-radius: 999px;
-  background: rgba(13, 111, 139, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.14);
   padding: 5px 8px;
-  color: #0d5165;
+  color: rgba(248, 252, 255, 0.96);
   font-size: 0.65rem;
   font-weight: 800;
   letter-spacing: 0.04em;
@@ -729,7 +738,7 @@
 }
 
 .stepHeadline {
-  color: var(--accent);
+  color: #ffffff;
   font-size: 0.95rem;
   font-family: var(--font-fraunces), Georgia, serif;
   line-height: 1.2;
@@ -737,7 +746,7 @@
 
 .stepBody {
   margin: 0;
-  color: var(--muted);
+  color: rgba(248, 252, 255, 0.9);
   font-size: 0.76rem;
   line-height: 1.5;
 }
@@ -747,19 +756,19 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  color: var(--muted);
+  color: rgba(248, 252, 255, 0.82);
   font-size: 0.72rem;
   font-weight: 700;
 }
 
 .stepMeta strong {
-  color: var(--accent);
+  color: #ffffff;
   font-size: 1rem;
   font-family: var(--font-orbitron), var(--font-sora), sans-serif;
 }
 
 .stepFootnote {
-  color: #0d6f8b;
+  color: rgba(255, 255, 255, 0.92);
   font-size: 0.66rem;
   font-weight: 800;
   letter-spacing: 0.05em;
@@ -768,12 +777,15 @@
 
 .stopCurrent .stepMarkerCore {
   box-shadow:
-    0 0 0 6px rgba(114, 206, 223, 0.2),
+    0 0 0 8px var(--phase-glow),
     0 18px 36px rgba(8, 31, 46, 0.16);
 }
 
 .stopCurrent .stepCard {
-  border-color: rgba(19, 93, 115, 0.24);
+  border-color: rgba(255, 255, 255, 0.48);
+  box-shadow:
+    0 24px 44px rgba(8, 31, 46, 0.18),
+    0 18px 34px var(--phase-glow);
 }
 
 .stopDone .stepMarkerCore,
@@ -786,16 +798,25 @@
 }
 
 .stopDone .stepCard {
-  border-color: rgba(19, 93, 115, 0.18);
+  border-color: rgba(255, 255, 255, 0.28);
 }
 
 .stopStarted .stepCard {
-  border-color: rgba(19, 93, 115, 0.16);
+  border-color: rgba(255, 255, 255, 0.22);
 }
 
 .stopPlanned .stepCard,
 .stopEmpty .stepCard {
   border-style: dashed;
+}
+
+.stopPlanned .stepCard {
+  opacity: 0.92;
+}
+
+.stopEmpty .stepCard {
+  opacity: 0.68;
+  filter: saturate(0.72);
 }
 
 [data-theme="dark"] .panel {
@@ -828,8 +849,7 @@
 [data-theme="dark"] .rankList li,
 [data-theme="dark"] .journeyLead,
 [data-theme="dark"] .journeyStat,
-[data-theme="dark"] .legendItem,
-[data-theme="dark"] .stepCard {
+[data-theme="dark"] .legendItem {
   border-color: rgba(122, 166, 229, 0.24);
   background: rgba(15, 33, 50, 0.76);
 }
@@ -848,12 +868,12 @@
 
 [data-theme="dark"] .journeyThemePill,
 [data-theme="dark"] .phasePill {
-  color: #081b2a;
+  color: #f9fdff;
 }
 
 [data-theme="dark"] .phasePill span,
 [data-theme="dark"] .journeyThemePill span {
-  color: #081b2a;
+  color: #f9fdff;
 }
 
 [data-theme="dark"] .scopeEarLeft,
@@ -877,24 +897,25 @@
 [data-theme="dark"] .stepMarkerCore {
   border-color: rgba(236, 248, 252, 0.92);
   background: linear-gradient(160deg, rgba(18, 45, 71, 0.96), rgba(14, 35, 53, 0.92));
-  color: #eef6fb;
+  color: var(--phase-b);
   box-shadow:
     0 0 0 6px rgba(109, 217, 229, 0.1),
     0 18px 36px rgba(0, 0, 0, 0.26);
 }
 
 [data-theme="dark"] .stepWard {
-  background: rgba(109, 217, 229, 0.14);
-  color: #d8f4f8;
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(248, 252, 255, 0.96);
 }
 
 [data-theme="dark"] .stepRoadmapLabel,
 [data-theme="dark"] .stepFootnote {
-  color: #93dbea;
+  color: rgba(248, 252, 255, 0.92);
 }
 
 [data-theme="dark"] .stepBody {
-  color: var(--muted);
+  color: rgba(248, 252, 255, 0.9);
 }
 
 [data-theme="dark"] .missionDone {
@@ -913,20 +934,20 @@
 }
 
 [data-theme="dark"] .stopCurrent .stepCard {
-  border-color: rgba(109, 217, 229, 0.3);
+  border-color: rgba(255, 255, 255, 0.42);
 }
 
 [data-theme="dark"] .stopDone .stepCard {
-  border-color: rgba(109, 217, 229, 0.24);
+  border-color: rgba(255, 255, 255, 0.28);
 }
 
 [data-theme="dark"] .stopStarted .stepCard {
-  border-color: rgba(109, 217, 229, 0.22);
+  border-color: rgba(255, 255, 255, 0.24);
 }
 
 [data-theme="dark"] .stopPlanned .stepCard,
 [data-theme="dark"] .stopEmpty .stepCard {
-  border-color: rgba(145, 169, 187, 0.18);
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 @media (max-width: 1050px) {
